@@ -1,3 +1,2921 @@
+# 🧠 ShadowTraffic LLM Knowledge File
+
+> This file is designed to help large language models (LLMs) generate correct ShadowTraffic configurations.  
+> Only use patterns explicitly shown in this file—do not guess, invent new fields, or combine examples in unsupported ways.  
+> When in doubt, prefer working examples over interpreting the full documentation.
+
+---
+
+## ✅ Quick Reference
+
+See the overview.md section in the full documentation below for the key product concepts.
+
+---
+
+## 🗂️ Example Gallery
+
+### Hello world with Kafka
+
+```json
+{
+    "generators": [
+        {
+            "topic": "testTopic",
+            "value": {
+                "_gen": "oneOf",
+                "choices": [
+                    "👍", "🔥", "❤️"
+                ]
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Hello world with Postgres
+
+```json
+{
+    "generators": [
+        {
+            "table": "testTable",
+            "row": {
+                "testColumn": {
+                    "_gen": "oneOf",
+                    "choices": [
+                        "👍", "🔥", "❤️"
+                    ]
+                }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Hello world with S3
+
+```json
+{
+    "generators": [
+        {
+            "bucket": "testBucket",
+            "data": {
+                "_gen": "oneOf",
+                "choices": [
+                    "👍", "🔥", "❤️"
+                ]
+            },
+            "bucketConfigs": {
+                "format": "jsonl",
+                "keyPrefix": "part-"
+            }
+        }        
+    ],
+    "connections": {
+        "s3": {
+            "kind": "s3"
+        }
+    }
+}
+```
+
+-----
+
+### Hello world with a webhook
+
+```json
+{
+    "generators": [
+        {
+            "url": "https://my-site/webhook-endpoint",
+            "method": "POST",
+            "headers": { "ORIGIN": "US-EAST-2" },
+            "queryParams": {
+                "foo": "bar",
+                "baz": "bip"
+            },
+            "data": {
+                "magicNumber": {
+                    "_gen": "normalDistribution",
+                    "mean": 100,
+                    "sd": 10
+                },
+                "magicString": {
+                    "_gen": "oneOf",
+                    "choices": [
+                        "👍", "🔥", "❤️"
+                    ]
+                }
+            }
+        }
+    ],
+    "connections": {
+        "saas-webhook": {
+            "kind": "webhook"
+        }
+    }
+}
+```
+
+-----
+
+### The kitchen sink: Kafka retail data
+
+```json
+{
+    "generators": [
+        {
+            "topic": "customers",
+            "value": {
+                "customerId": { "_gen": "uuid" },
+                "name": {
+                    "_gen": "string", "expr": "#{Name.fullName}"
+                },
+                "birthday": {
+                    "_gen": "string", "expr": "#{Date.birthday '18','80'}"
+                },
+                "directSubscription": {
+                    "_gen": "boolean"
+                },
+                "membershipLevel": {
+                    "_gen": "oneOf", "choices": ["free", "pro", "elite"]
+                },
+                "shippingAddress": {
+                    "_gen": "string", "expr": "#{Address.fullAddress}"
+                },
+                "activationDate": {
+                    "_gen": "formatDateTime",
+                    "ms": {
+                        "_gen": "uniformDistribution",
+                        "bounds": [ 1710176905, { "_gen": "now" } ]
+                    }
+                }
+            }
+        },
+        {
+            "topic": "orders",
+            "value": {
+                "orderId": { "_gen": "uuid" },
+                "customerId": {
+                    "_gen": "lookup",
+                    "topic": "customers",
+                    "path": ["value", "customerId"]
+                },
+                "orderNumber": {
+                    "_gen": "sequentialInteger"
+                },
+                "product": { "_gen": "string", "expr": "#{Commerce.productName}" },
+                "backordered": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        { "weight": 19, "value": false },
+                        { "weight": 1,  "value": true }
+                    ]
+                },
+                "cost": {
+                    "_gen": "normalDistribution",
+                    "mean": 100,
+                    "sd": 20
+                },
+                "description": { "_gen": "string", "expr": "#{Lorem.paragraph}" },
+                "create_ts": { "_gen": "now" },
+                "creditCardNumber": { "_gen": "string", "expr": "#{Business.creditCardNumber}" },
+                "discountPercent": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0, 10],
+                    "decimals": 0
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### The kitchen sink: Postgres retail data
+
+```json
+{
+    "generators": [
+        {
+            "table": "customers",
+            "row": {
+                "customerId": { "_gen": "uuid" },
+                "name": {
+                    "_gen": "string", "expr": "#{Name.fullName}"
+                },
+                "birthday": {
+                    "_gen": "string", "expr": "#{Date.birthday '18','80'}"
+                },
+                "directSubscription": {
+                    "_gen": "boolean"
+                },
+                "membershipLevel": {
+                    "_gen": "oneOf", "choices": ["free", "pro", "elite"]
+                },
+                "shippingAddress": {
+                    "_gen": "string", "expr": "#{Address.fullAddress}"
+                },
+                "activationDate": {
+                    "_gen": "formatDateTime",
+                    "ms": {
+                        "_gen": "uniformDistribution",
+                        "bounds": [ 1710176905, { "_gen": "now" } ]
+                    }
+                }
+            }
+        },
+        {
+            "table": "orders",
+            "row": {
+                "orderId": { "_gen": "uuid" },
+                "customerId": {
+                    "_gen": "lookup",
+                    "table": "customers",
+                    "path": ["customerId"]
+                },
+                "orderNumber": {
+                    "_gen": "sequentialInteger"
+                },
+                "product": { "_gen": "string", "expr": "#{Commerce.productName}" },
+                "backordered": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        { "weight": 19, "value": false },
+                        { "weight": 1,  "value": true }
+                    ]
+                },
+                "cost": {
+                    "_gen": "normalDistribution",
+                    "mean": 100,
+                    "sd": 20
+                },
+                "description": { "_gen": "string", "expr": "#{Lorem.paragraph}" },
+                "create_ts": { "_gen": "now" },
+                "creditCardNumber": { "_gen": "string", "expr": "#{Business.creditCardNumber}" },
+                "discountPercent": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0, 10],
+                    "decimals": 0
+                }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### The kitchen sink: S3 retail data
+
+```json
+{
+    "generators": [
+        {
+            "bucket": "customers",
+            "bucketConfigs": {
+                "format": "jsonl",
+                "keyPrefix": "part-"
+            },
+            "data": {
+                "customerId": { "_gen": "uuid" },
+                "name": {
+                    "_gen": "string", "expr": "#{Name.fullName}"
+                },
+                "birthday": {
+                    "_gen": "string", "expr": "#{Date.birthday '18','80'}"
+                },
+                "directSubscription": {
+                    "_gen": "boolean"
+                },
+                "membershipLevel": {
+                    "_gen": "oneOf", "choices": ["free", "pro", "elite"]
+                },
+                "shippingAddress": {
+                    "_gen": "string", "expr": "#{Address.fullAddress}"
+                },
+                "activationDate": {
+                    "_gen": "formatDateTime",
+                    "ms": {
+                        "_gen": "uniformDistribution",
+                        "bounds": [ 1710176905, { "_gen": "now" } ]
+                    }
+                }
+            }
+        },
+        {
+            "bucket": "orders",
+            "bucketConfigs": {
+                "format": "jsonl",
+                "keyPrefix": "part-"
+            },
+            "data": {
+                "orderId": { "_gen": "uuid" },
+                "customerId": {
+                    "_gen": "lookup",
+                    "bucket": "customers",
+                    "path": ["data", "customerId"]
+                },
+                "orderNumber": {
+                    "_gen": "sequentialInteger"
+                },
+                "product": { "_gen": "string", "expr": "#{Commerce.productName}" },
+                "backordered": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        { "weight": 19, "value": false },
+                        { "weight": 1,  "value": true }
+                    ]
+                },
+                "cost": {
+                    "_gen": "normalDistribution",
+                    "mean": 100,
+                    "sd": 20
+                },
+                "description": { "_gen": "string", "expr": "#{Lorem.paragraph}" },
+                "timestamp": { "_gen": "now" },
+                "creditCardNumber": { "_gen": "string", "expr": "#{Business.creditCardNumber}" },
+                "discountPercent": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0, 10],
+                    "decimals": 0
+                }
+            }
+        }
+    ],
+    "connections": {
+        "s3": {
+            "kind": "s3"
+        }
+    }
+}
+```
+
+-----
+
+### Customers have a name, age, and membership level
+
+```json
+{
+    "generators": [
+        {
+            "table": "customers",
+            "row": {
+                "name": {
+                    "_gen": "string",
+                    "expr": "#{Name.full_name}"
+                },
+                "age": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [
+                        18,
+                        120
+                    ],
+                    "decimals": 0
+                },
+                "membership": {
+                    "_gen": "oneOf",
+                    "choices": [
+                        "gold",
+                        "silver",
+                        "bronze"
+                    ]
+                }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### 57% of votes are cast for Franklin Roosevelt
+
+```json
+{
+    "generators": [
+        {
+            "topic": "votes",
+            "key": {
+                "voterId": {
+                    "_gen": "uuid"
+                }
+            },
+            "value": {
+                "candidate": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        {
+                            "weight": 57,
+                            "value": "Franklin Roosevelt"
+                        },
+                        {
+                            "weight": 43,
+                            "value": "Herbert Hoover"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Transactions are uniformly priced between $2 and $200
+
+```json
+{
+    "generators": [
+        {
+            "topic": "transactions",
+            "key": {
+                "_gen": "uuid"
+            },
+            "value": {
+                "price": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [
+                        2,
+                        200
+                    ],
+                    "decimals": 2
+                },
+                "timestamp": {
+                    "_gen": "now"
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Orders have a pre-existing customer
+
+```json
+{
+    "generators": [
+        {
+            "topic": "customers",
+            "key": {
+                "name": {
+                    "_gen": "string",
+                    "expr": "#{Name.full_name}"
+                }
+            }
+        },
+        {
+            "topic": "orders",
+            "value": {
+                "orderId": {
+                    "_gen": "uuid"
+                },
+                "customerId": {
+                    "_gen": "lookup",
+                    "topic": "customers",
+                    "path": [
+                        "key",
+                        "name"
+                    ]
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Support ticket messages arrive every 5000ms
+
+```json
+{
+    "generators": [
+        {
+            "connection": "dev-pg",
+            "table": "customers",
+            "row": {
+                "username": {
+                    "_gen": "string",
+                    "expr": "#{Name.username}"
+                },
+                "address": {
+                    "_gen": "string",
+                    "expr": "#{Address.full_address}"
+                }
+            }
+        },
+        {
+            "connection": "dev-kafka",
+            "topic": "purchases",
+            "key": {
+                "_gen": "uuid"
+            },
+            "value": {
+                "customerId": {
+                    "_gen": "lookup",
+                    "connection": "dev-pg",
+                    "table": "customers",
+                    "path": [
+                        "username"
+                    ]
+                },
+                "product": {
+                    "_gen": "string",
+                    "expr": "#{Commerce.product_name}"
+                },
+                "creditCard": {
+                    "_gen": "string",
+                    "expr": "#{Finance.credit_card}"
+                }
+            }
+        },
+        {
+            "connection": "dev-kafka",
+            "topic": "supportTickets",
+            "key": {
+                "_gen": "lookup",
+                "topic": "purchases",
+                "path": [
+                    "key"
+                ]
+            },
+            "value": {
+                "timestamp": {
+                    "_gen": "now"
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 5000
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+		"key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        },
+        "dev-pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "username": "postgres",
+                "password": "postgres",
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Publish 80% of the tweets from 20% of the users
+
+```json
+{
+    "generators": [
+        {
+            "topic": "users",
+            "key": {
+                "_gen": "string",
+                "expr": "#{Name.username}"
+            }
+        },
+        {
+            "topic": "tweets",
+            "value": {
+                "userId": {
+                    "_gen": "lookup",
+                    "topic": "users",
+                    "path": [
+                        "key"
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            {
+                                "bin": 0.2,
+                                "frequency": 8
+                            },
+                            {
+                                "bin": 0.8,
+                                "frequency": 2
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Send messages every 500 ms with a std dev of 40 ms
+
+```json
+{
+    "generators": [
+        {
+            "table": "messages",
+            "vars": {
+                "delay": {
+                    "_gen": "normalDistribution",
+                    "mean": 500,
+                    "sd": 40
+                }
+            },
+            "row": {
+                "id": {
+                    "_gen": "string",
+                    "expr": "#{Internet.macAddress}"
+                },
+                "delay": {
+                    "_gen": "var",
+                    "var": "delay"
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "var",
+                    "var": "delay"
+                }
+            }
+        }       
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Place exactly 15 orders
+
+```json
+{
+    "generators": [
+        {
+            "table": "orders",
+            "row": {
+                "orderId": {
+                    "_gen": "uuid"
+                },
+                "orderDate": {
+		    "_gen" : "formatDateTime",
+		    "ms" : {
+			"_gen" : "now"
+		    },
+		    "format" : "yyyy-MM-dd"
+		}
+            },
+            "localConfigs": {
+                "maxEvents": 15
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Pick a date/timestamp between yesterday and tomorrow
+
+```json
+{
+    "generators": [
+        {
+            "table": "sensorReadings",
+            "vars": {
+                "now": {
+                    "_gen": "now"
+                }
+            },
+            "row": {
+                "reading": {
+                    "_gen": "normalDistribution",
+                    "mean": 50,
+                    "sd": 4
+                },
+                "timestamp": {
+                    "_gen": "formatDateTime",
+                    "ms": {
+                        "_gen": "uniformDistribution",
+                        "bounds": [
+                            {
+                                "_gen": "subtract",
+                                "args": [
+                                    { "_gen": "var", "var": "now" },
+                                    86400000
+                                ]
+                            },
+                            {
+                                "_gen": "add",
+                                "args": [
+                                    { "_gen": "var", "var": "now" },
+                                    86400000
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### 5 sensors whose value is the previous value plus a random number between -1 and 1
+
+```json
+{
+    "generators": [
+        {
+            "table": "sensors",
+            "fork": {
+                "key": {
+                    "_gen": "sequentialString",
+                    "expr": "sensor-~d"
+                },
+                "maxForks": 5,
+                "stagger": { "ms": 250 }
+            },
+            "row": {
+                "sensorId": {
+                    "_gen": "var", "var": "forkKey"
+                },
+                "timestamp": {
+                    "_gen": "now",
+                    "serialize": {
+                        "type": "postgresTimestamp"
+                    }
+                }
+            },
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "start",
+                "transitions": {
+                    "start": "update",
+                    "update": "update"
+                },
+                "states": {
+                    "start": {
+                        "row": {
+                            "value": {
+                                "_gen": "normalDistribution",
+                                "mean": 50,
+                                "sd": 5
+                            }
+                        }
+                    },
+                    "update": {
+                        "row": {
+                            "value": {
+                                "_gen": "add",
+                                "args": [
+                                    {
+                                        "_gen": "uniformDistribution",
+                                        "bounds": [-1, 1]
+                                    },
+                                    {
+                                        "_gen": "previousEvent",
+                                        "path": [ "row", "value" ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 1000
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "username": "postgres",
+                "password": "postgres",
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Telemetry data gets randomly delayed 10% of the time, discarded 2% of the time, and repeated 5% of the time
+
+```json
+{
+    "generators": [
+        {
+            "topic": "telemetryEvents",
+	    "value": {
+		"latency": {
+		    "_gen": "normalDistribution",
+                    "mean": 15,
+                    "sd": 2
+                }
+	    },
+	    "localConfigs": {
+                "delay": {
+                    "rate": 0.1,
+                    "ms": {
+                        "_gen": "uniformDistribution",
+                        "bounds": [200, 800]
+                    }
+                },
+		"discard": {
+		    "rate": 0.02
+		},
+                "repeat": {
+                    "rate": 0.05,
+                    "times": 2
+                }
+	    }
+        }
+    ],
+    "connections": {
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### A stream of the h2o dataset configured for n=10M, k=10
+
+```json
+{
+    "generators": [
+        {
+            "table": "h2oGroupBy",
+            "varsOnce": {
+                "n": 10000000,
+                "k": 10
+            },
+            "vars": {
+                "id1": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, { "_gen": "var", "var": "k" }],
+                    "decimals": 0
+                },
+                "id2": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, { "_gen": "var", "var": "k" }],
+                    "decimals": 0
+                },
+                "id3": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, {
+                        "_gen": "divide",
+                        "args": [{ "_gen": "var", "var": "n" }, { "_gen": "var", "var": "k" }]
+                    }],
+                    "decimals": 0
+                }
+            },
+            "row": {
+                "id1": { "_gen": "string", "expr": "id#{id1}" },
+                "id2": { "_gen": "string", "expr": "id#{id2}" },
+                "id3": { "_gen": "string", "expr": "id#{id3}" },
+                "id4": { "_gen": "uniformDistribution", "bounds": [1, { "_gen": "var", "var": "k" }], "decimals": 0 },
+                "id5": { "_gen": "uniformDistribution", "bounds": [1, { "_gen": "var", "var": "k" }], "decimals": 0 },
+                "id6": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, {
+                        "_gen": "divide",
+                        "args": [ { "_gen": "var", "var": "n" }, { "_gen": "var", "var": "k" } ]
+                    }],
+                    "decimals": 0
+                },
+                "v1": { "_gen": "uniformDistribution", "bounds": [1, 5], "decimals": 0 },
+                "v2": { "_gen": "uniformDistribution", "bounds": [1, 15], "decimals": 0 },
+                "v3": { "_gen": "uniformDistribution", "bounds": [0, 100] }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### An inventory of films are tracked in 100 stores, like the Sakila dataset
+
+```json
+{
+    "generators": [
+        {
+            "table": "store",
+            "fork": {
+                "key": {
+                    "_gen": "uuid"
+                },
+                "maxForks": 100
+            },
+            "row": {
+                "store_id": {
+                    "_gen": "var",
+                    "var": "forkKey"
+                },
+                "manager_staff_id": {
+                    "_gen": "uuid"
+                },
+                "address_id": {
+                    "_gen": "uuid"
+                },
+                "last_update": {
+                    "_gen": "now"
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 1000
+            }
+        },
+        {
+            "table": "inventory",
+            "row": {
+                "inventory_id": {
+                    "_gen": "uuid"
+                },
+                "film_id": {
+                    "_gen": "lookup",
+                    "table": "film",
+                    "path": [
+                        "film_id"
+                    ]
+                },
+                "store_id": {
+                    "_gen": "lookup",
+                    "table": "store",
+                    "path": [ "store_id" ]
+                },
+                "last_update": {
+                    "_gen": "now"
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 200
+            }
+        },
+        {
+            "table": "film",
+            "row": {
+                "film_id": {
+                    "_gen": "uuid"
+                },
+                "title": {
+                    "_gen": "string",
+                    "expr": "#{Lorem.sentence}"
+                },
+                "description": {
+                    "_gen": "string",
+                    "expr": "#{Lorem.sentence}"
+                },
+                "release_year": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1900, 2023],
+                    "decimals": 0
+                },
+                "language_id": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, 10],
+                    "decimals": 0
+                },
+                "original_language_id": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, 10],
+                    "decimals": 0
+                },
+                "rental_duration": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [3, 10],
+                    "decimals": 0
+                },
+                "rental_rate": {
+                    "_gen": "normalDistribution",
+                    "mean": 10,
+                    "sd": 3,
+                    "decimals": 0
+                },
+                "length": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [60, 240],
+                    "decimals": 0
+                },
+                "replacement_cost": {
+                    "_gen": "normalDistribution",
+                    "mean": 20,
+                    "sd": 4
+                },
+                "rating": {
+                    "_gen": "oneOf",
+                    "choices": ["G", "PG", "PG-13", "R", "NC-17"]
+                },
+                "last_update": {
+                    "_gen": "now"
+                },
+                "special_features": {
+                    "_gen" : "repeatedly",
+                    "n" : {
+                        "_gen" : "uniformDistribution",
+                        "bounds" : [
+                            0,
+                            5
+                        ]
+                    },
+                    "target" : {
+                        "_gen" : "string",
+                        "expr" : "#{Lorem.sentence}"
+                    }
+                } ,
+                "fulltext": {
+                    "_gen": "string",
+                    "expr": "#{Lorem.paragraph}"
+                }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "username": "postgres",
+                "password": "your_password",
+                "db": "your_database_name"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### A new user comes online every 250ms and changes their IP every 1 second
+
+```json
+{
+    "generators": [
+        {
+            "table": "users",
+            "fork": {
+                "key": { "_gen": "uuid" },
+                "stagger": { "ms": 250 }
+            },
+            "varsOnce": {
+                "emailAddress": {
+                    "_gen": "string",
+                    "expr": "#{Internet.emailAddress}"
+                }
+            },
+            "row": {
+                "id": { "_gen": "var", "var": "forkKey", "pgHint": "uuid" },
+                "emailAddress": { "_gen": "var", "var": "emailAddress" },
+                "lastKnownIp": {
+                    "_gen": "string",
+                    "expr": "#{Internet.ipV4Address}"
+                }
+            },
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "insert",
+                "transitions": {
+                    "insert": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            { "weight": 4, "value": "update" },
+                            { "weight": 1, "value": "delete" }
+                        ]
+                    },
+                    "update": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            { "weight": 3, "value": "update" },
+                            { "weight": 1, "value": "delete" }
+                        ]
+                    }
+                },
+                "states": {
+                    "insert": {
+                        "op": "insert"
+                    },
+                    "update": {
+                        "op": "update",
+                        "where": {
+                            "id": { "_gen": "var", "var": "forkKey" }
+                        }
+                    },
+                    "delete": {
+                        "op": "delete",
+                        "where": {
+                            "id": { "_gen": "var", "var": "forkKey" }
+                        }
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 1000
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "tablePolicy": "dropAndCreate",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "username": "postgres",
+                "password": "postgres",
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### 50 machines DDOSing EC2 instances in us-east-1 with ~200 byte packets every 10 ms
+
+```json
+{
+    "generators": [
+        {
+            "topic": "packets",
+            "fork": {
+                "key": {
+                    "_gen": "string",
+                    "expr": "#{Internet.ipV4Address}"
+                },
+                "maxForks": 50
+            },
+            "vars": {
+                "octet": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, 14],
+                    "decimals": 0
+                }
+            },
+            "key": { "_gen": "uuid" },
+            "value": {
+                "sourceIP": { "_gen": "var", "var": "forkKey" },
+                "destinationIP": {
+                    "_gen": "string",
+                    "expr": "52.4.0.0.#{octet}"
+                },
+                "create_ts": {
+                    "_gen": "now"
+                },
+                "packetSizeBytes": {
+                    "_gen": "normalDistribution",
+                    "mean": 200,
+                    "sd": 4,
+                    "decimals": 0
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0, 20]
+                }
+            }
+        }        
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Suspicious accounts transacting that log in with a new IP address 1% of the time
+
+```json
+{
+    "generators": [
+        {
+            "topic": "accounts",
+            "key": {
+                "accountId": {
+                    "_gen": "sequentialInteger"
+                }
+            },
+            "value": {
+                "name": {
+                    "_gen": "string",
+                    "expr": "#{Name.fullName}"
+                       
+                },
+                "accountType": {
+                    "_gen": "oneOf",
+                    "choices": ["checking", "savings"]
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 500
+            }
+        },
+        {
+            "topic": "transactions",
+            "key": {
+                "transactionId": {
+                    "_gen": "uuid"
+                }
+            },
+            "value": {
+                "accountId": {
+                    "_gen": "lookup",
+                    "topic": "accounts",
+                    "path": ["key", "accountId"]
+                },
+                "amount": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        {
+                            "weight": 19,
+                            "value": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [1, 300]
+                            }
+                        },
+                        {
+                            "weight": 1,
+                            "value": {
+                                "_gen": "normalDistribution",
+                                "mean": 3000,
+                                "sd": 500
+                            }
+                        }
+                    ]
+                },
+                "transactionCategory": {
+                    "_gen": "string",
+                    "expr": "#{Commerce.department}"
+                },
+                "timestamp": {
+                    "_gen": "now"
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 150
+            }
+        },
+        {
+            "topic": "logins",
+            "fork": {
+                "key": {
+                    "_gen": "lookup",
+                    "topic": "accounts",
+                    "path": ["key", "accountId"]
+                },
+                "staggerMs": 500
+            },
+            "varsOnce": {
+                "ip": {
+                    "_gen": "string",
+                    "expr": "#{Internet.ipV4Address}"
+                }
+            },
+            "value": {
+                "accountId": {
+                    "_gen": "var",
+                    "var": "forkKey"
+                },
+                "ip": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        {
+                            "weight": 99,
+                            "value": {
+                                "_gen": "var",
+                                "var": "ip"
+                            }
+                        },
+                        {
+                            "weight": 1,
+                            "value": {
+                                "_gen": "string",
+                                "expr": "#{Internet.ipV4Address}"
+                            }
+                        }
+                    ]
+                },
+                "timestamp": {
+                    "_gen": "now"
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 500
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### 30 JVMs report their heap readings every 250 ms which oscillate around 50 mb
+
+```json
+{
+    "generators": [
+        {
+            "topic": "jvmHeapReadings",
+            "fork": {
+                "key": {
+                    "_gen": "sequentialString",
+                    "expr": "jvm-~d"
+                },
+                "maxForks": 30,
+                "stagger": { "ms": 2000 }
+            },
+            "key": {
+                "jvmId": {
+                    "_gen": "var", "var": "forkKey"
+                }
+            },
+            "value": {
+                "timestamp": {
+                    "_gen": "now"
+                }
+            },
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "start",
+                "transitions": {
+                    "start": "update",
+                    "update": "update"
+                },
+                "states": {
+                    "start": {
+                        "value": {
+                            "heapSize": {
+                                "_gen": "normalDistribution",
+                                "mean": 50,
+                                "sd": 5
+                            }
+                        }
+                    },
+                    "update": {
+                        "value": {
+                            "heapSize": {
+                                "_gen": "add",
+                                "args": [
+                                    {
+                                        "_gen": "uniformDistribution",
+                                        "bounds": [-1, 1]
+                                    },
+                                    {
+                                        "_gen": "previousEvent",
+                                        "path": [ "value", "heapSize" ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttle": {
+                    "ms": 250
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### 200 merchants have their businesses audited once every ~25 days
+
+```json
+{
+    "generators": [
+        {
+            "topic": "merchants",
+            "key": {
+                "merchantId": {
+                    "_gen": "sequentialString",
+                    "expr": "merchant-~d"
+                }
+            },
+            "value": {
+                "name": {
+                    "_gen": "string",
+                    "expr": "#{Company.name}"
+                },
+                "location": {
+                    "_gen": "string",
+                    "expr": "#{Address.latitude}, #{Address.longitude}"
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [500, 2000]
+                },
+                "maxEvents": 200
+            }
+        },
+        {
+            "topic": "audits",
+            "value": {
+                "against": {
+                    "_gen": "lookup",
+                    "topic": "merchants",
+                    "path": ["key", "merchantId"]
+                },
+                "auditDate": {
+                    "_gen": "formatDateTime",
+                    "format": "yyy-MM-dd",
+                    "ms": {
+                        "_gen": "subtract",
+                        "args": [
+                            {
+                                "_gen": "now"
+                            },
+                            {
+                                "_gen": "uniformDistribution",
+                                "bounds": [604800000, 2592000000]
+                            }
+                        ]
+                    }
+                },
+                "findings": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        { "weight": 9, "value": "Acceptable" },
+                        { "weight": 1, "value": "KYC violation" }
+                    ]
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "normalDistribution",
+                    "mean": 2160000000,
+                    "sd": 500000
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Inventory is updated every 200ms and queries check its status every 500ms
+
+```json
+{
+    "generators": [
+        {
+            "topic": "transaction.input.topic",
+            "value": {
+                "transactionId": {
+                    "_gen": "sequentialInteger"
+                },
+                "ts": {
+                    "_gen": "now"
+                },
+                "itemId": {
+                    "_gen": "sequentialString",
+                    "expr": "item_~d"
+                },
+                "quantity": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, 5],
+                    "decimals": 0
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "normalDistribution",
+                    "mean": 200,
+                    "sd": 50
+                }
+            }
+        },
+        {
+            "topic": "query.input.topic",
+            "value": {
+                "queryId": {
+                    "_gen": "sequentialInteger"
+                },
+                "ts": {
+                    "_gen": "now"
+                },
+                "itemId": {
+                    "_gen": "lookup",
+                    "topic": "transaction.input.topic",
+                    "path": [ "value", "itemId" ]
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 500
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### A stream of rides from New York's yellow taxi network
+
+```json
+{
+    "generators": [
+        {
+            "table": "rides",
+            "vars": {
+                "pickup": {
+                    "_gen": "now"
+                },
+                "dropoff": {
+                    "_gen": "add",
+                    "args": [
+                        { "_gen": "var", "var": "pickup" },
+                        { "_gen": "normalDistribution", "mean": 600, "sd": 100}
+                    ]
+                },
+                "fare_amount": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [2.5, 200.0],
+                    "decimals": 2
+                },
+                "extra": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0.0, 50.0],
+                    "decimals": 2
+                },
+                "mta_tax": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0.5, 1.0],
+                    "decimals": 2
+                },
+                "tip_amount": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0.0, 100.0],
+                    "decimals": 2
+                },
+                "tolls_amount": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0.0, 50.0],
+                    "decimals": 2
+                },
+                "improvement_surcharge": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0.3, 0.4],
+                    "decimals": 2
+                }
+            },
+            "row": {
+                "vendor_id": {
+                    "_gen": "string",
+                    "expr": "#{Company.name}"
+                },
+                "pickup_datetime": {
+                    "_gen": "var",
+                    "var": "pickup"
+                },
+                "dropoff_datetime": {
+                    "_gen": "var",
+                    "var": "dropoff"
+                },
+                "passenger_count": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [1, 6],
+                    "decimals": 0
+                },
+                "trip_distance": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0.1, 100.0]
+                },
+                "pickup_longitude": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [-180, 180]
+                },
+                "pickup_latitude": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [-90, 90]
+                },
+                "rate_code": {
+                    "_gen": "oneOf",
+                    "choices": [1, 2, 3, 4, 5, 6]
+                },
+                "dropoff_longitude": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [-180, 180]
+                },
+                "dropoff_latitude": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [-90, 90]
+                },
+                "payment_type": {
+                    "_gen": "oneOf",
+                    "choices": [1, 2, 3, 4, 5, 6]
+                },
+                "fare_amount": { "_gen": "var", "var": "fare_amount" },
+                "extra": { "_gen": "var", "var": "extra" },
+                "mta_tax": { "_gen": "var", "var": "mta_tax" },
+                "tip_amount": { "_gen": "var", "var": "tip_amount" },
+                "tolls_amount": { "_gen": "var", "var": "tolls_amount" },
+                "improvement_surcharge": { "_gen": "var", "var": "improvement_surcharge" },
+                "total_amount": {
+                    "_gen": "add",
+                    "args": [
+                        { "_gen": "var", "var": "fare_amount" },
+                        { "_gen": "var", "var": "extra" },
+                        { "_gen": "var", "var": "mta_tax" },
+                        { "_gen": "var", "var": "tolls_amount" },
+                        { "_gen": "var", "var": "improvement_surcharge" }
+                    ]
+                }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Shopping carts add items, check out, and sometimes get abandoned
+
+```json
+{
+    "generators": [
+        {
+            "topic": "shoppingCarts",
+            "fork": {
+                "key": {
+                    "_gen": "string",
+                    "expr": "#{Name.username}"
+                },
+                "stagger": {
+                    "ms": 1000
+                }
+            },
+            "key": {
+                "cartId": { "_gen": "var", "var": "forkKey" }
+            },
+            "value": {
+                "timestamp": {
+                    "_gen": "now"
+                }
+            },
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "OPEN",
+                "transitions": {
+                    "OPEN": {
+                        "_gen": "oneOf",
+                        "choices": ["OPEN", "MODIFIED", "CANCELLED"]
+                    },
+                    "MODIFIED": {
+                        "_gen": "oneOf",
+                        "choices": ["MODIFIED", "CHECKED_OUT", "CANCELLED"]
+                    }
+                },
+                "states": {
+                    "OPEN": {
+                        "value": {
+                            "cartState": "OPEN"
+                        }
+                    },
+                    "MODIFIED": {
+                        "value": {
+                            "cartState": "MODIFIED",
+                            "items": {
+                                "_gen": "repeatedly",
+                                "n": {
+                                    "_gen": "uniformDistribution",
+                                    "bounds": [1, 3]
+                                },
+                                "target": {
+                                    "_gen": "string",
+                                    "expr": "#{Commerce.productName}"
+                                }
+                            },
+                            "additionalCost": {
+                                "_gen": "normalDistribution",
+                                "mean": 50,
+                                "sd": 10,
+                                "decimals": 2
+                            }
+                        }
+                    },
+                    "CHECKED_OUT": {
+                        "value": {
+                            "cartState": "CHECKED_OUT"
+                        }
+                    },
+                    "CANCELLED": {
+                        "value": {
+                            "cartState": "CANCELLED"
+                        }
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "normalDistribution",
+                    "mean": 60000,
+                    "sd": 10000
+                }
+            }
+
+        }
+    ],
+    "connections": {
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### The Nexmark streaming benchmark of auction streams
+
+```json
+{
+    "generators": [
+        {
+            "topic": "people",
+            "value": {
+                "id": { "_gen": "sequentialInteger" },
+                "name": { "_gen": "string", "expr": "#{Name.fullName}" },
+                "emailAddress": { "_gen": "string", "expr": "#{Internet.emailAddress}" },
+                "creditCard": { "_gen": "string", "expr": "#{Finance.creditCard}" },
+                "city": { "_gen": "string", "expr": "#{Address.cityName}" },
+                "state": { "_gen": "string", "expr": "#{Address.state}" },
+                "dateTime": {"_gen": "now"},
+                "extra": ""
+            },
+            "localConfigs": {
+                "throttleMs": { "_gen": "normalDistribution", "mean": 2000, "sd": 500 }
+            }
+        },
+        {
+            "topic": "auctions",
+            "vars": {
+                "now": { "_gen": "now" }
+            },
+            "value": {
+                "id": { "_gen": "sequentialInteger" },
+                "itemName": { "_gen": "string", "expr": "#{Commerce.productName}" },
+                "description": { "_gen": "string", "expr": "#{Lorem.sentence}" },
+                "initialBid": { "_gen": "uniformDistribution", "bounds": [0, 100], "decimals": 2 },
+                "reserve": { "_gen": "uniformDistribution", "bounds": [5, 25], "decimals": 2 },
+                "dateTime": { "_gen": "var", "var": "now" },
+                "expires": {
+                    "_gen": "add",
+                    "args": [
+                        { "_gen": "var", "var": "now" },
+                        { "_gen": "uniformDistribution", "bounds": [1800, 7200] }
+                    ]
+                },
+                "seller": {
+                    "_gen": "lookup",
+                    "topic": "people",
+                    "path": ["value", "name"]
+                },
+                "category": { "_gen": "uniformDistribution", "bounds": [1, 5], "decimals": 0 },
+                "extra": ""
+            },
+            "localConfigs": {
+                "throttleMs": { "_gen": "normalDistribution", "mean": 1000, "sd": 200 }
+            }
+        },
+        {
+            "topic": "bids",
+            "value": {
+                "auction": {
+                    "_gen": "lookup",
+                    "topic": "auctions",
+                    "path": ["value", "id"]
+                },
+                "bidder": {
+                    "_gen": "lookup",
+                    "topic": "people",
+                    "path": ["value", "id"]
+                },
+                "price": { "_gen": "uniformDistribution", "bounds": [0, 200], "decimals": 2 },
+                "channel": {
+                    "_gen": "oneOf",
+                    "choices": ["Google", "Facebook", "Baidu", "Apple"]
+                },
+                "url": { "_gen": "string", "expr": "#{Internet.url}" },
+                "dateTime": { "_gen": "now" },
+                "extra": ""
+            },
+            "localConfigs": {
+                "throttleMs": { "_gen": "normalDistribution", "mean": 500, "sd": 100 }
+            }
+        }
+    ],
+    "connections": {
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### 70% of all posts are from repeat users
+
+```json
+{
+    "generators": [
+        {
+            "table": "posts",
+            "row": {
+                "poster": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        {
+                            "weight": 7,
+                            "value": {
+                                "_gen": "lookup",
+                                "table": "posts",
+                                "path": [
+                                    "poster"
+                                ]
+                            }
+                        },
+                        {
+                            "weight": 3,
+                            "value": {
+                                "_gen": "string",
+                                "expr": "#{Name.username}"
+                            }
+                        }
+                    ]
+                },
+                "timestamp": {
+                    "_gen": "now"
+                }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Harvest customer IDs from Postgres for Kafka events
+
+```json
+{
+    "generators": [
+        {
+            "connection": "postgres",
+            "table": "customers",
+            "row": {
+                "id": {
+                    "_gen": "uuid"
+                }
+            }
+        },
+        {
+            "connection": "kafka",
+            "topic": "orders",
+            "value": {
+                "customerId": {
+                    "_gen": "lookup",
+                    "connection": "postgres",
+                    "table": "customers",
+                    "path": [
+                        "id"
+                    ]
+                }
+            }
+        }
+    ],
+    "connections": {
+        "postgres": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "db": "mydb"
+            }
+        },
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Customers go through a 4-stage funnel
+
+```json
+{
+    "generators": [
+        {
+            "topic": "funnelEvents",
+            "fork": {
+                "key": {
+                    "_gen": "string",
+                    "expr": "#{Name.username}"
+                },
+                "stagger": { "ms": 200 }
+            },
+            "key": { "_gen": "var", "var": "forkKey" },
+            "value": {},
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "viewLandingPage",
+                "transitions": {
+                    "viewLandingPage": "addItemToCart",
+                    "addItemToCart": {
+                        "_gen": "oneOf",
+                        "choices": [
+                            "viewCart",
+                            "addItemToCart"
+                        ]
+                    },
+                    "viewCart": "checkout"
+                },
+                "states": {
+                    "viewLandingPage": {
+                        "value": {
+                            "stageName": "landingPage",
+                            "referrer": {
+                                "_gen": "string",
+                                "expr": "#{Internet.url}"
+                            }
+                        }
+                    },
+                    "addItemToCart": {
+                        "value": {
+                            "stageName": "addItem",
+                            "item": {
+                                "_gen": "string",
+                                "expr": "#{Commerce.productName}"
+                            }
+                        }
+                    },
+                    "viewCart": {
+                        "value": {
+                            "stageName": "checkCart",
+                            "timestamp": {
+                                "_gen": "now"
+                            }
+                        }
+                    },
+                    "checkout": {
+                        "value": {
+                            "stageName": "purchase",
+                            "price": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [
+                                    1,
+                                    100
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttle": { "ms": 800 }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Debezium envelopes have 3 discrete states
+
+```json
+{
+    "generators": [
+        {
+            "topic": "cdc-events",
+            "fork": {
+                "key": { "_gen": "uuid" },
+                "stagger": { "ms": 500 }
+            },
+            "key": {
+                "_gen": "var", "var": "forkKey"
+            },
+            "value": {},
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "insert",
+                "merge": { "previous": true },
+                "transitions": {
+                    "insert": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            { "weight": 4, "value": "update" },
+                            { "weight": 1, "value": "delete" }
+                        ]
+                    },
+                    "update": {
+                        "_gen": "oneOf",
+                        "choices": [
+                            "update", "delete"
+                        ]
+                    },
+                    "delete": "insert"
+                },
+                "states": {
+                    "insert": {
+                        "value": {
+                            "op": "c",
+                            "payload": {
+                                "before": null,
+                                "after": {
+                                    "id": { "_gen": "var", "var": "forkKey" },
+                                    "firstName": { "_gen": "string", "expr": "#{Name.first_name}" },
+                                    "lastName": { "_gen": "string", "expr": "#{Name.last_name}" },
+                                    "email": { "_gen": "string", "expr": "#{Internet.email_address}" }
+                                }
+                            }
+                        }
+                    },
+                    "update": {
+                        "value": {
+                            "op": "u",
+                            "payload": {
+                                "before": { "_gen": "previousEvent", "path": [ "value", "payload", "after" ] },
+                                "after": {
+                                    "_gen": "someKeys",
+                                    "object": {
+                                        "firstName": { "_gen": "string", "expr": "#{Name.first_name}" },
+                                        "lastName": { "_gen": "string", "expr": "#{Name.last_name}" },
+                                        "email": { "_gen": "string", "expr": "#{Internet.email_address}" }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "delete": {
+                        "value": {
+                            "op": "d",
+                            "payload": {
+                                "before": { "_gen": "previousEvent", "path": [ "value", "payload", "after" ] },
+                                "after": null
+                            }
+                        }
+
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 250
+            }
+        }
+    ],
+    "connections": {
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### 3 support agents field phone calls, arriving once a second
+
+```json
+{
+    "generators": [
+        {
+            "topic": "agents",
+            "value": {"id": {"_gen": "sequentialInteger" }},
+            "localConfigs": {"maxEvents": 3}
+        },
+        {
+            "topic": "calls",
+            "fork": {
+                "key": {
+                    "_gen": "lookup",
+                    "topic": "agents",
+                    "path": [ "value", "id" ]
+                },
+                "stagger": { "ms": { "_gen": "normalDistribution", "mean": 1000, "sd": 200 } }
+            },
+            "varsOnce": {
+                "callId": {"_gen": "uuid"},
+                "duration": {"_gen": "uniformDistribution", "bounds": [1000, 4000]}
+            },
+            "value": {
+                "callId": {"_gen": "var", "var": "callId"},
+                "agentId": {"_gen": "var", "var": "forkKey"}
+            },
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "startCall",
+                "transitions": {"startCall": "endCall"},
+                "states": {
+                    "startCall": {"value": {"action": "start", "timestamp": {"_gen": "now"}}},
+                    "endCall": {"value": {"action": "end", "timestamp": {"_gen": "now"}}}
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {"_gen": "var", "var": "duration"},
+                "maxEvents": 2
+            }
+        }
+    ],
+    "connections": {
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Flights take off every 5 seconds and report their geolocation
+
+```json
+{
+    "generators": [
+        {
+            "topic": "flights",
+            "fork": {
+                "key": {
+                    "_gen": "sequentialString",
+                    "expr": "flight-~d"
+                },
+                "stagger": {"ms": 5000}
+            },
+            "varsOnce": {
+                "src": {
+                    "_gen": "oneOf",
+                    "choices": [
+                        [39.819527, -84.067406],
+                        [40.641766, -73.780968],
+                        [35.213890, -80.943054],
+                        [41.978611, -87.904724],
+                        [34.903271, -108.514519],
+                        [42.907768, -77.318970],
+                        [35.436077, -82.541298],
+                        [32.848152, -96.851349],
+                        [40.822773, -72.748634],
+                        [27.979168, -82.539337],
+                        [63.035789, -163.527863],
+                        [40.199387, -112.937469],
+                        [30.781055, -86.524994],
+                        [33.656384, -101.821861],
+                        [32.886677, -94.599251],
+                        [43.128002, -77.665474],
+                        [38.592724, -77.711441],
+                        [32.731770, -117.197624],
+                        [35.053238, -80.409195],
+                        [36.131687, -86.668823],
+                        [29.384344, -98.618645],
+                        [47.443546, -122.301659],
+                        [35.805813, -83.989815],
+                        [60.567402, -151.246719],
+                        [33.420696, -82.152374],
+                        [37.363949, -121.928940],
+                        [33.640411, -84.419853],
+                        [35.617500, -106.088333],
+                        [45.719906, -87.094070]]
+                },
+                "dst": {
+                    "_gen": "oneOf",
+                    "choices": [
+                        [39.053276, -84.663017],
+                        [32.732346, -117.196053],
+                        [33.457439, -111.727386],
+                        [33.678925, -117.862869],
+                        [37.615223, -122.389977],
+                        [32.015644, -81.143127],
+                        [33.942791, -118.410042],
+                        [38.272118, -121.939857],
+                        [36.213257, -115.194572],
+                        [44.871201, -73.286491],
+                        [36.086010, -115.153969],
+                        [39.849312, -104.673828],
+                        [42.905575, -112.588776],
+                        [33.257923, -116.321014],
+                        [35.660957, -95.359558],
+                        [63.889515, -160.799927],
+                        [36.264206, -93.154961],
+                        [37.030792, -113.508987],
+                        [42.949890, -87.900414],
+                        [42.365589, -71.010025],
+                        [35.040031, -89.981873],
+                        [37.225136, -89.569305],
+                        [32.897480, -97.040443],
+                        [34.914547, -92.142914],
+                        [29.080168, -81.046669],
+                        [33.975777, -83.963097]]
+                }
+            },
+            "vars": {
+                "step": {
+                    "_gen": "waypoints",
+                    "waypoints": [
+                        { "coordinates": { "_gen": "var", "var": "src" } },
+                        { "coordinates": { "_gen": "var", "var": "dst" } } 
+                    ],
+                    "speed": 500,
+                    "scale": 0.025
+                }
+            },
+            "value": {
+                "FlightId": {"_gen": "var", "var": "forkKey"},
+                "Latitude": {
+                    "_gen": "var",
+                    "var": "step",
+                    "path": ["latitude"]
+                },
+                "Longitude": {
+                    "_gen": "var",
+                    "var": "step",
+                    "path": ["longitude"]
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "var",
+                    "var": "step",
+                    "path": ["duration"]
+                },
+                "maxEvents": {"_gen": "var", "var": "step", "path": [ "points" ]}
+            }
+        }
+    ],
+    "connections": {
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Every ~2 seconds, a new game is scheduled to start with bets placed every ~500ms
+
+```json
+{
+    "generators": [
+        {
+            "topic": "games",
+            "fork": {
+                "key": {
+                    "_gen": "sequentialString",
+                    "expr": "game-~d"
+                },
+                "stagger": {
+                    "ms": {
+                        "_gen": "normalDistribution",
+                        "mean": 2000,
+                        "sd": 500
+                    }
+                }
+            },
+            "key": { "_gen": "var", "var": "forkKey" },
+            "value": {
+                "timestamp": {
+                    "_gen": "now"
+                }
+            },
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "schedule",
+                "transitions": {
+                    "schedule": "start",
+                    "start": "end"
+                },
+                "states": {
+                    "schedule": {
+                        "value": {
+                            "status": "scheduled"
+                        }
+                    },
+                    "start": {
+                        "value": {
+                            "status": "started"
+                        }
+                    },
+                    "end": {
+                        "value": {
+                            "status": "ended"
+                        }
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [500, 5000]
+                }
+            }
+        },
+        {
+            "topic": "bets",
+            "value": {
+                "gameId": {
+                    "_gen": "lookup",
+                    "topic": "games",
+                    "path": ["key"]
+                },
+                "betType": {
+                    "_gen": "oneOf",
+                    "choices": ["win", "lose", "tie"]
+                },
+                "betAmount": {
+                    "_gen": "normalDistribution",
+                    "mean": 200,
+                    "sd": 20
+                },
+                "timestamp": {
+                    "_gen": "now"
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [200, 600]
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Bots post social content that get likes and shares only 5% of the time each
+
+```json
+{
+    "generators": [
+        {
+            "topic": "users",
+            "key": {
+                "id": { "_gen": "uuid" }
+            },
+            "value": {
+                "username": {
+                    "_gen": "string",
+                    "expr": "#{Name.username}"
+                },
+                "updatedAt": {
+                    "_gen": "now"
+                },
+                "followerCount": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [0, 2000],
+                    "decimals": 0
+                },
+                "followingCount": {
+                    "_gen": "normalDistribution",
+                    "mean": 500,
+                    "sd": 200,
+                    "decimals": 0
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 1000
+            }
+        },
+        {
+            "topic": "posts",
+            "fork": {
+                "key": {
+                    "_gen": "uuid"
+                },
+                "stagger": {
+                    "ms": {
+                        "_gen": "uniformDistribution",
+                        "bounds": [15, 50]
+                    }
+                }
+            },
+            "key": {
+                "_gen": "var", "var": "forkKey"
+            },
+            "value": {
+                "by": {
+                    "_gen": "lookup",
+                    "topic": "users",
+                    "path": ["key", "id"]
+                },
+                "content": {
+                    "_gen": "string",
+                    "expr": "#{Lorem.paragraph}"
+                },
+                "timestamp": {
+                    "_gen": "now"
+                }
+            },
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "post",
+                "merge": { "previous": true },
+                "transitions": {
+                    "post": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            { "weight": 18, "value": "exit" },
+                            { "weight": 1, "value": "like" },
+                            { "weight": 1, "value": "share" }
+                        ]
+                    },
+                    "like": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            { "weight": 18, "value": "exit" },
+                            { "weight": 1, "value": "like" },
+                            { "weight": 1, "value": "share" }
+                        ]
+                    },
+                    "share":{
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            { "weight": 18, "value": "exit" },
+                            { "weight": 1, "value": "like" },
+                            { "weight": 1, "value": "share" }
+                        ]
+                    }
+                },
+                "states": {
+                    "post": {
+                        "value": {
+                            "likes": 0,
+                            "shares": 0
+                        }
+                    },
+                    "like": {
+                        "value": {
+                            "likes": {
+                                "_gen": "add", "args": [
+                                    { "_gen": "previousEvent", "path": ["value", "likes"] },
+                                    1
+                                ]
+                            }
+                        }
+                    },
+                    "share": {
+                        "value": {
+                            "shares": {
+                                "_gen": "add", "args": [
+                                    { "_gen": "previousEvent", "path": ["value", "shares"] },
+                                    1
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttleMs": {
+                    "_gen": "normalDistribution",
+                    "mean": 50,
+                    "sd": 20
+                },
+                "delay": {
+                    "rate": 0.1,
+                    "ms": {
+                        "_gen": "uniformDistribution",
+                        "bounds": [200, 800]
+                    }
+                },
+		"discard": {
+		    "rate": 0.02
+		},
+                "repeat": {
+                    "rate": 0.05,
+                    "times": 2
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### Latency is about 10 milliseconds, with bursts to 50 and 150 every 2 and 5 minutes
+
+```json
+{
+    "generators": [
+        {
+            "topic": "latencyReadings",
+            "value": {
+                "latency": {
+                    "_gen": "intervals",
+                    "intervals": [
+                        [ "*/5 * * * *", { "_gen": "normalDistribution", "mean": 150, "sd": 3 } ],
+                        [ "*/2 * * * *", { "_gen": "normalDistribution", "mean": 50, "sd": 2 } ]
+                    ],
+                    "defaultValue": {
+                        "_gen": "normalDistribution",
+                        "mean": 10,
+                        "sd": 1
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttleMs": 1000
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
+### A server transitions between healthcheck statuses every 15 seconds
+
+```json
+{
+    "generators": [
+        {
+            "table": "serverStatus",
+            "row": {
+                "server0": {
+                    "_gen": "stateMachine",
+                    "initial": "ok",
+                    "transitions": {
+                        "ok": {
+                            "_gen": "weightedOneOf",
+                            "choices": [{"value": "ok", "weight": 20}, {"value": "warn", "weight": 2}, {"value": "bad", "weight": 2}]
+                        },
+                        "warn": {
+                            "_gen": "weightedOneOf",
+                            "choices": [{"value": "ok", "weight": 5}, {"value": "warn", "weight": 15}, {"value": "bad", "weight": 2}]
+                        },
+                        "bad": {
+                            "_gen": "weightedOneOf",
+                            "choices": [{"value": "ok", "weight": 1}, {"value": "warn", "weight": 3}, {"value": "bad", "weight": 15}]
+                        }
+                    },
+                    "states": {
+                        "ok": "OK",
+                        "warn": "WARN",
+                        "bad": "BAD"
+                    },
+                    "pgHint": "text"
+                },
+                "timestamp": {
+                    "_gen": "now",
+                    "pgHint": "timestamp",
+                    "serialize": {
+                        "type": "postgresTimestamp"
+                    }
+                }
+            },
+            "localConfigs": {
+                "throttle": { "ms": 15000 }
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "tablePolicy": "dropAndCreate",
+            "connectionConfigs": {
+                "host": "localhost",
+                "port": 5432,
+                "username": "postgres",
+                "password": "postgres",
+                "db": "mydb"
+            }
+        }
+    }
+}
+```
+
+-----
+
+
+---
+
+## 📌 Version Compatibility
+
+Version-specific features are listed in the changelog.md section of the full documentation.
+
+---
+
+## ⛔️ DO NOT MODIFY BELOW THIS LINE  
+Everything below is a full snapshot of the canonical ShadowTraffic documentation. It is provided only for reference and retrieval.
+
+---
+
+## 📚 Full Documentation (Auto-Synced)
+
+```shadowtraffic-docs
 # index.md
 
 ## First steps
@@ -26563,3 +29481,6 @@ In this example, generator `a` is overriden to produce only `5` events, and `b` 
   }
 }
 ```
+
+```
+
