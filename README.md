@@ -1,7 +1,9 @@
 # ShadowTraffic AI context
 
-This repo contains artifacts that are useful for improving agentic coding tools ability to work with ShadowTraffic. It includes:
+This repo contains artifacts that improve agentic coding tools ability to work with ShadowTraffic. It includes:
 
-- **AI-friendly documentation**: foo bar
+- [**AI-friendly documentation**](/markdown-docs): LLMs love Markdown, so I compiled ShadowTraffic's documentation into a single, neatly formatted Markdown file. It's easy to drop into your LLM as a knowledge source, and it's automatically updated whenever ShadowTraffic's official docs change.
+
+✨ More to come. :)
 
 Happy to accept pull requests!
