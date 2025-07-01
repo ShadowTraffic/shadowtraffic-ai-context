@@ -1,8 +1,4 @@
-
-
-================================================================================
 # changelog.md
-================================================================================
 
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
@@ -13,7 +9,10 @@ Fri Jun 27 11:55:57 PDT 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Mitigates [CVE-2025-6020](https://nvd.nist.gov/vuln/detail/CVE-2025-6020).- 🐛 **Fixed**: Mitigates [CVE-2025-48976](https://nvd.nist.gov/vuln/detail/CVE-2025-48976).- 🐛 **Fixed**: Mitigates [CVE-2025-25724](https://nvd.nist.gov/vuln/detail/CVE-2025-25724).- 🐛 **Fixed**: Mitigates [CVE-2025-3576](https://nvd.nist.gov/vuln/detail/CVE-2025-3576).
+- 🐛 **Fixed**: Mitigates [CVE-2025-6020](https://nvd.nist.gov/vuln/detail/CVE-2025-6020).
+- 🐛 **Fixed**: Mitigates [CVE-2025-48976](https://nvd.nist.gov/vuln/detail/CVE-2025-48976).
+- 🐛 **Fixed**: Mitigates [CVE-2025-25724](https://nvd.nist.gov/vuln/detail/CVE-2025-25724).
+- 🐛 **Fixed**: Mitigates [CVE-2025-3576](https://nvd.nist.gov/vuln/detail/CVE-2025-3576).
 
 ---
 
@@ -93,7 +92,21 @@ Mon Jun  2 11:34:14 PDT 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Mitigates [CVE-2025-30065](https://nvd.nist.gov/vuln/detail/CVE-2025-30065).- 🐛 **Fixed**: Mitigates [CVE-2025-48734](https://nvd.nist.gov/vuln/detail/CVE-2025-48734).- 🐛 **Fixed**: Mitigates [CVE-2025-46762](https://nvd.nist.gov/vuln/detail/CVE-2025-46762).- 🐛 **Fixed**: Mitigates [CVE-2022-49043](https://nvd.nist.gov/vuln/detail/CVE-2022-49043).- 🐛 **Fixed**: Mitigates [CVE-2024-56171](https://nvd.nist.gov/vuln/detail/CVE-2024-56171).- 🐛 **Fixed**: Mitigates [CVE-2025-24928](https://nvd.nist.gov/vuln/detail/CVE-2025-24928).- 🐛 **Fixed**: Mitigates [CVE-2024-12797](https://nvd.nist.gov/vuln/detail/CVE-2024-12797).- 🐛 **Fixed**: Mitigates [CVE-2025-4598](https://nvd.nist.gov/vuln/detail/CVE-2025-4598).- 🐛 **Fixed**: Mitigates [CVE-2020-11023](https://nvd.nist.gov/vuln/detail/CVE-2020-11023).- 🐛 **Fixed**: Mitigates [CVE-2025-0395](https://nvd.nist.gov/vuln/detail/CVE-2025-0395).- 🐛 **Fixed**: Mitigates [CVE-2019-12900](https://nvd.nist.gov/vuln/detail/CVE-2019-12900).- 🐛 **Fixed**: Mitigates [CVE-2025-24528](https://nvd.nist.gov/vuln/detail/CVE-2025-24528).- 🐛 **Fixed**: Mitigates [CVE-2024-8176](https://nvd.nist.gov/vuln/detail/CVE-2024-8176).- 🐛 **Fixed**: Mitigates [CVE-2024-12243](https://nvd.nist.gov/vuln/detail/CVE-2024-12243).- 🐛 **Fixed**: Mitigates [CVE-2024-12133](https://nvd.nist.gov/vuln/detail/CVE-2024-12133).
+- 🐛 **Fixed**: Mitigates [CVE-2025-30065](https://nvd.nist.gov/vuln/detail/CVE-2025-30065).
+- 🐛 **Fixed**: Mitigates [CVE-2025-48734](https://nvd.nist.gov/vuln/detail/CVE-2025-48734).
+- 🐛 **Fixed**: Mitigates [CVE-2025-46762](https://nvd.nist.gov/vuln/detail/CVE-2025-46762).
+- 🐛 **Fixed**: Mitigates [CVE-2022-49043](https://nvd.nist.gov/vuln/detail/CVE-2022-49043).
+- 🐛 **Fixed**: Mitigates [CVE-2024-56171](https://nvd.nist.gov/vuln/detail/CVE-2024-56171).
+- 🐛 **Fixed**: Mitigates [CVE-2025-24928](https://nvd.nist.gov/vuln/detail/CVE-2025-24928).
+- 🐛 **Fixed**: Mitigates [CVE-2024-12797](https://nvd.nist.gov/vuln/detail/CVE-2024-12797).
+- 🐛 **Fixed**: Mitigates [CVE-2025-4598](https://nvd.nist.gov/vuln/detail/CVE-2025-4598).
+- 🐛 **Fixed**: Mitigates [CVE-2020-11023](https://nvd.nist.gov/vuln/detail/CVE-2020-11023).
+- 🐛 **Fixed**: Mitigates [CVE-2025-0395](https://nvd.nist.gov/vuln/detail/CVE-2025-0395).
+- 🐛 **Fixed**: Mitigates [CVE-2019-12900](https://nvd.nist.gov/vuln/detail/CVE-2019-12900).
+- 🐛 **Fixed**: Mitigates [CVE-2025-24528](https://nvd.nist.gov/vuln/detail/CVE-2025-24528).
+- 🐛 **Fixed**: Mitigates [CVE-2024-8176](https://nvd.nist.gov/vuln/detail/CVE-2024-8176).
+- 🐛 **Fixed**: Mitigates [CVE-2024-12243](https://nvd.nist.gov/vuln/detail/CVE-2024-12243).
+- 🐛 **Fixed**: Mitigates [CVE-2024-12133](https://nvd.nist.gov/vuln/detail/CVE-2024-12133).
 
 ---
 
@@ -103,7 +116,9 @@ Wed May 28 10:53:32 PDT 2025
 
 ### Changes
 
-- ⚡ **Improved**: Defaults ShadowTraffic to use 65% of available container memory, increased from 25%.- ⚡ **Improved**: Adds [concurrency and buffer depth](/connections/s3/#adjusting-concurrency) parameters for S3.- 🐛 **Fixed**: Fixes an issue with the S3 connection where large objects could deplete memory.
+- ⚡ **Improved**: Defaults ShadowTraffic to use 65% of available container memory, increased from 25%.
+- ⚡ **Improved**: Adds [concurrency and buffer depth](/connections/s3/#adjusting-concurrency) parameters for S3.
+- 🐛 **Fixed**: Fixes an issue with the S3 connection where large objects could deplete memory.
 
 ---
 
@@ -143,7 +158,8 @@ Tue May 13 14:22:41 PDT 2025
 
 ### Changes
 
-- ✅ **Added**: Introduces [`customFunction`](/functions/customFunction) that lets you extend ShadowTraffic with Python, Ruby, and JavaScript.- ⚡ **Improved**: Changes the default JVM to use GraalVM 23.0.2, mainly in support of custom functions.
+- ✅ **Added**: Introduces [`customFunction`](/functions/customFunction) that lets you extend ShadowTraffic with Python, Ruby, and JavaScript.
+- ⚡ **Improved**: Changes the default JVM to use GraalVM 23.0.2, mainly in support of custom functions.
 
 ---
 
@@ -223,7 +239,8 @@ Mon Apr  7 08:44:20 PDT 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes issues related to Kafka data quality rules suppressing errors.- ⚡ **Improved**: Relaxes schema of [`lookup`](/functions/lookup) to no longer require `path`.
+- 🐛 **Fixed**: Fixes issues related to Kafka data quality rules suppressing errors.
+- ⚡ **Improved**: Relaxes schema of [`lookup`](/functions/lookup) to no longer require `path`.
 
 ---
 
@@ -253,7 +270,9 @@ Wed Apr  2 13:06:08 PDT 2025
 
 ### Changes
 
-- ⚡ **Improved**: Expands `elide`'s [`whenAbsent`](/function-modifiers/elide/#eliding-with-absence) check to trigger on `false` too, not just `null`.- ⚡ **Improved**: `--bootstrap` will now bundle the original schema as a hint with Kafka targeted generators.- 🐛 **Fixed**: Swaps the order the `decimals` and `clamp` modifiers run. `decimals` now runs afterward since clamp may introduce more floating point places.
+- ⚡ **Improved**: Expands `elide`'s [`whenAbsent`](/function-modifiers/elide/#eliding-with-absence) check to trigger on `false` too, not just `null`.
+- ⚡ **Improved**: `--bootstrap` will now bundle the original schema as a hint with Kafka targeted generators.
+- 🐛 **Fixed**: Swaps the order the `decimals` and `clamp` modifiers run. `decimals` now runs afterward since clamp may introduce more floating point places.
 
 ---
 
@@ -283,7 +302,8 @@ Mon Mar 31 08:15:38 PDT 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes a bug where `schedule` may throw an exception when used with `--stdout`.- 🐛 **Fixed**: Fixes `--bootstrap-*` commands for Kafka to now output the right corresponding serializers for the requested format.
+- 🐛 **Fixed**: Fixes a bug where `schedule` may throw an exception when used with `--stdout`.
+- 🐛 **Fixed**: Fixes `--bootstrap-*` commands for Kafka to now output the right corresponding serializers for the requested format.
 
 ---
 
@@ -293,7 +313,9 @@ Tue Mar 25 10:05:42 PDT 2025
 
 ### Changes
 
-- ⚠️ **Important**: Breaking change: all events are now instantaneously available through the [`lookup`](/functions/lookup) function. The previous behavior, which prevented events from being looked up until they were acknowledged by the target backend systems, [consistently caused confusion](https://github.com/ShadowTraffic/requests/issues/9). This change now unifies how data is generated with and without the `--stdout` flag. See below to restore the old behavior.- ✅ **Added**: Adds new [`lookupScope`](/generator-configuration/lookupScope) configuration. Set this value to `committed` to [restore the old behavior](/generator-configuration/lookupScope/#setting-committed-scope).- ❌ **Removed**: Drops the `--allow-unsafe-lookups` CLI flag. Use `lookupScope` instead.
+- ⚠️ **Important**: Breaking change: all events are now instantaneously available through the [`lookup`](/functions/lookup) function. The previous behavior, which prevented events from being looked up until they were acknowledged by the target backend systems, [consistently caused confusion](https://github.com/ShadowTraffic/requests/issues/9). This change now unifies how data is generated with and without the `--stdout` flag. See below to restore the old behavior.
+- ✅ **Added**: Adds new [`lookupScope`](/generator-configuration/lookupScope) configuration. Set this value to `committed` to [restore the old behavior](/generator-configuration/lookupScope/#setting-committed-scope).
+- ❌ **Removed**: Drops the `--allow-unsafe-lookups` CLI flag. Use `lookupScope` instead.
 
 ---
 
@@ -323,7 +345,8 @@ Mon Mar 17 09:43:26 PDT 2025
 
 ### Changes
 
-- ⚡ **Improved**: Adds support for YAML configuration files through the [`--config-format`](/cheatsheet#cli-switches) command line switch.- ⚡ **Improved**: Adds new [`defaultValue` parameter](/functions/previousEvent/#setting-a-default-value) for `previousEvent`.
+- ⚡ **Improved**: Adds support for YAML configuration files through the [`--config-format`](/cheatsheet#cli-switches) command line switch.
+- ⚡ **Improved**: Adds new [`defaultValue` parameter](/functions/previousEvent/#setting-a-default-value) for `previousEvent`.
 
 ---
 
@@ -363,7 +386,8 @@ Wed Mar  5 11:28:08 PST 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes a bug where UUIDs weren't casting correctly to Postgres.- 🐛 **Fixed**: Fixes Postgres `dropAndCreate` so that drops cascading, avoiding throwing errors on dependent object chains.
+- 🐛 **Fixed**: Fixes a bug where UUIDs weren't casting correctly to Postgres.
+- 🐛 **Fixed**: Fixes Postgres `dropAndCreate` so that drops cascading, avoiding throwing errors on dependent object chains.
 
 ---
 
@@ -433,7 +457,9 @@ Thu Feb 27 10:12:45 PST 2025
 
 ### Changes
 
-- ⚡ **Improved**: Web hook generators can now use [a URL suffix](/connections/webhook/#vary-the-url) to vary the called endpoint.- ⚡ **Improved**: Web hook `maxRequests` can be set to `0` to [force synchronous request/response exchanges](/connections/webhook/#synchronous-requests).- 🐛 **Fixed**: Fixes bug where [`printExchange`](/connections/webhook/#log-requestresponse-pairs) on webhook wouldn't run on non-200 HTTP responses.
+- ⚡ **Improved**: Web hook generators can now use [a URL suffix](/connections/webhook/#vary-the-url) to vary the called endpoint.
+- ⚡ **Improved**: Web hook `maxRequests` can be set to `0` to [force synchronous request/response exchanges](/connections/webhook/#synchronous-requests).
+- 🐛 **Fixed**: Fixes bug where [`printExchange`](/connections/webhook/#log-requestresponse-pairs) on webhook wouldn't run on non-200 HTTP responses.
 
 ---
 
@@ -443,7 +469,8 @@ Wed Feb 26 11:40:24 PST 2025
 
 ### Changes
 
-- ⚡ **Improved**: Adds the ability to [log HTTP exchanges](/connections/webhook/#log-requestresponse-pairs) in the `webhook` connector.- 🐛 **Fixed**: Fixes a bug that caused output to interleave when using `stages` with Kafka. Previously, the underlying Kafka producer did not flush its buffer between stages, which could cause out of order output on the topic's partitions.
+- ⚡ **Improved**: Adds the ability to [log HTTP exchanges](/connections/webhook/#log-requestresponse-pairs) in the `webhook` connector.
+- 🐛 **Fixed**: Fixes a bug that caused output to interleave when using `stages` with Kafka. Previously, the underlying Kafka producer did not flush its buffer between stages, which could cause out of order output on the topic's partitions.
 
 ---
 
@@ -463,7 +490,11 @@ Fri Feb 21 16:03:45 PST 2025
 
 ### Changes
 
-- ✅ **Added**: Adds a new connector for [Oracle](/connections/oracle).- ❌ **Removed**: Drops support for TimePlus.- ❌ **Removed**: Drops support for Proton.- 🐛 **Fixed**: Mitigates [CVE-2025-24970](https://nvd.nist.gov/vuln/detail/CVE-2025-25193).- 🐛 **Fixed**: Mitigates [CVE-2025-25193](https://nvd.nist.gov/vuln/detail/CVE-2025-25193).
+- ✅ **Added**: Adds a new connector for [Oracle](/connections/oracle).
+- ❌ **Removed**: Drops support for TimePlus.
+- ❌ **Removed**: Drops support for Proton.
+- 🐛 **Fixed**: Mitigates [CVE-2025-24970](https://nvd.nist.gov/vuln/detail/CVE-2025-25193).
+- 🐛 **Fixed**: Mitigates [CVE-2025-25193](https://nvd.nist.gov/vuln/detail/CVE-2025-25193).
 
 ---
 
@@ -523,7 +554,12 @@ Thu Feb 13 15:30:16 PST 2025
 
 ### Changes
 
-- ⚠️ **Important**: Breaking change: the [`fileSystem`](/connections/filesystem) has been updated to require a directory at the generator-level instead of a connection level. This makes it identical in behavior to the S3, Azure, and GCS connectors. Apologies for the breakage.- ✅ **Added**: Adds the ability to [merge multiple JSON files together](/functions/loadJsonFile/#merging-files) during preprocessing.- ✅ **Added**: Adds the ability to write multiple files for both [file system](/connections/filesystem/#writing-multiple-files) and [Azure](/connections/azureBlobStorage/#writing-multiple-blobs) connections.- ✅ **Added**: Adds new serialization option [`explodeJsonlArrays`](/connections/filesystem/#set-the-format-and-compression) to break arrays onto multiple lines.- ✅ **Added**: Adds new optional [`localVars`](/functions/repeatedly/#setting-local-variables) parameter to `repeatedly` to specify local, randomized values.- ✅ **Added**: S3, Azure, GCS, and file system connections can now [turn off batching](/connections/filesystem/#instantly-flush-files) and instantenously write files on each iteration.
+- ⚠️ **Important**: Breaking change: the [`fileSystem`](/connections/filesystem) has been updated to require a directory at the generator-level instead of a connection level. This makes it identical in behavior to the S3, Azure, and GCS connectors. Apologies for the breakage.
+- ✅ **Added**: Adds the ability to [merge multiple JSON files together](/functions/loadJsonFile/#merging-files) during preprocessing.
+- ✅ **Added**: Adds the ability to write multiple files for both [file system](/connections/filesystem/#writing-multiple-files) and [Azure](/connections/azureBlobStorage/#writing-multiple-blobs) connections.
+- ✅ **Added**: Adds new serialization option [`explodeJsonlArrays`](/connections/filesystem/#set-the-format-and-compression) to break arrays onto multiple lines.
+- ✅ **Added**: Adds new optional [`localVars`](/functions/repeatedly/#setting-local-variables) parameter to `repeatedly` to specify local, randomized values.
+- ✅ **Added**: S3, Azure, GCS, and file system connections can now [turn off batching](/connections/filesystem/#instantly-flush-files) and instantenously write files on each iteration.
 
 ---
 
@@ -553,7 +589,8 @@ Wed Feb  5 15:00:43 PST 2025
 
 ### Changes
 
-- ⚡ **Improved**: Adds explicit support for S3 [path-style access](/connections/s3/#connecting-to-minio), which is useful for S3-compatible services like MinIO.- 🐛 **Fixed**: Fixes Kafka SSL connectivity, which regressed in 0.15.0 after upgrading the backing Docker image to Java 23.
+- ⚡ **Improved**: Adds explicit support for S3 [path-style access](/connections/s3/#connecting-to-minio), which is useful for S3-compatible services like MinIO.
+- 🐛 **Fixed**: Fixes Kafka SSL connectivity, which regressed in 0.15.0 after upgrading the backing Docker image to Java 23.
 
 ---
 
@@ -603,7 +640,8 @@ Mon Feb  3 19:24:32 PST 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Mitigates [CVE-2024-6763](https://nvd.nist.gov/vuln/detail/CVE-2024-6763).- 🐛 **Fixed**: Mitigates [CVE-2023-40167](https://nvd.nist.gov/vuln/detail/CVE-2023-40167).
+- 🐛 **Fixed**: Mitigates [CVE-2024-6763](https://nvd.nist.gov/vuln/detail/CVE-2024-6763).
+- 🐛 **Fixed**: Mitigates [CVE-2023-40167](https://nvd.nist.gov/vuln/detail/CVE-2023-40167).
 
 ---
 
@@ -613,7 +651,41 @@ Mon Feb  3 15:53:17 PST 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes bug that would spawn forks out of order when using `maxForks` with `keepAlive`.- 🐛 **Fixed**: Mitigates [CVE-2024-22871](https://nvd.nist.gov/vuln/detail/CVE-2024-22871).- 🐛 **Fixed**: Mitigates [CVE-2024-23944](https://nvd.nist.gov/vuln/detail/cve-2024-23944).- 🐛 **Fixed**: Mitigates [CVE-2024-12801](https://nvd.nist.gov/vuln/detail/CVE-2024-12801).- 🐛 **Fixed**: Mitigates [CVE-2024-12798](https://nvd.nist.gov/vuln/detail/CVE-2024-12798).- 🐛 **Fixed**: Mitigates [CVE-2023-6378](https://nvd.nist.gov/vuln/detail/cve-2023-6378).- 🐛 **Fixed**: Mitigates [CVE-2023-52428](https://nvd.nist.gov/vuln/detail/cve-2023-6378).- 🐛 **Fixed**: Mitigates [CVE-2024-25638](https://nvd.nist.gov/vuln/detail/cve-2024-25638).- 🐛 **Fixed**: Mitigates [CVE-2023-5072](https://nvd.nist.gov/vuln/detail/cve-2023-5072).- 🐛 **Fixed**: Mitigates [CVE-2024-29133](https://nvd.nist.gov/vuln/detail/cve-2024-29133).- 🐛 **Fixed**: Mitigates [CVE-2024-29131](https://nvd.nist.gov/vuln/detail/cve-2024-29131).- 🐛 **Fixed**: Mitigates [CVE-2024-8184](https://nvd.nist.gov/vuln/detail/CVE-2024-8184).- 🐛 **Fixed**: Mitigates [CVE-2019-9674](https://nvd.nist.gov/vuln/detail/CVE-2019-9674).- 🐛 **Fixed**: Mitigates [CVE-2024-9681](https://nvd.nist.gov/vuln/detail/CVE-2024-9681).- 🐛 **Fixed**: Mitigates [CVE-2023-27043](https://nvd.nist.gov/vuln/detail/CVE-2023-27043).- 🐛 **Fixed**: Mitigates [CVE-2024-5535](https://nvd.nist.gov/vuln/detail/CVE-2024-5535).- 🐛 **Fixed**: Mitigates [CVE-2024-43802](https://nvd.nist.gov/vuln/detail/CVE-2024-43802).- 🐛 **Fixed**: Mitigates [CVE-2024-34459](https://nvd.nist.gov/vuln/detail/CVE-2024-34459).- 🐛 **Fixed**: Mitigates [CVE-2024-33600](https://nvd.nist.gov/vuln/detail/CVE-2024-33600).- 🐛 **Fixed**: Mitigates [CVE-2024-39689](https://nvd.nist.gov/vuln/detail/CVE-2024-39689).- 🐛 **Fixed**: Mitigates [CVE-2024-47561](https://nvd.nist.gov/vuln/detail/CVE-2024-47561).- 🐛 **Fixed**: Mitigates [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647).- 🐛 **Fixed**: Mitigates [CVE-2024-47554](https://nvd.nist.gov/vuln/detail/CVE-2024-47554).- 🐛 **Fixed**: Mitigates [CVE-2024-45490](https://nvd.nist.gov/vuln/detail/CVE-2024-45490).- 🐛 **Fixed**: Mitigates [CVE-2023-44487](https://nvd.nist.gov/vuln/detail/CVE-2023-44487).- 🐛 **Fixed**: Mitigates [CVE-2023-39410](https://nvd.nist.gov/vuln/detail/CVE-2023-39410).- 🐛 **Fixed**: Mitigates [CVE-2023-36478](https://nvd.nist.gov/vuln/detail/CVE-2023-36478).- 🐛 **Fixed**: Mitigates [CVE-2015-5652](https://nvd.nist.gov/vuln/detail/CVE-2015-5652).- 🐛 **Fixed**: Mitigates [CVE-2023-2976](https://nvd.nist.gov/vuln/detail/CVE-2023-2976).- 🐛 **Fixed**: Mitigates [CVE-2022-26488](https://nvd.nist.gov/vuln/detail/CVE-2022-26488).- 🐛 **Fixed**: Mitigates [CVE-2024-26308](https://nvd.nist.gov/vuln/detail/CVE-2024-26308).- 🐛 **Fixed**: Mitigates [CVE-2024-25710](https://nvd.nist.gov/vuln/detail/CVE-2024-25710).- 🐛 **Fixed**: Mitigates [CVE-2023-41900](https://nvd.nist.gov/vuln/detail/CVE-2023-41900).- 🐛 **Fixed**: Mitigates [CVE-2023-36479](https://nvd.nist.gov/vuln/detail/CVE-2023-36479).- 🐛 **Fixed**: Mitigates [CVE-2020-8908](https://nvd.nist.gov/vuln/detail/CVE-2020-8908).
+- 🐛 **Fixed**: Fixes bug that would spawn forks out of order when using `maxForks` with `keepAlive`.
+- 🐛 **Fixed**: Mitigates [CVE-2024-22871](https://nvd.nist.gov/vuln/detail/CVE-2024-22871).
+- 🐛 **Fixed**: Mitigates [CVE-2024-23944](https://nvd.nist.gov/vuln/detail/cve-2024-23944).
+- 🐛 **Fixed**: Mitigates [CVE-2024-12801](https://nvd.nist.gov/vuln/detail/CVE-2024-12801).
+- 🐛 **Fixed**: Mitigates [CVE-2024-12798](https://nvd.nist.gov/vuln/detail/CVE-2024-12798).
+- 🐛 **Fixed**: Mitigates [CVE-2023-6378](https://nvd.nist.gov/vuln/detail/cve-2023-6378).
+- 🐛 **Fixed**: Mitigates [CVE-2023-52428](https://nvd.nist.gov/vuln/detail/cve-2023-6378).
+- 🐛 **Fixed**: Mitigates [CVE-2024-25638](https://nvd.nist.gov/vuln/detail/cve-2024-25638).
+- 🐛 **Fixed**: Mitigates [CVE-2023-5072](https://nvd.nist.gov/vuln/detail/cve-2023-5072).
+- 🐛 **Fixed**: Mitigates [CVE-2024-29133](https://nvd.nist.gov/vuln/detail/cve-2024-29133).
+- 🐛 **Fixed**: Mitigates [CVE-2024-29131](https://nvd.nist.gov/vuln/detail/cve-2024-29131).
+- 🐛 **Fixed**: Mitigates [CVE-2024-8184](https://nvd.nist.gov/vuln/detail/CVE-2024-8184).
+- 🐛 **Fixed**: Mitigates [CVE-2019-9674](https://nvd.nist.gov/vuln/detail/CVE-2019-9674).
+- 🐛 **Fixed**: Mitigates [CVE-2024-9681](https://nvd.nist.gov/vuln/detail/CVE-2024-9681).
+- 🐛 **Fixed**: Mitigates [CVE-2023-27043](https://nvd.nist.gov/vuln/detail/CVE-2023-27043).
+- 🐛 **Fixed**: Mitigates [CVE-2024-5535](https://nvd.nist.gov/vuln/detail/CVE-2024-5535).
+- 🐛 **Fixed**: Mitigates [CVE-2024-43802](https://nvd.nist.gov/vuln/detail/CVE-2024-43802).
+- 🐛 **Fixed**: Mitigates [CVE-2024-34459](https://nvd.nist.gov/vuln/detail/CVE-2024-34459).
+- 🐛 **Fixed**: Mitigates [CVE-2024-33600](https://nvd.nist.gov/vuln/detail/CVE-2024-33600).
+- 🐛 **Fixed**: Mitigates [CVE-2024-39689](https://nvd.nist.gov/vuln/detail/CVE-2024-39689).
+- 🐛 **Fixed**: Mitigates [CVE-2024-47561](https://nvd.nist.gov/vuln/detail/CVE-2024-47561).
+- 🐛 **Fixed**: Mitigates [CVE-2022-25647](https://nvd.nist.gov/vuln/detail/CVE-2022-25647).
+- 🐛 **Fixed**: Mitigates [CVE-2024-47554](https://nvd.nist.gov/vuln/detail/CVE-2024-47554).
+- 🐛 **Fixed**: Mitigates [CVE-2024-45490](https://nvd.nist.gov/vuln/detail/CVE-2024-45490).
+- 🐛 **Fixed**: Mitigates [CVE-2023-44487](https://nvd.nist.gov/vuln/detail/CVE-2023-44487).
+- 🐛 **Fixed**: Mitigates [CVE-2023-39410](https://nvd.nist.gov/vuln/detail/CVE-2023-39410).
+- 🐛 **Fixed**: Mitigates [CVE-2023-36478](https://nvd.nist.gov/vuln/detail/CVE-2023-36478).
+- 🐛 **Fixed**: Mitigates [CVE-2015-5652](https://nvd.nist.gov/vuln/detail/CVE-2015-5652).
+- 🐛 **Fixed**: Mitigates [CVE-2023-2976](https://nvd.nist.gov/vuln/detail/CVE-2023-2976).
+- 🐛 **Fixed**: Mitigates [CVE-2022-26488](https://nvd.nist.gov/vuln/detail/CVE-2022-26488).
+- 🐛 **Fixed**: Mitigates [CVE-2024-26308](https://nvd.nist.gov/vuln/detail/CVE-2024-26308).
+- 🐛 **Fixed**: Mitigates [CVE-2024-25710](https://nvd.nist.gov/vuln/detail/CVE-2024-25710).
+- 🐛 **Fixed**: Mitigates [CVE-2023-41900](https://nvd.nist.gov/vuln/detail/CVE-2023-41900).
+- 🐛 **Fixed**: Mitigates [CVE-2023-36479](https://nvd.nist.gov/vuln/detail/CVE-2023-36479).
+- 🐛 **Fixed**: Mitigates [CVE-2020-8908](https://nvd.nist.gov/vuln/detail/CVE-2020-8908).
 
 ---
 
@@ -663,7 +735,9 @@ Mon Jan 27 13:16:38 PST 2025
 
 ### Changes
 
-- ⚡ **Improved**: Changes the semantics of [fork keys](/fork/key/) so that if `key` is ever `null`, an error is raised. Previously, ShadowTraffic would silently stop forking, which was confusing and unhelpful.- 🐛 **Fixed**: Fixes a bug where the use of [`oneTimeKeys`](/fork/oneTimeKeys) would not always allow ShadowTraffic to exit if it generated all expected data.- 🐛 **Fixed**: Fixes bootstrap generated output that targets Kafka connections. Previously the default Kafka connection URL was malformed.
+- ⚡ **Improved**: Changes the semantics of [fork keys](/fork/key/) so that if `key` is ever `null`, an error is raised. Previously, ShadowTraffic would silently stop forking, which was confusing and unhelpful.
+- 🐛 **Fixed**: Fixes a bug where the use of [`oneTimeKeys`](/fork/oneTimeKeys) would not always allow ShadowTraffic to exit if it generated all expected data.
+- 🐛 **Fixed**: Fixes bootstrap generated output that targets Kafka connections. Previously the default Kafka connection URL was malformed.
 
 ---
 
@@ -693,7 +767,8 @@ Wed Jan 15 12:23:32 PST 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes lack of schema checks on `map` function.- 🐛 **Fixed**: Fixes situation where using `iterateVars` on `repeatedly` would break with nested variables.
+- 🐛 **Fixed**: Fixes lack of schema checks on `map` function.
+- 🐛 **Fixed**: Fixes situation where using `iterateVars` on `repeatedly` would break with nested variables.
 
 ---
 
@@ -753,7 +828,8 @@ Fri Dec 13 07:57:48 PST 2024
 
 ### Changes
 
-- ⚡ **Improved**: Improves performance related to throttling generators.- 🐛 **Fixed**: Removes stray debug output.
+- ⚡ **Improved**: Improves performance related to throttling generators.
+- 🐛 **Fixed**: Removes stray debug output.
 
 ---
 
@@ -843,7 +919,8 @@ Mon Dec  2 09:52:19 PST 2024
 
 ### Changes
 
-- ⚡ **Improved**: Adds optional `keyPrefix` for lookups against S3 and Azure Blob Storage to narrow searched output.- 🐛 **Fixed**: Fixes `sequentialString` by requiring the presence of an `expr` parameter.
+- ⚡ **Improved**: Adds optional `keyPrefix` for lookups against S3 and Azure Blob Storage to narrow searched output.
+- 🐛 **Fixed**: Fixes `sequentialString` by requiring the presence of an `expr` parameter.
 
 ---
 
@@ -933,7 +1010,8 @@ Wed Nov 13 13:14:39 PST 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes leaked library debug message on startup.- ⚡ **Improved**: Improves baseline performance by about 50%.
+- 🐛 **Fixed**: Fixes leaked library debug message on startup.
+- ⚡ **Improved**: Improves baseline performance by about 50%.
 
 ---
 
@@ -963,7 +1041,9 @@ Thu Nov  7 11:34:54 PST 2024
 
 ### Changes
 
-- ⚡ **Improved**: Improves baseline performance of ShadowTraffic by about 25%.- ⚡ **Improved**: Replaces `string` templating library with Datafaker, resulting in much higher performance for string operations.- ⚡ **Improved**: Switches `S3` connection to use concurrent uploads. Keys will begin uploading in serial order, but may complete out of order.
+- ⚡ **Improved**: Improves baseline performance of ShadowTraffic by about 25%.
+- ⚡ **Improved**: Replaces `string` templating library with Datafaker, resulting in much higher performance for string operations.
+- ⚡ **Improved**: Switches `S3` connection to use concurrent uploads. Keys will begin uploading in serial order, but may complete out of order.
 
 ---
 
@@ -1053,7 +1133,8 @@ Mon Oct 21 14:44:50 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes `timeMultiplier` throwing spurious errors.- 🐛 **Fixed**: Fixes bug causing competiting state in `vars` and `stateMachine` not to advance correctly.
+- 🐛 **Fixed**: Fixes `timeMultiplier` throwing spurious errors.
+- 🐛 **Fixed**: Fixes bug causing competiting state in `vars` and `stateMachine` not to advance correctly.
 
 ---
 
@@ -1063,7 +1144,9 @@ Wed Oct 16 10:40:34 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: S3, Google Cloud Storage, Azure Blob Storage, and filesystem connections now support batching on number of serialized bytes with `batchBytes`.- ✅ **Added**: Adds uniform support for `json`, pretty `json`, `jsonl`, and `parquet` as serialization options for S3, Google Cloud Storage, Azure Blob Storage, and filesystem connections.- ✅ **Added**: Ditto for compression: all of these connections now support `gzip`.
+- ✅ **Added**: S3, Google Cloud Storage, Azure Blob Storage, and filesystem connections now support batching on number of serialized bytes with `batchBytes`.
+- ✅ **Added**: Adds uniform support for `json`, pretty `json`, `jsonl`, and `parquet` as serialization options for S3, Google Cloud Storage, Azure Blob Storage, and filesystem connections.
+- ✅ **Added**: Ditto for compression: all of these connections now support `gzip`.
 
 ---
 
@@ -1143,7 +1226,8 @@ Wed Oct  9 12:59:56 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds support for [SQL Server](/connections/sqlServer).- ⚡ **Improved**: Allows top-level `stateMachine` functions to [override](/functions/stateMachine/#overriding-throttle-values) `throttleMs` local configuration.
+- ✅ **Added**: Adds support for [SQL Server](/connections/sqlServer).
+- ⚡ **Improved**: Allows top-level `stateMachine` functions to [override](/functions/stateMachine/#overriding-throttle-values) `throttleMs` local configuration.
 
 ---
 
@@ -1163,7 +1247,8 @@ Tue Oct  8 10:48:41 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: Adds new optional `names` parameter to the `math` function to isolate local variable usage.- 🐛 **Fixed**: Fixes error message from the `math` function when the expression is malformed.
+- ⚡ **Improved**: Adds new optional `names` parameter to the `math` function to isolate local variable usage.
+- 🐛 **Fixed**: Fixes error message from the `math` function when the expression is malformed.
 
 ---
 
@@ -1193,7 +1278,8 @@ Mon Oct  7 10:59:18 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes [CVE-2024-47561](https://www.cve.org/CVERecord?id=CVE-2024-47561) pertaining to Avro.- ⚡ **Improved**: Upgrades Confluent Kafka serializers to 7.7.1
+- 🐛 **Fixed**: Fixes [CVE-2024-47561](https://www.cve.org/CVERecord?id=CVE-2024-47561) pertaining to Avro.
+- ⚡ **Improved**: Upgrades Confluent Kafka serializers to 7.7.1
 
 ---
 
@@ -1203,7 +1289,8 @@ Thu Oct  3 15:07:47 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: Adds support for new `string` function transformation `removeSubstring`.- 🐛 **Fixed**: Fixes uncaught error when `uniformDistributionBoundaries` aren't legal. A better error is now printed.
+- ⚡ **Improved**: Adds support for new `string` function transformation `removeSubstring`.
+- 🐛 **Fixed**: Fixes uncaught error when `uniformDistributionBoundaries` aren't legal. A better error is now printed.
 
 ---
 
@@ -1233,7 +1320,8 @@ Wed Oct  2 11:40:46 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes how UUIDs are printed in ShadowTraffic Studio.- 🐛 **Fixed**: Fixes timeline stretching beyond viewport in ShadowTraffic Studio.
+- 🐛 **Fixed**: Fixes how UUIDs are printed in ShadowTraffic Studio.
+- 🐛 **Fixed**: Fixes timeline stretching beyond viewport in ShadowTraffic Studio.
 
 ---
 
@@ -1373,7 +1461,8 @@ Mon Sep  9 14:42:29 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: Drops `dataShape` parameter from webhooks, allowing arbitrary shapes of data to be generated.- ❌ **Removed**: Drops top-level Decodable support, which was misdesigned as a piggyback onto webhooks.
+- ⚡ **Improved**: Drops `dataShape` parameter from webhooks, allowing arbitrary shapes of data to be generated.
+- ❌ **Removed**: Drops top-level Decodable support, which was misdesigned as a piggyback onto webhooks.
 
 ---
 
@@ -1383,7 +1472,9 @@ Mon Sep  9 09:33:35 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: Improves schema checks on fork configuration.- 🐛 **Fixed**: Raises an error when the reserved var `mapItem` is used outside of a `mapEach` call.- ❌ **Removed**: Removes deprecated `geospatialPath` and `geospatialPathScheme` functions. Use [`waypoints`](/functions/waypoints) instead.
+- ⚡ **Improved**: Improves schema checks on fork configuration.
+- 🐛 **Fixed**: Raises an error when the reserved var `mapItem` is used outside of a `mapEach` call.
+- ❌ **Removed**: Removes deprecated `geospatialPath` and `geospatialPathScheme` functions. Use [`waypoints`](/functions/waypoints) instead.
 
 ---
 
@@ -1433,7 +1524,8 @@ Tue Sep  3 09:20:33 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: Permits dynamic key prefixes for Azure Blob Storage.- ⚡ **Improved**: Improves pretty printing on deeply nested data when using --stdout.
+- ⚡ **Improved**: Permits dynamic key prefixes for Azure Blob Storage.
+- ⚡ **Improved**: Improves pretty printing on deeply nested data when using --stdout.
 
 ---
 
@@ -1463,7 +1555,9 @@ Thu Aug 29 10:04:15 PDT 2024
 
 ### Changes
 
-- ❌ **Removed**: Removes `pluckEach` in favor of a more general solution. See next lines.- ✅ **Added**: Adds new function [`mapEach`](/functions/mapEach) that supports general transformations of arrays.- ✅ **Added**: Adds new reserved variable `mapItem`.
+- ❌ **Removed**: Removes `pluckEach` in favor of a more general solution. See next lines.
+- ✅ **Added**: Adds new function [`mapEach`](/functions/mapEach) that supports general transformations of arrays.
+- ✅ **Added**: Adds new reserved variable `mapItem`.
 
 ---
 
@@ -1523,7 +1617,8 @@ Tue Aug 20 15:40:06 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new [`oneTimeKeys`](/fork/oneTimeKeys) parameter to fork, making it possible for terminates forks to never restart.- ⚡ **Improved**: Loosens `stateMachine` schema and allows sequential state transitions to run `0` times. This is useful if you want to sometimes run a state and sometimes skip it.
+- ✅ **Added**: Adds new [`oneTimeKeys`](/fork/oneTimeKeys) parameter to fork, making it possible for terminates forks to never restart.
+- ⚡ **Improved**: Loosens `stateMachine` schema and allows sequential state transitions to run `0` times. This is useful if you want to sometimes run a state and sometimes skip it.
 
 ---
 
@@ -1563,7 +1658,8 @@ Tue Aug 13 09:13:59 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: Adds new `whenPresent` and `whenAbsent` parameters for the [`elide`](/function-modifiers/elide) function modifier.- 🐛 **Fixed**: Fixes schema check for `null` rates
+- ⚡ **Improved**: Adds new `whenPresent` and `whenAbsent` parameters for the [`elide`](/function-modifiers/elide) function modifier.
+- 🐛 **Fixed**: Fixes schema check for `null` rates
 
 ---
 
@@ -1643,7 +1739,8 @@ Thu Jul 18 13:45:33 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new optional `names` parameter to the [`string`](/functions/string) function, letting you scope identifiers that may be used within `expr`.- ⚡ **Improved**: Raises a better error when `iterateVars` names a non-existent variable.
+- ✅ **Added**: Adds new optional `names` parameter to the [`string`](/functions/string) function, letting you scope identifiers that may be used within `expr`.
+- ⚡ **Improved**: Raises a better error when `iterateVars` names a non-existent variable.
 
 ---
 
@@ -1653,7 +1750,8 @@ Tue Jul 16 14:40:54 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes `iterateVars` parameter of `repeatedly` to refresh variables in dependency order.- 🐛 **Fixed**: Fixes nested function call errors that could overlap each other and hide the real error message.
+- 🐛 **Fixed**: Fixes `iterateVars` parameter of `repeatedly` to refresh variables in dependency order.
+- 🐛 **Fixed**: Fixes nested function call errors that could overlap each other and hide the real error message.
 
 ---
 
@@ -1743,7 +1841,9 @@ Fri Jun 28 14:40:29 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds [Azure Blob storage](/connections/azureBlobStorage) as a new connection type.- ⚡ **Improved**: Improves the error that gets emitted when ShadowTraffic tries to automatically generate a schema for a function whose type it can't infer.- ⚡ **Improved**: Improves the error that gets emitted when Avro serialization fails because of either missing fields or mistyped unions.
+- ✅ **Added**: Adds [Azure Blob storage](/connections/azureBlobStorage) as a new connection type.
+- ⚡ **Improved**: Improves the error that gets emitted when ShadowTraffic tries to automatically generate a schema for a function whose type it can't infer.
+- ⚡ **Improved**: Improves the error that gets emitted when Avro serialization fails because of either missing fields or mistyped unions.
 
 ---
 
@@ -1763,7 +1863,10 @@ Mon Jun 24 12:24:09 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds support for headers in Kafka records.- 🐛 **Fixed**: Fixes bug where forks with state initialization wouldn't have access to variables.- ⚡ **Improved**: Prints better error message when `waypoints` receives coordinates that don't match expectations.- ❌ **Removed**: Removes the `number` function. This was added early on with a different API in mind. Use `uniformDistribution` or `normalDistribution` to generate floating point numbers instead.
+- ✅ **Added**: Adds support for headers in Kafka records.
+- 🐛 **Fixed**: Fixes bug where forks with state initialization wouldn't have access to variables.
+- ⚡ **Improved**: Prints better error message when `waypoints` receives coordinates that don't match expectations.
+- ❌ **Removed**: Removes the `number` function. This was added early on with a different API in mind. Use `uniformDistribution` or `normalDistribution` to generate floating point numbers instead.
 
 ---
 
@@ -1783,7 +1886,8 @@ Thu Jun 20 09:36:11 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new `maxMs` generator configuration to cap how long a generator may run for.- ⚡ **Improved**: Adds new `default` parameter to the `env` function for fallback values.
+- ✅ **Added**: Adds new `maxMs` generator configuration to cap how long a generator may run for.
+- ⚡ **Improved**: Adds new `default` parameter to the `env` function for fallback values.
 
 ---
 
@@ -1803,7 +1907,8 @@ Thu Jun 13 11:54:35 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new `time` global configuration to override the starting wallclock time.- ✅ **Added**: Adds new `timeMultiplier` global configuration to change the rate at which time advances.
+- ✅ **Added**: Adds new `time` global configuration to override the starting wallclock time.
+- ✅ **Added**: Adds new `timeMultiplier` global configuration to change the rate at which time advances.
 
 ---
 
@@ -1813,7 +1918,8 @@ Wed Jun 12 11:19:16 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: `loadJsonFile` and `env` now work recursively, meaning you can chain loaded files and nest environment variables within.- ⚡ **Improved**: `loadJsonFile`'s `data` parameter is now evaluated for other preprocessors, like `env`, before it executes.
+- ⚡ **Improved**: `loadJsonFile` and `env` now work recursively, meaning you can chain loaded files and nest environment variables within.
+- ⚡ **Improved**: `loadJsonFile`'s `data` parameter is now evaluated for other preprocessors, like `env`, before it executes.
 
 ---
 
@@ -1833,7 +1939,10 @@ Tue Jun 11 12:35:21 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: Adds support for `eventId` in Event Store connections.- ⚡ **Improved**: Allows `eventType` to be the result of a function call in Event Store connections.- ⚡ **Improved**: Allows `eventType` to be overriden within a state machine in Event Store connections.- ⚡ **Improved**: Adds new optional `streamSuffix` to qualify Event Store stream names.
+- ⚡ **Improved**: Adds support for `eventId` in Event Store connections.
+- ⚡ **Improved**: Allows `eventType` to be the result of a function call in Event Store connections.
+- ⚡ **Improved**: Allows `eventType` to be overriden within a state machine in Event Store connections.
+- ⚡ **Improved**: Adds new optional `streamSuffix` to qualify Event Store stream names.
 
 ---
 
@@ -1843,7 +1952,10 @@ Tue Jun 11 10:35:13 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new `throttleMs` generator configuration, which supercedes `throttle ms`. Same configuration, improved name.- ✅ **Added**: Adds new `maxHistoryEvents` generator configuration, which supercedes `history events max`. Same configuration, improved name.- ❌ **Removed**: Removes the `integer` function, which was confusing. Superceded by the `decimals` function modifier, which when set to `0`, produces integers.- ❌ **Removed**: Removes the `degenerateDistribution` function, which was a redundant, more narrow version of the `constant` function.
+- ✅ **Added**: Adds new `throttleMs` generator configuration, which supercedes `throttle ms`. Same configuration, improved name.
+- ✅ **Added**: Adds new `maxHistoryEvents` generator configuration, which supercedes `history events max`. Same configuration, improved name.
+- ❌ **Removed**: Removes the `integer` function, which was confusing. Superceded by the `decimals` function modifier, which when set to `0`, produces integers.
+- ❌ **Removed**: Removes the `degenerateDistribution` function, which was a redundant, more narrow version of the `constant` function.
 
 ---
 
@@ -1883,7 +1995,8 @@ Fri Jun  7 14:19:50 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes `oneOf` and `weightedOneOf` not passing up initialization from stateful functions.- ⚡ **Improved**: Loosens schema to allow `waypoints` to take dynamic coordinates.
+- 🐛 **Fixed**: Fixes `oneOf` and `weightedOneOf` not passing up initialization from stateful functions.
+- ⚡ **Improved**: Loosens schema to allow `waypoints` to take dynamic coordinates.
 
 ---
 
@@ -1963,7 +2076,9 @@ Fri May 31 10:19:53 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new `loadJsonFile` function to load configuration fragments from other files.- ✅ **Added**: Adds new `cast` function modifier to cast values to/from strings.- 🐛 **Fixed**: Fixes static check for required properties on `digitString` and `characterString` functions.
+- ✅ **Added**: Adds new `loadJsonFile` function to load configuration fragments from other files.
+- ✅ **Added**: Adds new `cast` function modifier to cast values to/from strings.
+- 🐛 **Fixed**: Fixes static check for required properties on `digitString` and `characterString` functions.
 
 ---
 
@@ -1983,7 +2098,11 @@ Wed May 29 09:17:47 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes automatic schema creation for Postgres binary types.- 🐛 **Fixed**: Allows `bytes` function to generate zero length arrays.- 🐛 **Fixed**: Fixes `uniformDistribution` and `normalDistribution` parameters for very large numbers.- 🐛 **Fixed**: Fixes regression in `someKeys` not evaluating nested values.- ⚡ **Improved**: Allows `characterString` and `digitString` to generate varying sized text.
+- 🐛 **Fixed**: Fixes automatic schema creation for Postgres binary types.
+- 🐛 **Fixed**: Allows `bytes` function to generate zero length arrays.
+- 🐛 **Fixed**: Fixes `uniformDistribution` and `normalDistribution` parameters for very large numbers.
+- 🐛 **Fixed**: Fixes regression in `someKeys` not evaluating nested values.
+- ⚡ **Improved**: Allows `characterString` and `digitString` to generate varying sized text.
 
 ---
 
@@ -2003,7 +2122,8 @@ Fri May 24 14:20:59 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds automatic schema generation for the `waypoints` function.- ⚡ **Improved**: Prevents throttle from applying on terminal states of a state machine. Now, when the state machine is finished, the generator exits immediately.
+- ✅ **Added**: Adds automatic schema generation for the `waypoints` function.
+- ⚡ **Improved**: Prevents throttle from applying on terminal states of a state machine. Now, when the state machine is finished, the generator exits immediately.
 
 ---
 
@@ -2023,7 +2143,8 @@ Thu May 23 09:10:35 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes bug where `--watch` wouldn't reset `--seed` to produce the same data each run.- 🐛 **Fixed**: Fixes bug where using forked generators and `--seed` might not produce the same data each run.
+- 🐛 **Fixed**: Fixes bug where `--watch` wouldn't reset `--seed` to produce the same data each run.
+- 🐛 **Fixed**: Fixes bug where using forked generators and `--seed` might not produce the same data each run.
 
 ---
 
@@ -2123,7 +2244,11 @@ Thu May 16 09:04:31 PDT 2024
 
 ### Changes
 
-- ⚠️ **Important**: Changes the require path syntax for `lookup` calls against Postgres. Previously, `path` automatically prepended `"row"`, which was confusing and shortsighted. Now, it no longer prepends, giving you access to the entire geneerated event. Apologies for the breakage.- ⚡ **Improved**: Simplifies the `waypoints` function. Instead of having this function feed into `geoPosition`, it can now be used alone.- ❌ **Removed**: Removes the `geoPosition` function, according to the above.- ✅ **Added**: Adds new `path` function modifier so that it can be applied to any function.- ✅ **Added**: Adds new `decimals` function modifier so that it can be applied to any function.
+- ⚠️ **Important**: Changes the require path syntax for `lookup` calls against Postgres. Previously, `path` automatically prepended `"row"`, which was confusing and shortsighted. Now, it no longer prepends, giving you access to the entire geneerated event. Apologies for the breakage.
+- ⚡ **Improved**: Simplifies the `waypoints` function. Instead of having this function feed into `geoPosition`, it can now be used alone.
+- ❌ **Removed**: Removes the `geoPosition` function, according to the above.
+- ✅ **Added**: Adds new `path` function modifier so that it can be applied to any function.
+- ✅ **Added**: Adds new `decimals` function modifier so that it can be applied to any function.
 
 ---
 
@@ -2213,7 +2338,8 @@ Fri Apr 26 13:04:04 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes determinism when using seeded generation with `someKeys`.- ⚡ **Improved**: Reduces the overload of calling generators that perform a random-nth operation.
+- 🐛 **Fixed**: Fixes determinism when using seeded generation with `someKeys`.
+- ⚡ **Improved**: Reduces the overload of calling generators that perform a random-nth operation.
 
 ---
 
@@ -2243,7 +2369,8 @@ Wed Apr 17 11:41:42 PDT 2024
 
 ### Changes
 
-- ❌ **Removed**: Removes CLI option `--show-progress`. Instead, use Prometheus metrics exposed on port `9400` to monitor generated events/s.- ⚡ **Improved**: Sets smaller Prometheus histogram buckets to discern how long each generator iteration takes.
+- ❌ **Removed**: Removes CLI option `--show-progress`. Instead, use Prometheus metrics exposed on port `9400` to monitor generated events/s.
+- ⚡ **Improved**: Sets smaller Prometheus histogram buckets to discern how long each generator iteration takes.
 
 ---
 
@@ -2253,7 +2380,8 @@ Wed Apr 17 09:50:30 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new experimental `geoWander`, `geoPosition`, and `waypoints` generators with the intent to deprecate the older geospatial functions.- ✅ **Added**: Adds new `selectKeys` option to gran a subset of keys from an object.
+- ✅ **Added**: Adds new experimental `geoWander`, `geoPosition`, and `waypoints` generators with the intent to deprecate the older geospatial functions.
+- ✅ **Added**: Adds new `selectKeys` option to gran a subset of keys from an object.
 
 ---
 
@@ -2293,7 +2421,8 @@ Mon Apr 15 08:04:58 PDT 2024
 
 ### Changes
 
-- ⚡ **Improved**: Dramatically improves performance for deeply nested generators.- 🐛 **Fixed**: Fixes fractional throttle values.
+- ⚡ **Improved**: Dramatically improves performance for deeply nested generators.
+- 🐛 **Fixed**: Fixes fractional throttle values.
 
 ---
 
@@ -2303,7 +2432,8 @@ Thu Apr 11 14:06:53 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: **Critical**: Fixes a memory leak where `fork` and `lookup` interact across generators.- ⚡ **Improved**: Optimizes memory footprint by no longer storing history for generators that don't service `lookup`s.
+- 🐛 **Fixed**: **Critical**: Fixes a memory leak where `fork` and `lookup` interact across generators.
+- ⚡ **Improved**: Optimizes memory footprint by no longer storing history for generators that don't service `lookup`s.
 
 ---
 
@@ -2333,7 +2463,8 @@ Thu Apr  4 13:44:30 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new `keyNames` option to rename keys from any generators that return objects.- ✅ **Added**: Adds new `heading` function to calculate direction in degrees.
+- ✅ **Added**: Adds new `keyNames` option to rename keys from any generators that return objects.
+- ✅ **Added**: Adds new `heading` function to calculate direction in degrees.
 
 ---
 
@@ -2343,7 +2474,8 @@ Thu Apr  4 10:31:25 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes step size bug in `geospatialPathScheme` function.- 🐛 **Fixed**: Fixes radians bug in `geospatialPathScheme` function.
+- 🐛 **Fixed**: Fixes step size bug in `geospatialPathScheme` function.
+- 🐛 **Fixed**: Fixes radians bug in `geospatialPathScheme` function.
 
 ---
 
@@ -2393,7 +2525,11 @@ Thu Mar 28 08:43:05 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Introduces new `geolocation` generator.- 🐛 **Fixed**: Fixes race condition where dynamic JSON Schema classes didn't always load on time.- 🐛 **Fixed**: Fixes bug where local generator overrides for Kafka producer configuration didn't work.- 🐛 **Fixed**: Fixes bug where Postgres tables weren't always correctly created with certain column types.- ✅ **Added**: Adds a utility `JsonDeserializer` class.
+- ✅ **Added**: Introduces new `geolocation` generator.
+- 🐛 **Fixed**: Fixes race condition where dynamic JSON Schema classes didn't always load on time.
+- 🐛 **Fixed**: Fixes bug where local generator overrides for Kafka producer configuration didn't work.
+- 🐛 **Fixed**: Fixes bug where Postgres tables weren't always correctly created with certain column types.
+- ✅ **Added**: Adds a utility `JsonDeserializer` class.
 
 ---
 
@@ -2453,7 +2589,8 @@ Mon Mar 18 09:40:38 PDT 2024
 
 ### Changes
 
-- 🐛 **Fixed**: Fixed bug where inferring an Avro schema on a forked lookup would throw an error.- ⚡ **Improved**: Made the `uuid` generator compatible with all string serializers.
+- 🐛 **Fixed**: Fixed bug where inferring an Avro schema on a forked lookup would throw an error.
+- ⚡ **Improved**: Made the `uuid` generator compatible with all string serializers.
 
 ---
 
@@ -2473,7 +2610,8 @@ Mon Mar 11 11:32:44 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Added new `topicPolicy` to Kafka connection map, with the default to auto-create non-existent topics (and drop/recreate them otherwise). This makes it easier to iterate on data generators without having to flip back and forth between ShadowTraffic and Kafka.- ⚡ **Improved**: Updated default Postgres behavior for `tablePolicy` from `manual` to `dropAndCreate`, for the same reason as Kafka.
+- ✅ **Added**: Added new `topicPolicy` to Kafka connection map, with the default to auto-create non-existent topics (and drop/recreate them otherwise). This makes it easier to iterate on data generators without having to flip back and forth between ShadowTraffic and Kafka.
+- ⚡ **Improved**: Updated default Postgres behavior for `tablePolicy` from `manual` to `dropAndCreate`, for the same reason as Kafka.
 
 ---
 
@@ -2533,7 +2671,8 @@ Thu Feb 22 10:56:22 PST 2024
 
 ### Changes
 
-- ⚡ **Improved**: Loosened configuration validation for Kafka serializers to permit custom serializers. See the Kafka reference docs for instructions.- ❌ **Removed**: Removed Kafka XML serializer - instead, use a custom serializer.
+- ⚡ **Improved**: Loosened configuration validation for Kafka serializers to permit custom serializers. See the Kafka reference docs for instructions.
+- ❌ **Removed**: Removed Kafka XML serializer - instead, use a custom serializer.
 
 ---
 
@@ -2765,7 +2904,12 @@ Tue Feb 20 10:31:01 PST 2024
 
 ### Changes
 
-- ❌ **Removed**: Removed `for` in `stateMachine`, superseded by `fork` (see below).- ❌ **Removed**: Removed `stringSeries` call, superseded by `sequentialString`.- ✅ **Added**: Added `sequentialString` call to mirror behavior of `sequentialInteger`.- ✅ **Added**: Added motion calls: `geospatialPathScheme` and `geospatialPath`.- ✅ **Added**: Added new feature `fork` to dynamically create new generators.- ✅ **Added**: Added new feature `varsOnce` to lock variable definitions for the lifetime of a generator.
+- ❌ **Removed**: Removed `for` in `stateMachine`, superseded by `fork` (see below).
+- ❌ **Removed**: Removed `stringSeries` call, superseded by `sequentialString`.
+- ✅ **Added**: Added `sequentialString` call to mirror behavior of `sequentialInteger`.
+- ✅ **Added**: Added motion calls: `geospatialPathScheme` and `geospatialPath`.
+- ✅ **Added**: Added new feature `fork` to dynamically create new generators.
+- ✅ **Added**: Added new feature `varsOnce` to lock variable definitions for the lifetime of a generator.
 
 ---
 
@@ -2789,7 +2933,8 @@ Tue Feb 20 10:31:01 PST 2024
 
 ### Changes
 
-- ⚡ **Improved**: Dramatically improved performance to all backends by a factor of 20-30x.- ✅ **Added**: Added new `delay` configuration option.
+- ⚡ **Improved**: Dramatically improved performance to all backends by a factor of 20-30x.
+- ✅ **Added**: Added new `delay` configuration option.
 
 ---
 
@@ -2829,14 +2974,13 @@ Tue Feb 20 10:31:01 PST 2024
 
 ### Changes
 
-- ✅ **Added**: Introduced `discard` local and global configuration option.- 🐛 **Fixed**: Fixed eager evaluation of `oneOf` and `weightedOneOf` parameters.
+- ✅ **Added**: Introduced `discard` local and global configuration option.
+- 🐛 **Fixed**: Fixed eager evaluation of `oneOf` and `weightedOneOf` parameters.
 
 ---
 
 
-================================================================================
 # cheatsheet.md
-================================================================================
 
 Use these commands when you need a bit of boilerplate to get up and running.
 
@@ -2853,6 +2997,7 @@ docker run --env-file license.env \
 ```
 
 - `license.env` contains your license environment variables and values.
+
 - `your-config.json` is your ShadowTraffic config file.
 
 ### Docker Compose example
@@ -3044,6 +3189,7 @@ To set up your account to generate leases, do the following:
 
 1. Use [Amazon's KMS](https://docs.aws.amazon.com/kms/latest/developerguide/asymm-create-key.html) to generate an encryption key. When you select the key type, choose asymmetric so that you'll generate both a public and private key. For key usage, choose Sign and verify. For key spec, choose an RSA key of any strength, such as RSA_2048. (In the future, other key providers will also be supported)
 2. Obtain your *public key* from the KMS console and send it to ShadowTraffic support.
+
 3. You'll be sent back two additional license keys (`LICENSE_LEASE_KEY` and `LICENSE_LEASE_SIGNATURE`), which you should store with the rest of your ShadowTraffic keys. You'll need these specific keys to generate leases in your name.
 
 Finally, to generate a lease, execute the following command:
@@ -3053,7 +3199,9 @@ docker run --env-file license.env shadowtraffic/shadowtraffic:latest --action si
 ```
 
 - `--lease-name` is the team name who will own the lease.
+
 - `--lease-expiration` is a `yyyy-MM-dd` formatted date when the lease will expire. You can choose any date before your main license expires.
+
 - `--lease-signing-aws-kms-key-id` is your KMS key ID, which can be obtained from the KMS console.
 
 Be sure to set any environment variables needed inside of ShadowTraffic to communicate with AWS. In particular, you may need some combination of `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` `AWS_SESSION_TOKEN`, and `AWS_REGION`.
@@ -3072,9 +3220,7 @@ LEASE_SIGNATURE=zzz
 
 When this set of keys is used to authenticate, ShadowTraffic will work indistinguishably from your main Enterprise license.
 
-================================================================================
 # index.md
-================================================================================
 
 ## First steps
 
@@ -3104,9 +3250,7 @@ Use the [free AI copilot](https://chat.openai.com/g/g-Am8LNJj8M-shadowtraffic-he
   [![Image](/img/custom-gpt.png)](https://chatgpt.com/share/672500ad-07ec-800a-9c0c-14c0dadec0eb) (external)
 
 
-================================================================================
 # overview.md
-================================================================================
 
 So you need some synthetic data? Maybe ShadowTraffic can help. This page explains in detail what ShadowTraffic is and how it works. We'll progressively build up a simple example to introduce each of the major features.
 
@@ -3369,8 +3513,11 @@ To send our sensor data to a local Kafka cluster, our connection will look somet
 A few things to call out:
 
 1. Each connection needs a name, `dev-kafka` in this case. When you have just one connection, ShadowTraffic automatically understands that your generators should use that connection, so you don't need to tell it anything else - like in this example.
+
 2. If you have multiple connections, each generator has to specify a `connection` field to tell it what connection name it should bind to.
+
 3. The `kind` field specifies which connection type this is, and therefore what fields are required for a valid connection. For instance, if you set it to `postgres`, ShadowTraffic would require fields like `host` and `port` instead of `bootstrap.servers`.
+
 4. For you Kafka readers with a keen eye, you'll have noticed the JSON serializers with the ShadowTraffic package name. ShadowTraffic ships this out of the box for your convenience. You're welcome.
 
 See the reference pages for [Kafka](/connections/kafka.mdx), [Postgres](/connections/postgres.mdx), and [S3](/connections/s3.mdx) to learn more about each connection type.
@@ -3734,7 +3881,9 @@ The best way to understand this is to just dive into the example. Notice how `se
 Notice a few things:
 
 1. If you run it, you'll see one event written per second. The first event will be from the `start` state, and subsequent events will be from the `update` state.
+
 2. The `reading` field has been moved from the top-level `value` field into each state. The states *merge*, or *override*, its configuration into the base generator. You can observe this by adding more fields besides `reading` to the `update` state. All events but the first will contain your new field.
+
 3. `previousEvent` is a function that grabs the latest event from this generator's history. The `path` function modifier drills into the last sensor reading so it can be added to a random value as described.
 
 We're almost there. In the next section, we'll remove that hardcoded sensor ID, `2d9549cc-ac0f-b899-0b8b-cca3fc0691d3`, and generate data for 10 distinct sensors.
@@ -3773,7 +3922,9 @@ Fork is a construct that dynamically clones a generator, running it in parallel 
 Notice how:
 
 1. The `key` field in `fork` has been set to the `uuid` function, which is what it originally was at the start of this page. This will create random sensor IDs for us.
+
 2. There's also a `maxForks` field that's been set to `10`. When unset, `fork` will generate as many instances as possible. Since we want only 10 sensors, `maxForks` puts an upper bound on it.
+
 3. The hardcoded sensor ID has been removed and replaced with a reference to a variable called `forKey`. When you use `fork`, you can use this variable to identify which fork this one is.
 
 If you run this, you'll now see 10 different UUIDs, each of which updates every 1 second.
@@ -3995,7 +4146,9 @@ One common use case for this is seeding data, especially across multiple systems
 Notice a few things here:
 
 1. Generators are give `name` fields. This is what is references in the `stages` array.
+
 2. You can specify `overrides` to change how a generator behaves. In this instance, the schedule specifies that `sensors` should only produce 5 elements and then stop.
+
 3. Explicit connection names are supplied in the generator definitions because there are multiple connections.
 
 When you run this simplified example, you'll see `5` sensors emitted to Postgres, followed by an unlimited number of readings to Kafka:
@@ -4018,9 +4171,7 @@ And with that, you have a solid understanding of the main constructs in ShadowTr
 
 Want to learn more? Try the [video guides](/video-guides.mdx) or [the cheat sheet](/cheatsheet.mdx).
 
-================================================================================
 # quickstart.md
-================================================================================
 
 Here's a minimal example that generates data to Kafka to get you up and running.
 
@@ -4093,9 +4244,7 @@ If your Kafka broker is running on localhost, you may need to turn off Docker ne
 
 Want to learn more? Try the [video guides](/video-guides.mdx) or [the cheat sheet](/cheatsheet.mdx).
 
-================================================================================
 # studio.md
-================================================================================
 
 ShadowTraffic Studio is a light-weight, visual inspection tool to help you generate data exactly how you want.
 
@@ -4106,8 +4255,11 @@ ShadowTraffic Studio is a light-weight, visual inspection tool to help you gener
 ShadowTraffic Studio is bundled with the container and requires no additional dependencies. Follow these steps to launch it:
 
 1. Start the container with the `--with-studio` flag.
+
 2. When you specify this flag, it'll start a web server inside the container on port `8080`.
+
 3. Forward that port your host with Docker's `-p` command.
+
 4. Open up `http://localhost:<your forwarded port>` in your browser.
 
 Your Docker command should look something like this:
@@ -4153,9 +4305,7 @@ Click on the gear next to each generator to get a read-only view of its `localCo
 
 ![image info](/img/studio-configs.png)
 
-================================================================================
 # video-guides.md
-================================================================================
 
 ## Up and running
 
@@ -4180,28 +4330,25 @@ Click on the gear next to each generator to get a read-only view of its `localCo
 **Video**: [Watch on YouTube](https://www.youtube.com/embed/GnvVNSxF-yM?si=nMZXIuFxUpYCM5iK)
 
 
-================================================================================
 # connections/_fileFlush.md
-================================================================================
 
 To disable file buffering, set any of `lingerMs`, `batchElements`, or `batchBytes` to `0`. In other words, this will force each event to be immediately written to a file, with a new one rolled right after.
 
-================================================================================
 # connections/_fileFormats.md
-================================================================================
 
 `format` can be any of `json`, `jsonl`, `log`, and `parquet`.
 
 Additionally:
 
 - `pretty` set to `true` will cause `json` to pretty print.
+
 - `explodeJsonlArrays` set to `true` will cause `jsonl` arrays to span one element per line.
+
 - `format` set to `log` means that `data` must be a string.
+
 - `compression` can optionally be set to `gzip`.
 
-================================================================================
 # connections/azureBlobStorage.md
-================================================================================
 
 ## Commentary
 
@@ -4497,6 +4644,7 @@ This mostly works great, but sometimes you might want to adjust that degree of c
 You can change it by using the following two optional parameters under `writerConfigs`:
 
 - `bufferDepth`: the maximum number of events to buffer for parallel writers to consume from. By default, this number is `50`.
+
 - `concurrency`: the number of parallel writers. By default, this number is the number of cores ShadowTraffic has access to.
 
 **Input:**
@@ -5061,9 +5209,7 @@ You can change it by using the following two optional parameters under `writerCo
 ```
 
 
-================================================================================
 # connections/eventstore.md
-================================================================================
 
 ## Commentary
 
@@ -5542,9 +5688,7 @@ Use the `data` and `metadata` fields to set event payload data.
 ```
 
 
-================================================================================
 # connections/filesystem.md
-================================================================================
 
 ## Commentary
 
@@ -6370,9 +6514,7 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
 ```
 
 
-================================================================================
 # connections/googleCloudStorage.md
-================================================================================
 
 ## Commentary
 
@@ -7053,9 +7195,7 @@ If you have multiple generators writing to the same bucket and want to execute a
 ```
 
 
-================================================================================
 # connections/kafka.md
-================================================================================
 
 ## Commentary
 
@@ -8274,9 +8414,7 @@ This will cause ShadowTraffic to skip past the record and continue running. Note
 ```
 
 
-================================================================================
 # connections/mysql.md
-================================================================================
 
 ## Commentary
 
@@ -8978,9 +9116,7 @@ postgres=# SELECT * FROM sandbox LIMIT 10;
 ```
 
 
-================================================================================
 # connections/oracle.md
-================================================================================
 
 ## Commentary
 
@@ -9686,9 +9822,7 @@ A random snapshot of the table might look like:
 ```
 
 
-================================================================================
 # connections/postgres.md
-================================================================================
 
 ## Commentary
 
@@ -10414,9 +10548,7 @@ The specific format of the timestamp will defer to the schema set in Postgres.
 ```
 
 
-================================================================================
 # connections/s3.md
-================================================================================
 
 ## Commentary
 
@@ -10425,6 +10557,7 @@ The specific format of the timestamp will defer to the schema set in Postgres.
 Connects to Amazon S3. The following environment variables must be set:
 
 - `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, or `AWS_SESSION_TOKEN`.
+
 - `AWS_REGION`
 
 You can set [Docker environment variables](https://stackoverflow.com/questions/30494050/how-do-i-pass-environment-variables-to-docker-containers) with either `-e` or `--env-file`, similar to how the license environment variables are passed.
@@ -10605,6 +10738,7 @@ This mostly works great, but sometimes you might want to adjust that degree of c
 You can change it by using the following two optional parameters under `writerConfigs`:
 
 - `bufferDepth`: the maximum number of events to buffer for parallel writers to consume from. By default, this number is `10000`.
+
 - `concurrency`: the number of parallel writers. By default, this number is the number of cores ShadowTraffic has access to.
 
 **Input:**
@@ -11063,9 +11197,7 @@ You can change it by using the following two optional parameters under `writerCo
 ```
 
 
-================================================================================
 # connections/sqlServer.md
-================================================================================
 
 ## Commentary
 
@@ -11770,9 +11902,7 @@ A random snapshot of the table might look like:
 ```
 
 
-================================================================================
 # connections/webhook.md
-================================================================================
 
 ## Commentary
 
@@ -12475,9 +12605,7 @@ response:
 ```
 
 
-================================================================================
 # fork/keepAlive.md
-================================================================================
 
 ## Commentary
 
@@ -12531,9 +12659,7 @@ In this example, two forks will be running at any given time. When a fork exits 
 ```
 
 
-================================================================================
 # fork/key.md
-================================================================================
 
 ## Commentary
 
@@ -12753,9 +12879,7 @@ You can override this behavior by setting an alternative [`strategy`](/functions
 ```
 
 
-================================================================================
 # fork/maxForks.md
-================================================================================
 
 ## Commentary
 
@@ -12797,9 +12921,7 @@ The maximum number of forks that will be spawned. After this number is met, this
 ```
 
 
-================================================================================
 # fork/oneTimeKeys.md
-================================================================================
 
 ## Commentary
 
@@ -12868,9 +12990,7 @@ When `oneTimeKeys` is set to `true`, the `child` topic will only ever receive 3 
 ```
 
 
-================================================================================
 # fork/stagger.md
-================================================================================
 
 ## Commentary
 
@@ -12929,9 +13049,7 @@ The minimum number of ms between how quickly a new fork is spawned.
 ```
 
 
-================================================================================
 # function-modifiers/avroHint.md
-================================================================================
 
 ## Commentary
 
@@ -12996,9 +13114,7 @@ In this example, `avroHint` overrides ShadowTraffic's guess that `weightedOneOf`
 ```
 
 
-================================================================================
 # function-modifiers/cardinality.md
-================================================================================
 
 ## Commentary
 
@@ -13098,9 +13214,7 @@ Set `cardinality` to a positive integer. In this example:
 ```
 
 
-================================================================================
 # function-modifiers/cast.md
-================================================================================
 
 ## Commentary
 
@@ -13278,9 +13392,7 @@ Use `boolean` to parse a string to a boolean. Invalid values become `false`.
 ```
 
 
-================================================================================
 # function-modifiers/clamp.md
-================================================================================
 
 ## Commentary
 
@@ -13368,9 +13480,7 @@ Use `clamp` with a minimum and maxiumum value. In this example, the value will n
 ```
 
 
-================================================================================
 # function-modifiers/decimals.md
-================================================================================
 
 ## Commentary
 
@@ -13448,9 +13558,7 @@ Use `0` to retrieve whole integers.
 ```
 
 
-================================================================================
 # function-modifiers/elide.md
-================================================================================
 
 ## Commentary
 
@@ -13754,9 +13862,7 @@ Specify `whenAbsent` to elide when a reference value is `false` or `null`.
 ```
 
 
-================================================================================
 # function-modifiers/keyNames.md
-================================================================================
 
 ## Commentary
 
@@ -13816,9 +13922,7 @@ Overrides key names for any generator that returns a map, letting you customize 
 ```
 
 
-================================================================================
 # function-modifiers/null.md
-================================================================================
 
 ## Commentary
 
@@ -13886,9 +13990,7 @@ How frequently this function should return `null`.
 ```
 
 
-================================================================================
 # function-modifiers/path.md
-================================================================================
 
 ## Commentary
 
@@ -13998,9 +14100,7 @@ Use indexes, offset from `0`, to drill into an array.
 ```
 
 
-================================================================================
 # function-modifiers/pgHint.md
-================================================================================
 
 ## Commentary
 
@@ -14035,9 +14135,7 @@ Explicitly defines how this data will be represented if ShadowTraffic automatica
 ```
 
 
-================================================================================
 # function-modifiers/selectKeys.md
-================================================================================
 
 ## Commentary
 
@@ -14115,9 +14213,7 @@ Selects a subset of keys from generators that return objects.
 ```
 
 
-================================================================================
 # function-modifiers/serialize.md
-================================================================================
 
 ## Commentary
 
@@ -14315,9 +14411,7 @@ Use `type` set to `postgresTimestamp` to coerce the value into a Postgres `TIMES
 ```
 
 
-================================================================================
 # function-modifiers/sqlHint.md
-================================================================================
 
 ## Commentary
 
@@ -14352,9 +14446,7 @@ Explicitly defines how this data will be represented if ShadowTraffic automatica
 ```
 
 
-================================================================================
 # functions/add.md
-================================================================================
 
 ## Commentary
 
@@ -14429,9 +14521,7 @@ Generates the sum of `args`. You can also use this function through an infix [`m
 ```
 
 
-================================================================================
 # functions/boolean.md
-================================================================================
 
 ## Commentary
 
@@ -14492,9 +14582,7 @@ Generates `true` and `false`.
 ```
 
 
-================================================================================
 # functions/bytes.md
-================================================================================
 
 ## Commentary
 
@@ -14625,9 +14713,7 @@ Use a function to generate byte arrays of varying sizes, in this case between `1
 ```
 
 
-================================================================================
 # functions/characterString.md
-================================================================================
 
 ## Commentary
 
@@ -14807,9 +14893,7 @@ In this example with `unique` set to `true` and `case` set to `lower`, there are
 ```
 
 
-================================================================================
 # functions/constant.md
-================================================================================
 
 ## Commentary
 
@@ -14876,9 +14960,7 @@ Generates the value of `x` always. This is useful if you want to generate a know
 ```
 
 
-================================================================================
 # functions/cos.md
-================================================================================
 
 ## Commentary
 
@@ -14948,9 +15030,7 @@ Generates the trigonometric cosine of `degrees`. You can also use this function 
 ```
 
 
-================================================================================
 # functions/customFunction.md
-================================================================================
 
 ## Commentary
 
@@ -15115,9 +15195,7 @@ Finally, invoke the function inside ShadowTraffic.
 ```
 
 
-================================================================================
 # functions/digitString.md
-================================================================================
 
 ## Commentary
 
@@ -15202,9 +15280,7 @@ Generates character strings composed of only digits. Specify the length with `n`
 ```
 
 
-================================================================================
 # functions/divide.md
-================================================================================
 
 ## Commentary
 
@@ -15279,9 +15355,7 @@ Generates the division of `args`. You can also use this function through an infi
 ```
 
 
-================================================================================
 # functions/env.md
-================================================================================
 
 ## Commentary
 
@@ -15432,9 +15506,7 @@ The terminal will display:
 ```
 
 
-================================================================================
 # functions/formatDateTime.md
-================================================================================
 
 ## Commentary
 
@@ -15597,9 +15669,7 @@ In this example, timestamps are generated anywhere between 1 and 6 months in the
 ```
 
 
-================================================================================
 # functions/geoWander.md
-================================================================================
 
 ## Commentary
 
@@ -15610,13 +15680,17 @@ Generates an infinite, randomized path of coordinates in a geospatially bounded 
 Inputs:
 
 - `boundingBox`: a geospatially bounded box defined by two points: the lower left point and the upper right point.
+
 - All other parameters mirror those in `waypoints` generator.
 
 Outputs:
 
 - `latitude`: The latitude of the position.
+
 - `longitude`: The longitude of the position.
+
 - `duration`: The number of milliseconds between each point. Use this value to throttle the generator for speed-realism.
+
 - `heading`: The navigational heading/bearing, in degrees, of the object.
 
 ---
@@ -15792,9 +15866,7 @@ Outputs:
 ```
 
 
-================================================================================
 # functions/geolocation.md
-================================================================================
 
 ## Commentary
 
@@ -15805,6 +15877,7 @@ Generates real geolocations in a variety of formats. This generator requires dow
 ### Getting the data sets
 
 This generator is powered using public domain data. For each country you want to generate locations in, you need the corresponding data set. Download it to your machine and follow the rest of the instructions.
+
 
 - [United States](https://nationaladdressdata.s3.amazonaws.com/NAD_r15_TXT.zip)
 
@@ -16014,9 +16087,7 @@ If you set `format` to an array, `geolocation` will return an object of `format`
 ```
 
 
-================================================================================
 # functions/gitSha.md
-================================================================================
 
 ## Commentary
 
@@ -16077,9 +16148,7 @@ Generates Git SHA-256 strings.
 ```
 
 
-================================================================================
 # functions/heading.md
-================================================================================
 
 ## Commentary
 
@@ -16133,9 +16202,7 @@ Given a pair of starting and ending coordinates, calculates the heading in degre
 ```
 
 
-================================================================================
 # functions/histogram.md
-================================================================================
 
 ## Commentary
 
@@ -16201,9 +16268,7 @@ Selects elements from a population according to the supplied bins and frequencie
 ```
 
 
-================================================================================
 # functions/intervals.md
-================================================================================
 
 ## Commentary
 
@@ -16216,7 +16281,9 @@ With this function, you specify intervals of time and the corresponding value to
 A few Cron expression examples:
 
 - `0-29 1 * * *` matches 1:00 - 1:29 AM of every day.
+
 - `* * * * 5` matches all day Friday.
+
 - `* 0-12 * 2 5` matches the first 12 hours of the day for all Friday's in Feburary.
 
 UNIX Cron expressions have granularity down to the minute, so specifying `0-29 1 * * *` captures all wallclock times `>= 1:00 AM` and strictly `< 1:30 AM`.
@@ -16532,9 +16599,7 @@ When multiple Cron expressions match, the earlier one is used. Both of these Cro
 ```
 
 
-================================================================================
 # functions/loadJsonFile.md
-================================================================================
 
 ## Commentary
 
@@ -16604,7 +16669,9 @@ When you load JSON files, you should see messages like the following on the cons
 
 Use `files` to merge multiple files together. All files must contain the same root types. This is useful if you want to break a generator or variables declaration into separate files, but ultimately use them all together.
 
+
 - If all files are maps, the maps are merged together, with latter maps taking priority over earlier maps.
+
 - If all files are arrays, the arrays are concatenated in the order listed.
 
 For example, if `file1.json` contained:
@@ -16737,9 +16804,7 @@ Before `loadJsonFile` runs, all other preprocessors run. In this example, the en
 ```
 
 
-================================================================================
 # functions/lookup.md
-================================================================================
 
 ## Commentary
 
@@ -18084,9 +18149,7 @@ Lookups against different connection types have different schemas. Each schema i
 ```
 
 
-================================================================================
 # functions/map.md
-================================================================================
 
 ## Commentary
 
@@ -18197,9 +18260,7 @@ Generates a map of `n` key/value pairs. Duplicate keys will collapse and defer t
 ```
 
 
-================================================================================
 # functions/mapEach.md
-================================================================================
 
 ## Commentary
 
@@ -18408,9 +18469,7 @@ This example sums the total value of a shopping cart, where the cart contains it
 ```
 
 
-================================================================================
 # functions/math.md
-================================================================================
 
 ## Commentary
 
@@ -18693,9 +18752,7 @@ Use `names` to make a map of identifiers to expressions. These identifiers can b
 ```
 
 
-================================================================================
 # functions/max.md
-================================================================================
 
 ## Commentary
 
@@ -18770,9 +18827,7 @@ Generates the maximum value of `args`. You can also use this function through an
 ```
 
 
-================================================================================
 # functions/merge.md
-================================================================================
 
 ## Commentary
 
@@ -18878,9 +18933,7 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
 ```
 
 
-================================================================================
 # functions/min.md
-================================================================================
 
 ## Commentary
 
@@ -18955,9 +19008,7 @@ Generates the minimum value of `args`. You can also use this function through an
 ```
 
 
-================================================================================
 # functions/multiply.md
-================================================================================
 
 ## Commentary
 
@@ -19031,9 +19082,7 @@ Generates the multiplication of `args`. You can also use this function through a
 ```
 
 
-================================================================================
 # functions/normalDistribution.md
-================================================================================
 
 ## Commentary
 
@@ -19183,9 +19232,7 @@ Use the `decimals` function modifier to generate integers.
 ```
 
 
-================================================================================
 # functions/now.md
-================================================================================
 
 ## Commentary
 
@@ -19232,9 +19279,7 @@ Generates the current wallclock time in milliseconds.
 ```
 
 
-================================================================================
 # functions/oneOf.md
-================================================================================
 
 ## Commentary
 
@@ -19376,9 +19421,7 @@ Each choice can be another generator.
 ```
 
 
-================================================================================
 # functions/pow.md
-================================================================================
 
 ## Commentary
 
@@ -19519,9 +19562,7 @@ Optionally, use function calls that return numbers to perform dynamic calculatio
 ```
 
 
-================================================================================
 # functions/previousEvent.md
-================================================================================
 
 ## Commentary
 
@@ -19650,9 +19691,7 @@ In this example, the fallback value (`42`) is wrapped in a map with `value` beca
 ```
 
 
-================================================================================
 # functions/repeatedly.md
-================================================================================
 
 ## Commentary
 
@@ -19915,9 +19954,7 @@ Set `localVars` to a map of names and values, just like top-level generator `var
 ```
 
 
-================================================================================
 # functions/sequentialInteger.md
-================================================================================
 
 ## Commentary
 
@@ -20139,9 +20176,7 @@ Use `loopAfter` to reset the sequence to its initial value after exceeding the s
 ```
 
 
-================================================================================
 # functions/sequentialString.md
-================================================================================
 
 ## Commentary
 
@@ -20218,9 +20253,7 @@ May optionally supply `startingFrom`, which defaults to `0`.
 ```
 
 
-================================================================================
 # functions/sin.md
-================================================================================
 
 ## Commentary
 
@@ -20290,9 +20323,7 @@ Generates the trigonometric sine of `degrees`. You can also use this function th
 ```
 
 
-================================================================================
 # functions/someKeys.md
-================================================================================
 
 ## Commentary
 
@@ -20377,9 +20408,7 @@ Selects one or more keys from an object at random. Most useful combined with `pr
 ```
 
 
-================================================================================
 # functions/stateMachine.md
-================================================================================
 
 ## Commentary
 
@@ -20965,6 +20994,7 @@ In these situations, you need to have some way to explicitly track intermediate 
 To do this, each state in a state machine can optionally name a `preHook` and `postHook`, which are both typed as [`customFunction`](/functions/customFunction). They work as a pair:
 
 - `preHook` runs *before* the state is evaluated and allows you to expose new variables based the intermediate state.
+
 - `postHook` runs *after* the state is evaluated and allows you to update the intermediate state based on the event you emitted.
 
 Here's the configuration in context:
@@ -21046,7 +21076,9 @@ Here's the configuration in context:
 Notice a few things about this configuration:
 
 1. `addItem` defines a `postHook`, whose job it will be to store the generated item into its intermediate state.
+
 2. `removeItem` defines a `preHook`, whose job it is to select a previously generated item, remove it from intermediate state, and make it available as a variable so the event can name which item was removed.
+
 3. `checkout` defines a `prehook` to inspect its state and deliver all remaining items as a variable.
 
 Lastly, let's look at the content of `/home/hooks.py` to show how it all works.
@@ -21086,6 +21118,7 @@ def checkout(params):
 Pre and post hooks always return maps. Namely:
 
 1. `preHook` returns `state` and `vars`.
+
 2. `postHook` returns `state`.
 
 When all of this is put together, you'll see output that makes sense across all items added and removed, like so:
@@ -21236,9 +21269,7 @@ When all of this is put together, you'll see output that makes sense across all 
 ```
 
 
-================================================================================
 # functions/string.md
-================================================================================
 
 ## Commentary
 
@@ -21255,6 +21286,7 @@ By default, strings are generated with a locale configured for United States Eng
 ### Faker expressions and values
 
 Use any of these expressions in the form of `#{expr}`. Where applicable, links are supplied to the literal value list within the Datafaker project.
+
 
 - Address.buildingNumber **Faker Expression**: address
 - Address.city **Faker Expression**: address
@@ -22782,9 +22814,7 @@ Change the locale (default United States/English) by setting `locale`: first par
 ```
 
 
-================================================================================
 # functions/subtract.md
-================================================================================
 
 ## Commentary
 
@@ -22858,9 +22888,7 @@ Generates the substraction of `args`. You can also use this function through an 
 ```
 
 
-================================================================================
 # functions/tan.md
-================================================================================
 
 ## Commentary
 
@@ -22930,9 +22958,7 @@ Generates the trigonometric tangent of `degrees`. You can also use this function
 ```
 
 
-================================================================================
 # functions/toInstant.md
-================================================================================
 
 ## Commentary
 
@@ -23006,9 +23032,7 @@ Generates an Instant type for use with a backend requiring non-string timestamps
 ```
 
 
-================================================================================
 # functions/trichotomy.md
-================================================================================
 
 ## Commentary
 
@@ -23161,9 +23185,7 @@ Use `bound`s and `result`s to create the bucket allocations.
 ```
 
 
-================================================================================
 # functions/ulid.md
-================================================================================
 
 ## Commentary
 
@@ -23225,9 +23247,7 @@ This function takes no parameters.
 ```
 
 
-================================================================================
 # functions/uniformDistribution.md
-================================================================================
 
 ## Commentary
 
@@ -23367,9 +23387,7 @@ Use the `decimals` function modifier to generate integers.
 ```
 
 
-================================================================================
 # functions/uuid.md
-================================================================================
 
 ## Commentary
 
@@ -23430,9 +23448,7 @@ Generates type-4 instances of java.util.UUID.
 ```
 
 
-================================================================================
 # functions/var.md
-================================================================================
 
 ## Commentary
 
@@ -23666,9 +23682,7 @@ Use a compound structure, like a map, to generate multiple values assigned to on
 ```
 
 
-================================================================================
 # functions/waypoints.md
-================================================================================
 
 ## Commentary
 
@@ -23679,19 +23693,29 @@ Generates a map of data about how to travel between `waypoints`, a series of coo
 ### Inputs
 
 - `waypoints`: A series of coordinates to travel to.
+
 - `speed`: The speed to travel, in km/hr.
+
 - `scale`: Controls the granularity of points to travel through the `waypoints`. A value of `1`, the default, yields one point per kilometer. Higher values yield coarser points, lower yield finer.
+
 - `unit`: Specify values in degrees or radians. Default is radians.
+
 - `loop`: Optional parameter. When set to `true`, causes an infinite series of coordinates to be generated in a loop around waypoints. In other words, when the last waypoint is encountered, a final segment is automatically drawn back to the first. Defaults to `false`.
 
 ### Outputs
 
 - `latitude`: The current latitude.
+
 - `longitude`: The current longitude.
+
 - `heading`: The current heading between this geoposition and the next.
+
 - `duration`: The number of milliseconds between each point. Use this value to throttle the generator for speed-realism.
+
 - `points`: The total number of iterations it will take to travel between the first and last waypoint. Use this to stop the generator after completing the route. If `loop` is set to `true`, this indicates the number of points needed to travel through one complete loop.
+
 - `distance`: The total number of kilometers between the waypoints.
+
 - `time`: The total time, in hours, it will take to travel between `waypoints` for the given `speed`.
 
 ---
@@ -23913,9 +23937,7 @@ It's a good idea to place calls to `waypoints` in a `var` so you can pick apart 
 ```
 
 
-================================================================================
 # functions/weightedOneOf.md
-================================================================================
 
 ## Commentary
 
@@ -24007,9 +24029,7 @@ Randomly selects a choice using the supplied probabilities.
 ```
 
 
-================================================================================
 # generator-configuration/avroSchemaHint.md
-================================================================================
 
 ## Commentary
 
@@ -24123,9 +24143,7 @@ The right way to compute this value based on [`now`](/functions/now) is to:
 ```
 
 
-================================================================================
 # generator-configuration/delay.md
-================================================================================
 
 ## Commentary
 
@@ -24238,9 +24256,7 @@ Use `globalConfigs` to set `delay` globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/discard.md
-================================================================================
 
 ## Commentary
 
@@ -24374,9 +24390,7 @@ In the example below, `a` discards 20% of its events, but `b` is able to look up
 ```
 
 
-================================================================================
 # generator-configuration/events.md
-================================================================================
 
 ## Commentary
 
@@ -24490,9 +24504,7 @@ Use `globalConfigs` to set it globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/geolocation.md
-================================================================================
 
 ## Commentary
 
@@ -24553,9 +24565,7 @@ Provide the mapping between country and file. The file should be the absolute pa
 ```
 
 
-================================================================================
 # generator-configuration/history.md
-================================================================================
 
 ## Commentary
 
@@ -24655,9 +24665,7 @@ Use `globalConfigs` to set the history limit globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/jsonSchemaHint.md
-================================================================================
 
 ## Commentary
 
@@ -24725,9 +24733,7 @@ Set the keys in the map to the fields in the generator. In this example, the sch
 ```
 
 
-================================================================================
 # generator-configuration/kafkaKeyAvroSchemaHint.md
-================================================================================
 
 ## Commentary
 
@@ -24775,9 +24781,7 @@ Set `kafkaKeyAvroSchemaHint` to the exact Avro schema you want ShadowTraffic to 
 ```
 
 
-================================================================================
 # generator-configuration/kafkaKeyProtobufHint.md
-================================================================================
 
 ## Commentary
 
@@ -24856,9 +24860,7 @@ Set `kafkaKeyProtobufHint` with two keys: `schemaFile`, which is a path inside t
 ```
 
 
-================================================================================
 # generator-configuration/kafkaValueAvroSchemaHint.md
-================================================================================
 
 ## Commentary
 
@@ -24906,9 +24908,7 @@ Set `kafkaValueAvroSchemaHint` to the exact Avro schema you want ShadowTraffic t
 ```
 
 
-================================================================================
 # generator-configuration/kafkaValueProtobufHint.md
-================================================================================
 
 ## Commentary
 
@@ -24984,9 +24984,7 @@ Set `kafkaValueProtobufHint` with two keys: `schemaFile`, which is a path inside
 ```
 
 
-================================================================================
 # generator-configuration/lookupScope.md
-================================================================================
 
 ## Commentary
 
@@ -25107,9 +25105,7 @@ Use `globalConfigs` to set explicitly `lookupScope` to  `instantaneous`. This is
 ```
 
 
-================================================================================
 # generator-configuration/maxBytes.md
-================================================================================
 
 ## Commentary
 
@@ -25174,9 +25170,7 @@ Use `localConfigs` to set `maxBytes` for the generator. This generator will stop
 ```
 
 
-================================================================================
 # generator-configuration/maxEvents.md
-================================================================================
 
 ## Commentary
 
@@ -25279,9 +25273,7 @@ Use `globalConfigs` to set `maxEvents` globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/maxHistoryEvents.md
-================================================================================
 
 ## Commentary
 
@@ -25361,9 +25353,7 @@ Use `globalConfigs` to set the history limit globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/maxMs.md
-================================================================================
 
 ## Commentary
 
@@ -25451,9 +25441,7 @@ Use `globalConfigs` to set `maxMs` globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/protobufSchemaHint.md
-================================================================================
 
 ## Commentary
 
@@ -25536,9 +25524,7 @@ Set the keys in the map to the fields in the generator. In this example, the sch
 ```
 
 
-================================================================================
 # generator-configuration/repeat.md
-================================================================================
 
 ## Commentary
 
@@ -25665,9 +25651,7 @@ Use `globalConfigs` to set `repeat` globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/throttle.md
-================================================================================
 
 ## Commentary
 
@@ -25793,9 +25777,7 @@ Use `globalConfigs` to set `throttle` globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/throttleMs.md
-================================================================================
 
 ## Commentary
 
@@ -25910,9 +25892,7 @@ Use `globalConfigs` to set `throttle` globally for all generators.
 ```
 
 
-================================================================================
 # generator-configuration/throughput.md
-================================================================================
 
 ## Commentary
 
@@ -26007,9 +25987,7 @@ Use `globalConfigs` to set `throughput` globally for all generators. In this exa
 ```
 
 
-================================================================================
 # generator-configuration/time.md
-================================================================================
 
 ## Commentary
 
@@ -26070,9 +26048,7 @@ Use `time` in the global configuration to run as if this were the wallclock time
 ```
 
 
-================================================================================
 # generator-configuration/timeMultiplier.md
-================================================================================
 
 ## Commentary
 
@@ -26235,9 +26211,7 @@ Use functions to dynamically choose the rate. In this example, every other minut
 ```
 
 
-================================================================================
 # schedule/loop.md
-================================================================================
 
 ## Commentary
 
@@ -26350,9 +26324,7 @@ When the last stage of a schedule finishes, `loop` resets the schedule and begin
 ```
 
 
-================================================================================
 # schedule/stages.md
-================================================================================
 
 ## Commentary
 
@@ -26591,10 +26563,3 @@ In this example, generator `a` is overriden to produce only `5` events, and `b` 
   }
 }
 ```
-
-
-================================================================================
-# End of Documentation
-*Generated on 2025-06-30T22:24:01.987Z*
-*Total files consolidated: 111*
-================================================================================
