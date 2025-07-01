@@ -1,3 +1,33 @@
+# index.md
+
+## First steps
+
+### Learn by doing
+
+## Getting Started
+
+  [**Try the quickstart**](/quickstart)
+  [**Read the overview**](/overview)
+
+### Learn by watching
+
+### Videos
+
+  [![Image](/img/yt-up-and-running.svg)](https://www.youtube.com/watch?v=Ty0syc2TMM4) (external)
+  [![Image](/img/yt-api.svg)](https://www.youtube.com/watch?v=hqGWMiHtWHY) (external)
+  [![Image](/img/yt-relational.svg)](https://www.youtube.com/watch?v=bVggGh3u58k) (external)
+
+See [the full library](/video-guides.mdx).
+
+### Learn by chatting
+
+Use the [free AI copilot](https://chat.openai.com/g/g-Am8LNJj8M-shadowtraffic-helper) to automatically write ShadowTraffic files through natural language (requires an OpenAI login).
+
+### Videos
+
+  [![Image](/img/custom-gpt.png)](https://chatgpt.com/share/672500ad-07ec-800a-9c0c-14c0dadec0eb) (external)
+
+
 # changelog.md
 
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
@@ -3219,36 +3249,6 @@ LEASE_SIGNATURE=zzz
 ```
 
 When this set of keys is used to authenticate, ShadowTraffic will work indistinguishably from your main Enterprise license.
-
-# index.md
-
-## First steps
-
-### Learn by doing
-
-## Getting Started
-
-  [**Try the quickstart**](/quickstart)
-  [**Read the overview**](/overview)
-
-### Learn by watching
-
-### Videos
-
-  [![Image](/img/yt-up-and-running.svg)](https://www.youtube.com/watch?v=Ty0syc2TMM4) (external)
-  [![Image](/img/yt-api.svg)](https://www.youtube.com/watch?v=hqGWMiHtWHY) (external)
-  [![Image](/img/yt-relational.svg)](https://www.youtube.com/watch?v=bVggGh3u58k) (external)
-
-See [the full library](/video-guides.mdx).
-
-### Learn by chatting
-
-Use the [free AI copilot](https://chat.openai.com/g/g-Am8LNJj8M-shadowtraffic-helper) to automatically write ShadowTraffic files through natural language (requires an OpenAI login).
-
-### Videos
-
-  [![Image](/img/custom-gpt.png)](https://chatgpt.com/share/672500ad-07ec-800a-9c0c-14c0dadec0eb) (external)
-
 
 # overview.md
 
@@ -15669,203 +15669,6 @@ In this example, timestamps are generated anywhere between 1 and 6 months in the
 ```
 
 
-# functions/geoWander.md
-
-## Commentary
-
-[Badges]
-
-Generates an infinite, randomized path of coordinates in a geospatially bounded box.
-
-Inputs:
-
-- `boundingBox`: a geospatially bounded box defined by two points: the lower left point and the upper right point.
-
-- All other parameters mirror those in `waypoints` generator.
-
-Outputs:
-
-- `latitude`: The latitude of the position.
-
-- `longitude`: The longitude of the position.
-
-- `duration`: The number of milliseconds between each point. Use this value to throttle the generator for speed-realism.
-
-- `heading`: The navigational heading/bearing, in degrees, of the object.
-
----
-
-## Examples
-
-### Generating coordinates
-
-**Input:**
-```json
-{
-  "_gen": "geoWander",
-  "boundingBox": [
-    [
-      45,
-      -125
-    ],
-    [
-      50,
-      -70
-    ]
-  ],
-  "speed": 500,
-  "scale": 0.025
-}
-```
-
-**Output:**
-```json
-[
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": {
-      "latitude": 49.897710573405185,
-      "longitude": -111.56184421408972,
-      "duration": 179.99987029755133,
-      "heading": 350.64646965144277
-    },
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": {
-      "latitude": 49.89770122909286,
-      "longitude": -111.56182085485278,
-      "duration": 179.99987029755133,
-      "heading": 350.64646965144277
-    },
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": {
-      "latitude": 49.897691884780535,
-      "longitude": -111.56179749561585,
-      "duration": 179.99987029755133,
-      "heading": 350.64646965144277
-    },
-    "headers": null
-  }
-]
-```
-
-*... (7 more examples)*
-
----
-
-## Specification
-
-### JSON schema
-
-```json
-{
-  "type": "object",
-  "properties": {
-    "boundingBox": {
-      "oneOf": [
-        {
-          "type": "object",
-          "properties": {
-            "_gen": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "_gen"
-          ]
-        },
-        {
-          "type": "array",
-          "items": {
-            "oneOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "_gen": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "_gen"
-                ]
-              },
-              {
-                "type": "array",
-                "items": {
-                  "oneOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "_gen": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "_gen"
-                      ]
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ]
-                },
-                "minItems": 2,
-                "maxItems": 2
-              }
-            ]
-          },
-          "minItems": 2,
-          "maxItems": 2
-        }
-      ]
-    },
-    "speed": {
-      "oneOf": [
-        {
-          "type": "number",
-          "minimum": 0
-        },
-        {
-          "type": "object",
-          "properties": {
-            "_gen": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "_gen"
-          ]
-        }
-      ]
-    },
-    "scale": {
-      "type": "number",
-      "minimum": 0.000001
-    },
-    "unit": {
-      "type": "string",
-      "enum": [
-        "degrees",
-        "radians"
-      ]
-    }
-  },
-  "required": [
-    "boundingBox",
-    "speed"
-  ]
-}
-```
-
-
 # functions/geolocation.md
 
 ## Commentary
@@ -16082,6 +15885,203 @@ If you set `format` to an array, `geolocation` will return an object of `format`
   },
   "required": [
     "country"
+  ]
+}
+```
+
+
+# functions/geoWander.md
+
+## Commentary
+
+[Badges]
+
+Generates an infinite, randomized path of coordinates in a geospatially bounded box.
+
+Inputs:
+
+- `boundingBox`: a geospatially bounded box defined by two points: the lower left point and the upper right point.
+
+- All other parameters mirror those in `waypoints` generator.
+
+Outputs:
+
+- `latitude`: The latitude of the position.
+
+- `longitude`: The longitude of the position.
+
+- `duration`: The number of milliseconds between each point. Use this value to throttle the generator for speed-realism.
+
+- `heading`: The navigational heading/bearing, in degrees, of the object.
+
+---
+
+## Examples
+
+### Generating coordinates
+
+**Input:**
+```json
+{
+  "_gen": "geoWander",
+  "boundingBox": [
+    [
+      45,
+      -125
+    ],
+    [
+      50,
+      -70
+    ]
+  ],
+  "speed": 500,
+  "scale": 0.025
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "latitude": 49.897710573405185,
+      "longitude": -111.56184421408972,
+      "duration": 179.99987029755133,
+      "heading": 350.64646965144277
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "latitude": 49.89770122909286,
+      "longitude": -111.56182085485278,
+      "duration": 179.99987029755133,
+      "heading": 350.64646965144277
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "latitude": 49.897691884780535,
+      "longitude": -111.56179749561585,
+      "duration": 179.99987029755133,
+      "heading": 350.64646965144277
+    },
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "boundingBox": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "_gen": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "_gen"
+                ]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ]
+                },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            ]
+          },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      ]
+    },
+    "speed": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "scale": {
+      "type": "number",
+      "minimum": 0.000001
+    },
+    "unit": {
+      "type": "string",
+      "enum": [
+        "degrees",
+        "radians"
+      ]
+    }
+  },
+  "required": [
+    "boundingBox",
+    "speed"
   ]
 }
 ```
