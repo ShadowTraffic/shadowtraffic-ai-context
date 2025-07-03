@@ -2951,6 +2951,37 @@ Use the [free AI copilot](https://chat.openai.com/g/g-Am8LNJj8M-shadowtraffic-he
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.1.5
+
+Wed Jul  2 11:56:11 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Permits `startingFrom` in [`sequentialString`](/functions/sequentialString) to be a function call.
+- 🐛 **Fixed**: Fixes a bug related to [`customFunction`](/functions/customFunction) that would incorrectly advance other fields state.
+
+---
+
+###  1.1.4
+
+Tue Jul  1 12:03:42 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes a bug in ShadowTraffic Studio that crashes the UI when state machine delays are used.
+
+---
+
+###  1.1.3
+
+Tue Jul  1 11:20:59 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Adds the ability for state machines to [delay arbitrary states](/functions/stateMachine/#overriding-delay-conditions).
+
+---
+
 ###  1.1.2
 
 Fri Jun 27 11:55:57 PDT 2025
@@ -23899,6 +23930,57 @@ In this example, state `s1` throttles for `2000` ms, the default, and `s2` throt
 }
 ```
 
+### Overriding delay conditions
+
+Use `localConfigs` with [`delay`](/generator-configuration/delay/) inside of a state to override the generator's default delay conditions. Use this when you want to make a particular state lag behind other ones.
+
+In this example, half of `s2`s events get delayed by about 200 milliseconds, while `s1`'s events send immediately. You can differentiate which events got delayed by looking at the advancing `id` attribute.
+
+**Input:**
+```json
+{
+  "topic": "sandbox",
+  "value": {
+    "id": {
+      "_gen": "sequentialInteger"
+    }
+  },
+  "stateMachine": {
+    "_gen": "stateMachine",
+    "initial": "s1",
+    "transitions": {
+      "s1": "s2",
+      "s2": "s1"
+    },
+    "states": {
+      "s1": {
+        "value": {
+          "x": 1
+        }
+      },
+      "s2": {
+        "value": {
+          "x": 2
+        },
+        "localConfigs": {
+          "delay": {
+            "rate": 0.5,
+            "ms": {
+              "_gen": "normalDistribution",
+              "mean": 200,
+              "sd": 50
+            }
+          }
+        }
+      }
+    }
+  },
+  "localConfigs": {
+    "throttleMs": 100
+  }
+}
+```
+
 ### Managing custom state
 
 Sometimes you need to generate new data that's based on previous action but isn't present in any of the data you already emitted.
@@ -25559,19 +25641,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-28 05:19:49.883949332",
+    "value": "2023-06-02 05:19:49.883949332",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2021-11-04 21:32:48.976335815",
+    "value": "2021-11-09 21:32:48.976335815",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2021-07-01 02:00:53.351956934",
+    "value": "2021-07-06 02:00:53.351956934",
     "headers": null
   }
 ]
