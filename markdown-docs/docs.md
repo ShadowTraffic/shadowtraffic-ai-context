@@ -267,7 +267,7 @@ See the overview.md section in the full documentation below for the key product 
                 "customerId": {
                     "_gen": "lookup",
                     "table": "customers",
-                    "path": ["customerId"]
+                    "path": ["row", "customerId"]
                 },
                 "orderNumber": {
                     "_gen": "sequentialInteger"
@@ -2898,7 +2898,6 @@ See the overview.md section in the full documentation below for the key product 
 ```
 
 -----
-
 
 ---
 
@@ -10766,7 +10765,7 @@ Set `sendSynchronous` to `true`, and optionally [set the producer configuration]
 
 If you want to generate events that intentionally violate [data quality rules](https://docs.confluent.io/cloud/current/sr/fundamentals/data-contracts.html), set `continueOnRuleException` to `true`.
 
-This will cause ShadowTraffic to skip past the record and continue running. Note that any events which violate data quality rules won't be available for `lookup` operations since the data won't have been written to the target topic.
+This will cause ShadowTraffic to suppress violation errors and continue running. Note that any events which violate data quality rules won't be available for `lookup` operations since the data won't have been written to the target topic.
 
 **Input:**
 ```json
@@ -29562,6 +29561,7 @@ In this example, generator `a` is overriden to produce only `5` events, and `b` 
     ]
   }
 }
+```
 ```
 
 ```
