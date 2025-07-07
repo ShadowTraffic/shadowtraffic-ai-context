@@ -2919,14 +2919,14 @@ Everything below is a full snapshot of the canonical ShadowTraffic documentation
 
 ## First steps
 
-### Learn by doing
+### Get hands-on
 
 ## Getting Started
 
   [**Try the quickstart**](/quickstart)
   [**Read the overview**](/overview)
 
-### Learn by watching
+### Watch how it's done
 
 ### Videos
 
@@ -2936,13 +2936,13 @@ Everything below is a full snapshot of the canonical ShadowTraffic documentation
 
 See [the full library](/video-guides.mdx).
 
-### Learn by chatting
+### Build with AI
 
-Use the [free AI copilot](https://chat.openai.com/g/g-Am8LNJj8M-shadowtraffic-helper) to automatically write ShadowTraffic files through natural language (requires an OpenAI login).
+✨ If you use Claude, Cursor, or any other agentic coding assistant, load up [ShadowTraffic's AI context](https://github.com/ShadowTraffic/shadowtraffic-ai-context). These LLM-optimized will artifacts strongly increase the accuracy of your AI.
 
 ### Videos
 
-  [![Image](/img/custom-gpt.png)](https://chatgpt.com/share/672500ad-07ec-800a-9c0c-14c0dadec0eb) (external)
+  [![Image](/img/claude.png)](https://github.com/ShadowTraffic/shadowtraffic-ai-context) (external)
 
 
 # changelog.md
