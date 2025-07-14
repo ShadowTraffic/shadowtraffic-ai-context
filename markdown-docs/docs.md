@@ -2950,6 +2950,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.1.8
+
+Mon Jul 14 10:58:08 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Loosens the schema for [`waypoints`](/functions/waypoints) so that `coordinates` can be an array of function calls.
+
+---
+
 ###  1.1.7
 
 Fri Jul 11 08:09:41 PDT 2025
@@ -25676,19 +25686,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-10 08:36:51.822994797",
+    "value": "2022-11-13 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-20 14:04:32.730806236",
+    "value": "2023-03-23 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-09 07:28:35.21634256",
+    "value": "2022-12-12 07:28:35.21634256",
     "headers": null
   }
 ]
