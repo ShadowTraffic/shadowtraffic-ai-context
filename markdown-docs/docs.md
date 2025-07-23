@@ -14,6 +14,36 @@ See the overview.md section in the full documentation below for the key product 
 
 ## 🗂️ Example Gallery
 
+### 
+
+```json
+{
+    "generators": [
+        {
+            "topic": "testTopic",
+            "value": {
+                "_gen": "oneOf",
+                "choices": [
+                    "👍", "🔥", "❤️"
+                ]
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
 ### Hello world with Kafka
 
 ```json
@@ -2899,6 +2929,94 @@ See the overview.md section in the full documentation below for the key product 
 
 -----
 
+### A client emits OTEL telemetry data
+
+```json
+{
+    "generators": [
+        {
+            "topic": "otel",
+            "value": {
+                "traceId": {
+                    "_gen": "uuid"
+                },
+                "spanId": {
+                    "_gen": "uuid"
+                },
+                "parentSpanId": {
+                    "_gen": "uuid"
+                },
+                "name": {
+                    "_gen": "string",
+                    "expr": "#{App.name}"
+                },
+                "startTimeUnixNano": {
+                    "_gen": "now"
+                },
+                "endTimeUnixNano": {
+                    "_gen": "add",
+                    "args": [
+                        { "_gen": "now" },
+                        { "_gen": "uniformDistribution", "bounds": [100, 5000] }
+                    ]
+                },
+                "status": {
+                    "_gen": "oneOf",
+                    "choices": ["OK", "ERROR", "UNSET"]
+                },
+                "attributes": {
+                    "http.method": {
+                        "_gen": "oneOf",
+                        "choices": ["GET", "POST", "PUT", "DELETE"]
+                    },
+                    "http.status_code": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            {
+                                "weight": 95,
+                                "value": 200
+                            },
+                            {
+                                "weight": 1,
+                                "value": 201
+                            },
+                            {
+                                "weight": 1,
+                                "value": 400
+                            },
+                            {
+                                "weight": 2,
+                                "value": 404
+                            },
+                            {
+                                "weight": 1,
+                                "value": 500
+                            }
+                        ]
+                    },
+                    "service.name": {
+                        "_gen": "string",
+                        "expr": "#{App.name}"
+                    }
+                }
+            }
+        }
+    ],
+    "connections": {
+        "dev-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}
+```
+
+-----
+
 ---
 
 ## 📌 Version Compatibility
@@ -2950,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.1.9
+
+Wed Jul 23 10:10:21 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds new function [`cycle`](/functions/cycle) to emit looping sequences of elements.
+
+---
+
 ###  1.1.8
 
 Mon Jul 14 10:58:08 PDT 2025
@@ -18173,6 +18301,138 @@ Finally, invoke the function inside ShadowTraffic.
 ```
 
 
+# functions/cycle.md
+
+## Commentary
+
+[Badges]
+
+Given a sequence of elements, `cycle` emits one element at a time in-order, looping when it reaches the end of the sequence.
+
+---
+
+## Examples
+
+### Cycling a constant
+
+The most simple example is setting `sequence` to a constant array. `cycle` will emit each element in order, and then go back to the start.
+
+**Input:**
+```json
+{
+  "_gen": "cycle",
+  "sequence": [
+    "a",
+    "b",
+    "c"
+  ]
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "a",
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "b",
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "c",
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
+
+### Cycling a function
+
+`sequence` can also be a function call. Note that this function will only be called once and its value immutably frozen so that `cycle` has a stable target to iterate over.
+
+**Input:**
+```json
+{
+  "_gen": "cycle",
+  "sequence": {
+    "_gen": "var",
+    "var": "colors"
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "red",
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "green",
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "blue",
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "sequence": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {}
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "sequence"
+  ]
+}
+```
+
+
 # functions/digitString.md
 
 ## Commentary
@@ -25686,19 +25946,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-13 08:36:51.822994797",
+    "value": "2022-11-22 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-23 14:04:32.730806236",
+    "value": "2023-04-01 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-12 07:28:35.21634256",
+    "value": "2022-12-21 07:28:35.21634256",
     "headers": null
   }
 ]
@@ -26933,7 +27193,22 @@ It's a good idea to place calls to `waypoints` in a `var` so you can pick apart 
                       {
                         "type": "array",
                         "items": {
-                          "type": "number"
+                          "oneOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "_gen": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "_gen"
+                              ]
+                            }
+                          ]
                         },
                         "minItems": 2,
                         "maxItems": 2
