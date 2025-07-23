@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.1.10
+
+Wed Jul 23 15:27:52 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: [`intervals`](/functions/intervals) no longer requires a fallback value or index.
+
+---
+
 ###  1.1.9
 
 Wed Jul 23 10:10:21 PDT 2025
@@ -19526,9 +19536,15 @@ A few Cron expression examples:
 
 UNIX Cron expressions have granularity down to the minute, so specifying `0-29 1 * * *` captures all wallclock times `>= 1:00 AM` and strictly `< 1:30 AM`.
 
-Within the intervals, Cron expressions are evaluated in the order they're specified, so if more than one expression matches, the earlier one is used.
+If no Cron expressions match, then the `defaultValue` or `defaultIndex` will be used if they are supplied:
 
-If no Cron expressions match, then the `defaultValue` or `defaultIndex` will be used instead. `defaultValue` is a simple value to use instead. `defaultIndex` is the index of the array of Cron expressions, starting from `0`. If both `defaultValue` and `defaultIndex` are provided, `defaultValue` is used.
+- `defaultValue` is a simple value to use instead. [Example 1](#fallback-value)
+- `defaultIndex` is the index of the array of Cron expressions, starting from `0`. [Example 2](#fallback-index)
+- If both `defaultValue` and `defaultIndex` are provided, `defaultValue` is used.
+
+Within the intervals, Cron expressions are evaluated in the order they're specified, so if more than one expression matches, the earlier one is used. [Example 3](#priority)
+
+If no defaults are specified, ShadowTraffic will try to call this function again no earlier than 200 milliseconds into the future. [Example 4](#no-fallback)
 
 ---
 
@@ -19779,6 +19795,23 @@ When multiple Cron expressions match, the earlier one is used. Both of these Cro
 
 *... (2 more examples)*
 
+### No fallback
+
+When no defaults are specified, ShadowTraffic will not emit any events if none of the expressions match. In this example, events are only emitted on even-numbered minutes.
+
+**Input:**
+```json
+{
+  "_gen": "intervals",
+  "intervals": [
+    [
+      "*/2 * * * *",
+      "Magic value"
+    ]
+  ]
+}
+```
+
 ---
 
 ## Specification
@@ -19819,19 +19852,8 @@ When multiple Cron expressions match, the earlier one is used. Both of these Cro
       }
     }
   },
-  "oneOf": [
-    {
-      "required": [
-        "intervals",
-        "defaultValue"
-      ]
-    },
-    {
-      "required": [
-        "intervals",
-        "defaultIndex"
-      ]
-    }
+  "required": [
+    "intervals"
   ]
 }
 ```
