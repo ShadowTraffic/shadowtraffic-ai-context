@@ -3068,6 +3068,18 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.1.11
+
+Mon Jul 28 11:49:18 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds new function [`cache`](/functions/cache) to create dynamic, immutable relationships.
+- 🐛 **Fixed**: Mitigates [CVE-2025-53864](https://nvd.nist.gov/vuln/detail/CVE-2025-53864).
+- 🐛 **Fixed**: Mitigates [CVE-2025-48924](https://nvd.nist.gov/vuln/detail/CVE-2025-48924).
+
+---
+
 ###  1.1.10
 
 Wed Jul 23 15:27:52 PDT 2025
@@ -17829,6 +17841,125 @@ Use a function to generate byte arrays of varying sizes, in this case between `1
 ```
 
 
+# functions/cache.md
+
+## Commentary
+
+[Badges]
+
+Caches the value of `on` to the values in `to`. This is a useful function for creating an immutable relationship when using forks doesn't make sense.
+
+Beware that `cache `is accrete-only, so be careful not to overload memory by caching many values!
+
+---
+
+## Examples
+
+### Caching a map
+
+Set `on` to whatever value dictates the identity of your cache. Set `to` to any value that will be evaluted.
+
+The effect is that the same `on` value will always produce the same `to` value.
+
+**Input:**
+```json
+{
+  "topic": "sandbox",
+  "vars": {
+    "i": {
+      "_gen": "oneOf",
+      "choices": [
+        1,
+        2
+      ]
+    },
+    "cached": {
+      "_gen": "cache",
+      "on": {
+        "_gen": "var",
+        "var": "i"
+      },
+      "to": {
+        "x": {
+          "_gen": "normalDistribution",
+          "mean": 50,
+          "sd": 5
+        }
+      }
+    }
+  },
+  "value": {
+    "from": {
+      "_gen": "var",
+      "var": "i"
+    },
+    "to": {
+      "_gen": "var",
+      "var": "cached",
+      "path": [
+        "x"
+      ]
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "from": 2,
+      "to": 45.92117476009821
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "from": 1,
+      "to": 48.47137376354857
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "from": 1,
+      "to": 48.47137376354857
+    },
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "on": {},
+    "to": {}
+  },
+  "required": [
+    "on",
+    "to"
+  ]
+}
+```
+
+
 # functions/characterString.md
 
 ## Commentary
@@ -25968,19 +26099,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-22 08:36:51.822994797",
+    "value": "2022-11-27 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-01 14:04:32.730806236",
+    "value": "2023-04-06 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-21 07:28:35.21634256",
+    "value": "2022-12-26 07:28:35.21634256",
     "headers": null
   }
 ]
