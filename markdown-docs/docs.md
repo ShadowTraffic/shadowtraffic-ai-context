@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.2.0
+
+Thu Jul 31 09:48:08 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds support for Kafka/Confluent client-side field level encryption (AWS, Azure, GCP, Vault, and local). Follow [Confluent's docs](https://docs.confluent.io/cloud/current/security/encrypt/csfle/client-side.html) to enable it.
+
+---
+
 ###  1.1.11
 
 Mon Jul 28 11:49:18 PDT 2025
@@ -26099,19 +26109,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-27 08:36:51.822994797",
+    "value": "2022-11-30 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-06 14:04:32.730806236",
+    "value": "2023-04-09 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-26 07:28:35.21634256",
+    "value": "2022-12-29 07:28:35.21634256",
     "headers": null
   }
 ]
