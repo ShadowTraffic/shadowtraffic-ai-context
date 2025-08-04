@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.3.0
+
+Mon Aug  4 12:09:11 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds the ability for Kafka generators to [automatically download schemas](/connections/kafka#automatic-schema-downloading) out of Schema Registry.
+
+---
+
 ###  1.2.0
 
 Thu Jul 31 09:48:08 PDT 2025
@@ -10387,6 +10397,14 @@ io.shadowtraffic.kafka.serdes.JsonSerializer
 
 To use Schema Registry, simply set `schema.registry.url` in the connection map when using any Confluent-provided serializers, like `KafkaAvroSerializer`. You can also set the accompanying `basic.auth.user.info` config if the Schema Registry instance requires authentication. [Example 3](#connecting-to-schema-registry)
 
+### Schema selection
+
+ShadowTraffic comes with built-in behavior to make generating data with Schema Registry-enabled serializers a bit easier. It will try to create a schema for your data in the following ways:
+
+1. **Use a provided schema:** If you explicitly supply a schema, ShadowTraffic will use it. [Example 4](#using-avro-schema-files) [Example 5](#using-json-schema-files) [Example 6](#using-protobuf-schema-files)
+2. **Download the schema from Schema Registry:** If no schema is provided, it will try to fetch one from Schema Registry. By default, it uses the [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#overview) to construct the subject name, but you can override this with a specific subject if needed. If a matching schema is found, the latest version is used. [Example 7](#automatic-schema-downloading)
+3. **Infer a schema:** If no schema is provided or found, ShadowTraffic will analyze your generator and infer a schema automatically. [Example 8](#automatic-schema-creation)
+
 ### Custom serializers
 
 ShadowTraffic also supports custom serializers. To use them, create a class that implements the `org.apache.kafka.common.serialization.Serializer` interface.
@@ -10727,7 +10745,7 @@ It will create this schema in Schema Registry for you:
 }
 ```
 
-If you already have your desired schema, or want to override the schema ShadowTraffic picked automatically, you can supply it explicitly. [Example 4](#using-avro-schema-files) [Example 5](#using-json-schema-files)
+If you already have your desired schema, or want to override the schema ShadowTraffic picked automatically, you can supply it explicitly. [Example 9](#using-avro-schema-files) [Example 10](#using-json-schema-files)
 
 ### Using Avro schema files
 
@@ -10970,6 +10988,74 @@ This will cause ShadowTraffic to suppress violation errors and continue running.
         "bootstrap.servers": "localhost:9092",
         "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
         "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+      }
+    }
+  }
+}
+```
+
+### Automatic schema downloading
+
+If you're using Schema Registry-enabled serializers, a common usage pattern is to automatically download the latest schemas from the registry and use them in your code.
+
+ShadowTraffic tries to make this equally easy. If you don't explicitly supply a schema, ShadowTraffic will attempt to find and download the corresponding schema for you if it exists. It uses the following strategy to try and find it:
+
+1. If you set [`schemaRegistrySubject`](/generator-configuration/schemaRegistrySubject), it will look up the subject with the supplied name.
+
+2. If you don't set `schemaRegistrySubject`, it will use [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#overview), which is the default behavior for most of the Kafka clients.
+
+Here's an example to make this easier to understand. Imagine that you're using `RecordNameStrategy` and you've already registered this schema under the subject `foo.bar.Baz`:
+
+```js
+{
+    "namespace": "foo.bar",
+    "name": "Baz",
+    "type" "record",
+    "fields": [
+        {
+            "name": "field1",
+            "type": "int"
+        }
+    ]
+}
+```
+
+If you want to generate data using this exact schema, but without needing to download it yourself and supply it to ShadowTraffic, you could do the following.
+
+Notice that `"value.subject.name.strategy"` is set to `"io.confluent.kafka.serializers.subject.RecordNameStrategy"` so that ShadowTraffic will reemit the schema under the right name.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "topic": "sandbox",
+      "value": {
+        "field1": {
+          "_gen": "uniformDistribution",
+          "bounds": [
+            1,
+            10
+          ],
+          "decimals": 0
+        }
+      },
+      "localConfigs": {
+        "schemaRegistrySubject": {
+          "value": "foo.bar.Baz"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "kafka": {
+      "kind": "kafka",
+      "producerConfigs": {
+        "bootstrap.servers": "localhost:9092",
+        "schema.registry.url": "http://localhost:8081",
+        "key.serializer": "io.confluent.kafka.serializers.KafkaAvroSerializer",
+        "value.serializer": "io.confluent.kafka.serializers.KafkaAvroSerializer",
+        "value.subject.name.strategy": "io.confluent.kafka.serializers.subject.RecordNameStrategy"
       }
     }
   }
@@ -26109,19 +26195,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-30 08:36:51.822994797",
+    "value": "2022-12-04 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-09 14:04:32.730806236",
+    "value": "2023-04-13 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-29 07:28:35.21634256",
+    "value": "2023-01-02 07:28:35.21634256",
     "headers": null
   }
 ]
@@ -29174,6 +29260,70 @@ Use `globalConfigs` to set `repeat` globally for all generators.
     "rate",
     "times"
   ]
+}
+```
+
+
+# generator-configuration/schemaRegistrySubject.md
+
+## Commentary
+
+[Badges]
+
+Sets the exact subject name the Kafka connection should [download from Schema Registry](/connections/kafka#automatic-schema-downloading). This is particularly useful if you do not use the default [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#overview) configuration.
+
+---
+
+## Examples
+
+### Setting the subject name
+
+Set `schemaRegistrySubject` to a map of attributes to names. The attributes represent the parts of the Kafka record to find subjects for (e.g. `key` and `value`), and the name represents the subject to find.
+
+In this example, ShadowTraffic will use schemas for the subject named `com.acme.MyRecord`, which should already exist in Schema Registry.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "topic": "sandbox",
+      "value": {
+        "myField": {
+          "_gen": "boolean"
+        }
+      },
+      "localConfigs": {
+        "schemaRegistrySubject": {
+          "value": "com.acme.MyRecord"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "kafka": {
+      "kind": "kafka",
+      "producerConfigs": {
+        "bootstrap.servers": "localhost:9092",
+        "schema.registry.url": "http://localhost:8081",
+        "key.serializer": "io.confluent.kafka.serializers.KafkaAvroSerializer",
+        "value.serializer": "io.confluent.kafka.serializers.KafkaAvroSerializer",
+        "value.subject.name.strategy": "io.confluent.kafka.serializers.subject.RecordNameStrategy"
+      }
+    }
+  }
+}
+```
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object"
 }
 ```
 
