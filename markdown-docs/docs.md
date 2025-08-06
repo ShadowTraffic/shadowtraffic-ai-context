@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.4.2
+
+Wed Aug  6 14:03:03 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes authentication forwarding for auto-schema downloading with Kafka connections.
+
+---
+
 ###  1.4.1
 
 Wed Aug  6 13:37:52 PDT 2025
