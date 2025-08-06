@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.4.1
+
+Wed Aug  6 13:37:52 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes a spurious authentication issue with Kafka Schema Registry when using SR-enabled serializers.
+
+---
+
 ###  1.4.0
 
 Wed Aug  6 10:54:16 PDT 2025
