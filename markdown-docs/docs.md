@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.4.0
+
+Wed Aug  6 10:54:16 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes a performance regression when using `lookup` with `histogram`. Large lookup targets > 10K elements would dramatically reduce output speed. This is now fixed.
+
+---
+
 ###  1.3.0
 
 Mon Aug  4 12:09:11 PDT 2025
@@ -20373,7 +20383,7 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
   {
     "topic": "a",
     "key": {
-      "id": "Joy"
+      "id": "Elvina"
     },
     "value": null,
     "headers": null
@@ -20451,7 +20461,7 @@ Look up data in a Postgres table.
   {
     "table": "a",
     "row": {
-      "id": "Joy"
+      "id": "Elvina"
     },
     "op": null,
     "where": null
@@ -20525,7 +20535,7 @@ Sometimes make a new key, sometimes use a previously generated one.
   },
   {
     "topic": "users",
-    "key": "Kip O'Reilly",
+    "key": "Daisy D'Amore",
     "value": null,
     "headers": null
   }
@@ -20609,7 +20619,7 @@ Explicitly supply the connection name when there are multiple connections.
   {
     "table": "a",
     "row": {
-      "email": "shakira.mclaughlin@gmail.com"
+      "email": "benito.turner@yahoo.com"
     },
     "op": null,
     "where": null
@@ -20668,7 +20678,7 @@ In this example, notice how all the values for `b` lock onto the first value gen
   {
     "topic": "a",
     "key": null,
-    "value": 103.21537054252789,
+    "value": 89.14192828994,
     "headers": null
   }
 ]
@@ -20725,7 +20735,7 @@ In this example, notice how each value for `b` lock onto the most revent value g
   {
     "topic": "a",
     "key": null,
-    "value": 103.21537054252789,
+    "value": 89.14192828994,
     "headers": null
   }
 ]
@@ -20808,7 +20818,7 @@ Use a histogram to control how the element is selected from the population. This
   {
     "topic": "a",
     "key": {
-      "id": "Serita Hegmann"
+      "id": "Santiago Rolfson"
     },
     "value": null,
     "headers": null
@@ -20898,8 +20908,8 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
   {
     "topic": "a",
     "key": {
-      "name": "Melda Cartwright",
-      "magicNumber": 50
+      "name": "Mr. Devora Bartell",
+      "magicNumber": 10
     },
     "value": null,
     "headers": null
@@ -20962,7 +20972,7 @@ Use `name` in the lookup function to target another generator by its `name` attr
   },
   {
     "topic": "a",
-    "key": 7,
+    "key": 89,
     "value": null,
     "headers": null
   }
@@ -21044,7 +21054,7 @@ In the example below, `a` generates the sum of two numbers. `b` looks up the num
   {
     "topic": "a",
     "key": null,
-    "value": 126.2499628081984,
+    "value": 67.37253098813049,
     "headers": null
   }
 ]
@@ -26195,19 +26205,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-04 08:36:51.822994797",
+    "value": "2022-12-06 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-13 14:04:32.730806236",
+    "value": "2023-04-15 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-02 07:28:35.21634256",
+    "value": "2023-01-04 07:28:35.21634256",
     "headers": null
   }
 ]
