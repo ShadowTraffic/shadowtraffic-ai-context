@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.4.3
+
+Fri Aug  8 07:37:24 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Allows [`throughput`](/generator-configuration/throughput/) to take dynamic values. The docs previously erroneously specified it could do this.
+
+---
+
 ###  1.4.2
 
 Wed Aug  6 14:03:03 PDT 2025
@@ -26225,19 +26235,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-06 08:36:51.822994797",
+    "value": "2022-12-08 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-15 14:04:32.730806236",
+    "value": "2023-04-17 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-04 07:28:35.21634256",
+    "value": "2023-01-06 07:28:35.21634256",
     "headers": null
   }
 ]
