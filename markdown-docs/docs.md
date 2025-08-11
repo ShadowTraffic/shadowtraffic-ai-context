@@ -10397,7 +10397,7 @@ Connects to an Apache Kafka cluster.
 
 By default for convenience, any topics ShadowTraffic writes to will be automatically created if they don't exist. This makes it easier to iterate on your generators without flipping back and forth between ShadowTraffic and the Kafka admin tools.
 
-Topics will be created with the broker default partition count and replication factor, but you can control these with `tablePolicy`. [Example 1](#overriding-topic-properties)
+Topics will be created with the broker default partition count and replication factor, but you can control these with `topicPolicy`. [Example 1](#overriding-topic-properties)
 
 ### Manual topic control
 
