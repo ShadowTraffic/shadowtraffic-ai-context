@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.5.1
+
+Tue Aug 12 12:06:41 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes a bug where [scheduled](/schedule/stages/) generators couldn't [lookup](/functions/lookup/) each other if they shared the same name.
+
+---
+
 ###  1.5.0
 
 Tue Aug 12 10:49:08 PDT 2025
