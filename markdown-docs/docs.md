@@ -19376,7 +19376,7 @@ By default, each easing function will run sequentially until completion. When th
 
 You can optionally loop the chain to make it run indefinitely. [Example 2](#looping-a-chain)
 
-Lastly, instead of an easing function, you can also supply a numeric function in its place. This is handy if you want to model a value ramping up, holding steady, and then declining. [Example 3](#supplying-a-numeric-function)
+Lastly, instead of an easing function, you can also supply a numeric function in its place. This is handy if you want to model a value ramping up, holding steady, and then declining. [Example 3](#supply-a-numeric-function)
 
 ---
 
