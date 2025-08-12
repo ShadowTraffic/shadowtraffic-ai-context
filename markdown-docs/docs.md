@@ -3068,6 +3068,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.5.0
+
+Tue Aug 12 10:49:08 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds new functions [`easing`](/functions/easing) and [`easingChain`](/functions/easingChain) to transition numeric values over time.
+- 🐛 **Fixed**: Allows [`throughput`](/generator-configuration/throughput/) to be set by a variable.
+
+---
+
 ###  1.4.3
 
 Fri Aug  8 07:37:24 PDT 2025
@@ -18870,6 +18881,761 @@ Generates the division of `args`. You can also use this function through an infi
 ```
 
 
+# functions/easing.md
+
+## Commentary
+
+[Badges]
+
+Applies an [easing function](https://easings.net/) to change a number over time. This is useful if you want to simulate a value ramping up or down at particular velocities, especially mathematically complex ones.
+
+Like many things, easings—which are common in [animation APIs](https://radialglo.github.io/blog/2014/08/07/understanding-the-intuition-of-easing/)—seem complicated at first, but become simple when explained with an example.
+
+Imagine that you want to generate some data that slowly moves a value from `5` to `50`. How would you do that?
+
+One idea you might have is to use [`sequentialInteger`](/functions/sequentialInteger) to advance the number one data point at a time. That works great for the simplest case, but what if you want to advance towards `50` at a nonlinear rate? Perhaps [`intervals`](/functions/intervals) could do the job? But that doesn't work either because the numbers it produces will change at abrupt pitches. At one interval, your value might be `5`, and at the next, `15`, and so on.
+
+What you want is some way to glide your value between `5` and `50` and see intermediate values between the two, along with the option to control the rate it advances.
+
+Easings solve that problem.
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 300
+---
+xychart-beta
+    x-axis [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+    y-axis 5 --> 50
+    line [5, 5.005625, 5.045, 5.151875, 5.36, 5.703125, 6.215, 6.929375, 7.88, 9.100625, 10.625, 12.486875, 14.72, 17.358125, 20.435, 23.984375, 28.04, 32.636875, 37.805, 43.581875, 50]
+```
+
+---
+
+To use them, you specify a handful of parameters. The simplest ones to understand are `from` (the value you want to start at), `to` (the value you want to end at), and `duration` (the number of milliseconds to transition between the two. ShadowTraffic will use the wallclock to decide when to stop transitioning the value and emit as many events during that time as you allow it. [Example 1](#linear-easing) When the easing function reaches `to` value, it will only ever produce that value thereafter. [Example 2](#capping-the-end-value)
+
+In addition to defining those three parameters, you also define a `direction` (the shape of the line between your two values) and `degree` (the steepness of the line). These parameters follow well-known mathematical formulas. For example, `direction` [Example 3](#changing-direction) can be:
+
+- `easeIn`: the transition starts slowly, and then accelerates
+- `easeOut`: the transition starts fast, and then decelerates
+- `easeInOut`: the transition is slow at both ends, but fast in the middle
+
+Likewise, `degree` [Example 4](#changing-degree) has like familiar values:
+
+- `linear`: a constant rate of transition, `t`
+- `quad`: a quadratic rate of transition, `t^2`
+- `cubic`: a cubic rate of transition, `t^3`
+- `quart`: a quartic rate of transition, `t^4`
+- `quint`: a quintic rate of transition, `t^5`
+
+When you specify an easing, you combine a `direction` and a `degree` into a pair to create transitions like `easeIn` / `linear`, or `easeInOut` / `cubic`. These pairings specify the precise slope of the line between your `from` and `to` values
+.
+If you have trouble visualizing what any of these look like, many of these pairs are helpfully graphed on [Easings.net](https://easings.net/.)
+
+Lastly, in addition to the predefined easing `direction` / `degree` pairs, you may also supply your own numeric function. [Example 5](#custom-easings) This is especially useful if you want to stack easings with [`easingChain`](/functions/easingChain) and peg a value at a particular number.
+
+---
+
+## Examples
+
+### Linear easing
+
+Linear easings are the most simple example. They consistently advance `from` to `to` at a constant rate. When you use a `linear` degree, the choice of `direction` doesn't matter because its rate never deviates.
+
+In this example, ShadowTraffic will emit events for `8000` milliseconds that transition `5` to `125`.
+
+**Input:**
+```json
+{
+  "_gen": "easing",
+  "direction": "easeIn",
+  "degree": "linear",
+  "from": 5,
+  "to": 125,
+  "duration": 8000
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.015,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.03,
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
+These values resemble the plot:
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 300
+---
+xychart-beta
+    x-axis [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+    y-axis 5 --> 125
+    line [5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 89, 95, 101, 107, 113, 119, 125]
+```
+
+### Capping the end value
+
+When the `duration` is reached, `easing` will peg the result to the value of `from`. In this example, `duration` is set to `5` milliseconds, a very small amount of time. `easing` generates a few intermediate values, and all values after will be `12`.
+
+**Input:**
+```json
+{
+  "_gen": "easing",
+  "direction": "easeIn",
+  "degree": "linear",
+  "from": 10,
+  "to": 12,
+  "duration": 5
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 10,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 10.4,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 10.8,
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
+Which resembles the plot:
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 300
+---
+xychart-beta
+    x-axis [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+    y-axis 10 --> 12
+    line [10, 10.4, 10.8, 11.2, 11.6, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12]
+```
+
+### Changing direction
+
+Use a different `direction` to change the slope of the tails of the curve. In this example, `easeOut` will decelerate the rate of change as the value gets closer to `70`.
+
+**Input:**
+```json
+{
+  "_gen": "easing",
+  "direction": "easeOut",
+  "degree": "cubic",
+  "from": 50,
+  "to": 70,
+  "duration": 10000
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 50,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 50.00599940002,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 50.01199760016,
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
+Plotting the values, you can see how `easeOut` has an accelerated start, but "easy / flat" ending:
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 300
+---
+xychart-beta
+    x-axis [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+    y-axis 50 --> 70
+    line [50, 52.8525, 55.42, 57.7175, 59.76, 61.5625, 63.14, 64.5075, 65.68, 66.6725, 67.5, 68.1775, 68.72, 69.1425, 69.46, 69.6875, 69.84, 69.9325, 69.98, 69.9975, 70]
+```
+
+### Changing degree
+
+Likewise, use a different `degree` to change the steepness of the curve. Higher polynomials (like `quart`) have steeper curves than lower polynomials (like `quad`).
+
+**Input:**
+```json
+{
+  "_gen": "easing",
+  "direction": "easeInOut",
+  "degree": "quart",
+  "from": 100,
+  "to": 30,
+  "duration": 3000
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 100,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 99.9999999999931,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 99.99999999988938,
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
+Plotting the values, you can see the curve with flat tails at both ends:
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 300
+---
+xychart-beta
+    x-axis [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+    y-axis 30 --> 100
+    line [100, 99.9965, 99.944, 99.7165, 99.104, 97.8125, 95.464, 91.5965, 85.664, 77.0365, 65, 52.9635, 44.336, 38.4035, 34.536, 32.1875, 30.896, 30.2835, 30.056, 30.0035, 30]
+```
+
+### Custom easings
+
+If you want to define your own easing, set `ease` to any numeric function and `duration`.
+
+**Input:**
+```json
+{
+  "_gen": "easing",
+  "direction": "easeInOut",
+  "ease": {
+    "_gen": "normalDistribution",
+    "mean": 100,
+    "sd": 5
+  },
+  "duration": 5000
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 105.46946550894056,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 100.23162027249977,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 94.57096414497,
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
+### Imperfect lines
+
+If the mathematically perfect curves that `easing` creates aren't realistic, you can use [`math`](/functions/math) to add a small amount of "jitter" to each value. Notice how the values aren't strictly ascending anymore.
+
+**Input:**
+```json
+{
+  "_gen": "math",
+  "expr": "value + jitter",
+  "names": {
+    "value": {
+      "_gen": "easing",
+      "direction": "easeIn",
+      "degree": "quad",
+      "from": 100,
+      "to": 150,
+      "duration": 5000
+    },
+    "jitter": {
+      "_gen": "uniformDistribution",
+      "bounds": [
+        -1,
+        1
+      ]
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 99.14409961507134,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 99.2804851852396,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 99.12853933930458,
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "string",
+          "enum": [
+            "easeIn",
+            "easeOut",
+            "easeInOut"
+          ]
+        },
+        "degree": {
+          "type": "string",
+          "enum": [
+            "linear",
+            "quad",
+            "cubic",
+            "quart",
+            "quint"
+          ]
+        },
+        "from": {
+          "type": "number"
+        },
+        "to": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "direction",
+        "degree",
+        "from",
+        "to",
+        "duration"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "ease": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "ease",
+        "duration"
+      ]
+    }
+  ]
+}
+```
+
+
+# functions/easingChain.md
+
+## Commentary
+
+[Badges]
+
+Runs a series of [`easing`](/functions/easing) functions in succession. Use this if you want to orchestrate a series of changes to a value over time.
+
+By default, each easing function will run sequentially until completion. When the final function runs, the value will be pegged at the last easing's `from` value. [Example 1](#terminating-a-chain)
+
+You can optionally loop the chain to make it run indefinitely. [Example 2](#looping-a-chain)
+
+Lastly, instead of an easing function, you can also supply a numeric function in its place. This is handy if you want to model a value ramping up, holding steady, and then declining. [Example 3](#supplying-a-numeric-function)
+
+---
+
+## Examples
+
+### Terminating a chain
+
+Set `stages` to a series of easing functions that will be run in a row. Each `duration` will be respected before moving onto the next.
+
+**Input:**
+```json
+{
+  "_gen": "easingChain",
+  "stages": [
+    {
+      "_gen": "easing",
+      "direction": "easeIn",
+      "degree": "quart",
+      "from": 5,
+      "to": 8,
+      "duration": 7
+    },
+    {
+      "_gen": "easing",
+      "direction": "easeIn",
+      "degree": "linear",
+      "from": 8,
+      "to": 9,
+      "duration": 5
+    },
+    {
+      "_gen": "easing",
+      "direction": "easeInOut",
+      "degree": "quint",
+      "from": 9,
+      "to": 1,
+      "duration": 8
+    }
+  ]
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.00124947938359,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.0199916701374425,
+    "headers": null
+  }
+]
+```
+
+*... (17 more examples)*
+
+You can see how the values chain together by looking at a plot:
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 300
+---
+xychart-beta
+    x-axis [0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00]
+    y-axis 1 --> 9
+    line [5, 5.001, 5.018, 5.089, 5.276, 5.666, 6.368, 7.517, 8.12, 8.31, 8.5, 8.69, 8.88, 8.999, 8.96, 8.669, 7.441, 4.542, 1.867, 1.119, 1.004]    
+```
+
+### Looping a chain
+
+Set `loop` to `true` to cause the chain to repeat indefinitely.
+
+**Input:**
+```json
+{
+  "_gen": "easingChain",
+  "loop": true,
+  "stages": [
+    {
+      "_gen": "easing",
+      "direction": "easeOut",
+      "degree": "quad",
+      "from": 1,
+      "to": 10,
+      "duration": 3
+    },
+    {
+      "_gen": "easing",
+      "direction": "easeInOut",
+      "degree": "cubic",
+      "from": 10,
+      "to": 1,
+      "duration": 3
+    }
+  ]
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 1,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.999999999999999,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 9,
+    "headers": null
+  }
+]
+```
+
+*... (21 more examples)*
+
+Looking at a plot again, you can see how the values cycle:
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 300
+---
+xychart-beta
+    x-axis [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    y-axis 1 --> 10
+    line [1, 6, 9, 10, 8.667, 2.333, 1, 1, 6, 9, 10, 8.667, 2.333, 1, 1, 6, 9, 10, 8.667, 2.333, 1, 1, 6, 9]
+```
+
+### Supply a numeric function
+
+Supply any numeric function inside of `stage` to control how values are generated. This is mainly useful for holding values steady or within a range for some duration.
+
+**Input:**
+```json
+{
+  "_gen": "easingChain",
+  "stages": [
+    {
+      "_gen": "easing",
+      "direction": "easeIn",
+      "degree": "quart",
+      "from": 5,
+      "to": 8,
+      "duration": 7
+    },
+    {
+      "_gen": "easing",
+      "ease": {
+        "_gen": "normalDistribution",
+        "mean": 8,
+        "sd": 0.3
+      },
+      "duration": 5
+    },
+    {
+      "_gen": "easing",
+      "direction": "easeInOut",
+      "degree": "quint",
+      "from": 8,
+      "to": 1,
+      "duration": 8
+    }
+  ]
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.00124947938359,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.0199916701374425,
+    "headers": null
+  }
+]
+```
+
+*... (17 more examples)*
+
+Plotting the values:
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 300
+---
+xychart-beta
+    x-axis [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    y-axis 1 --> 9
+    line [5, 5.001, 5.02, 5.101, 5.32, 5.781, 6.619, 8, 8.251, 7.65, 8.199, 8.114, 8.285, 7.997, 7.891, 7.169, 4.5, 1.831, 1.109, 1.003]
+```
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "_gen": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "_gen"
+        ]
+      },
+      "minItems": 1
+    },
+    "loop": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "stages"
+  ]
+}
+```
+
+
 # functions/env.md
 
 ## Commentary
@@ -26235,19 +27001,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-08 08:36:51.822994797",
+    "value": "2022-12-12 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-17 14:04:32.730806236",
+    "value": "2023-04-21 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-06 07:28:35.21634256",
+    "value": "2023-01-10 07:28:35.21634256",
     "headers": null
   }
 ]
