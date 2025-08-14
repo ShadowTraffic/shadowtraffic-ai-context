@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.5.4
+
+Thu Aug 14 08:26:52 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes a bug in Kafka schema inference that creates single-type unions.
+
+---
+
 ###  1.5.3
 
 Thu Aug 14 07:57:45 PDT 2025
