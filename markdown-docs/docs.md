@@ -3068,6 +3068,18 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.5.3
+
+Thu Aug 14 07:57:45 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes an issue where [`bytes`](/functions/bytes) would emit too many bytes when serialized with Avro through Kafka.
+- 🐛 **Fixed**: Fixes poor Avro validation error messages when serializing incorrect deeply nested, unionized data.
+- 🐛 **Fixed**: Mitigates [CVE-2024-57699](https://nvd.nist.gov/vuln/detail/CVE-2024-57699).
+
+---
+
 ###  1.5.2
 
 Wed Aug 13 11:25:42 PDT 2025
@@ -27021,19 +27033,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-13 08:36:51.822994797",
+    "value": "2022-12-14 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-22 14:04:32.730806236",
+    "value": "2023-04-23 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-11 07:28:35.21634256",
+    "value": "2023-01-12 07:28:35.21634256",
     "headers": null
   }
 ]
