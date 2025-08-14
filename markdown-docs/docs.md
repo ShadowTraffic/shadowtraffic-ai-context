@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.5.5
+
+Thu Aug 14 14:05:32 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds the ability to write [multiple files per iteration](/connections/s3/#writing-multiple-blobs) to the S3 connection.
+
+---
+
 ###  1.5.4
 
 Thu Aug 14 08:26:52 PDT 2025
@@ -7815,7 +7825,7 @@ To do that, specify `multiBlob`: a map of string to container configuration over
 
 When `multiBlob` is enabled, `data` must be a map who's keys match those in `multiBlob`. The values under each key are written according to the spec in `multiBlob`.
 
-For example, the configuration below will write 10 blobs: 5 to `/tmp/data/a/foo-*.json`, and 5 to `/tmp/data/b/bar-*.json`.
+For example, the configuration below will write 10 blobs: 5 to `/sandbox/a/foo-*.json`, and 5 to `/sandbox/b/bar-*.json`.
 
 **Input:**
 ```json
@@ -14048,6 +14058,130 @@ It can be especially useful to set logging to `DEBUG` if you're experiencing une
 }
 ```
 
+### Writing to subdirectories
+
+When a generator writes to an S3 bucket, by default it writes blobs to the specified key prefix. Sometimes, though, you may want a generator to write to multiple subdirectories on top of that prefix.
+
+To do that, set `subdir` in the `bucketConfigs` key. Presumably this will be a variable that changes over time.
+
+In this example, 3 forks are launched which write the following blobs:
+
+- `sandbox/a/foo-<n>.jsonl`
+- `sandbox/b/foo-<n>.jsonl`
+- `sandbox/c/foo-<n>.jsonl`
+
+Note that each unique value for `subdir` will get its own blob-roll milestones. In other words, subdirectory `a` will roll new blobs based on time/size/events at a rate independent from `b` and `c`.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "bucket": "sandbox",
+      "fork": {
+        "key": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "bucketConfigs": {
+        "subdir": {
+          "_gen": "var",
+          "var": "forkKey"
+        },
+        "keyPrefix": "foo-",
+        "format": "jsonl"
+      },
+      "data": {
+        "a": {
+          "_gen": "uuid"
+        },
+        "b": {
+          "_gen": "boolean"
+        }
+      },
+      "localConfigs": {
+        "throttleMs": 200
+      }
+    }
+  ],
+  "connections": {
+    "s3": {
+      "kind": "s3"
+    }
+  }
+}
+```
+
+### Writing multiple blobs
+
+Sometimes, you might want to write to multiple blobs on each generator iteration.
+
+To do that, specify `multiBlob`: a map of string to bucket configuration overrides. You must specify each `keyPrefix`, and you can optionally specify individual `subdir` values.
+
+When `multiBlob` is enabled, `data` must be a map who's keys match those in `multiBlob`. The values under each key are written according to the spec in `multiBlob`.
+
+For example, the configuration below will write 10 blobs: 5 to `/sandbox/a/foo-*.json`, and 5 to `/sandbox/b/bar-*.json`.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "bucket": "sandbox",
+      "bucketConfigs": {
+        "format": "json",
+        "multiBlob": {
+          "a": {
+            "keyPrefix": "foo-",
+            "subdir": "a"
+          },
+          "b": {
+            "keyPrefix": "bar-",
+            "subdir": "b"
+          }
+        }
+      },
+      "data": {
+        "a": {
+          "_gen": "repeatedly",
+          "n": 3,
+          "target": {
+            "_gen": "oneOf",
+            "choices": [
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "b": {
+          "_gen": "repeatedly",
+          "n": 3,
+          "target": {
+            "_gen": "oneOf",
+            "choices": [
+              4,
+              5,
+              6
+            ]
+          }
+        }
+      },
+      "localConfigs": {
+        "maxEvents": 5
+      }
+    }
+  ],
+  "connections": {
+    "s3": {
+      "kind": "s3"
+    }
+  }
+}
+```
+
 ### Adjusting concurrency
 
 When ShadowTraffic writes to S3, it does so asynchronously: it generates some events and uses a number of threads to write them in parallel.
@@ -14459,51 +14593,147 @@ You can change it by using the following two optional parameters under `writerCo
       }
     },
     "bucketConfigs": {
-      "type": "object",
-      "properties": {
-        "keyPrefix": {
-          "type": "string"
-        },
-        "format": {
-          "type": "string",
-          "enum": [
-            "json",
-            "jsonl",
-            "parquet",
-            "log"
-          ]
-        },
-        "pretty": {
-          "type": "boolean"
-        },
-        "compression": {
-          "type": "string",
-          "enum": [
-            "gzip"
-          ]
-        },
-        "subdir": {
-          "oneOf": [
-            {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "keyPrefix": {
               "type": "string"
             },
-            {
-              "type": "object",
-              "properties": {
-                "_gen": {
+            "format": {
+              "type": "string",
+              "enum": [
+                "json",
+                "jsonl",
+                "parquet",
+                "log"
+              ]
+            },
+            "pretty": {
+              "type": "boolean"
+            },
+            "compression": {
+              "type": "string",
+              "enum": [
+                "gzip"
+              ]
+            },
+            "subdir": {
+              "oneOf": [
+                {
                   "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
                 }
-              },
-              "required": [
-                "_gen"
               ]
             }
+          },
+          "required": [
+            "keyPrefix",
+            "format"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "enum": [
+                "json",
+                "jsonl",
+                "parquet",
+                "log"
+              ]
+            },
+            "pretty": {
+              "type": "boolean"
+            },
+            "compression": {
+              "type": "string",
+              "enum": [
+                "gzip"
+              ]
+            },
+            "subdir": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            },
+            "multiBlob": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "keyPrefix": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "_gen": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "_gen"
+                        ]
+                      }
+                    ]
+                  },
+                  "subdir": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "_gen": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "_gen"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "keyPrefix"
+                ]
+              }
+            }
+          },
+          "required": [
+            "format",
+            "multiBlob"
           ]
         }
-      },
-      "required": [
-        "keyPrefix",
-        "format"
       ]
     }
   },
