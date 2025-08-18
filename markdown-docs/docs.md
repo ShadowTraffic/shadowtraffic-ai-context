@@ -3452,7 +3452,7 @@ Mon Apr 28 10:51:34 PDT 2025
 
 ### Changes
 
-- ⚡ **Improved**: Deprecates [`toInstant`](/functions/toInstant) and instead adds a new [`serialize`](/function-modifiers/serialize#serialize-to-postgres-timestamp) target for Postgres timestamps. This makes it easier decouple type-system specifics from the data you're generating.
+- ⚡ **Improved**: Deprecates `toInstant` and instead adds a new [`serialize`](/function-modifiers/serialize#serialize-to-postgres-timestamp) target for Postgres timestamps. This makes it easier decouple type-system specifics from the data you're generating.
 
 ---
 
@@ -3659,7 +3659,7 @@ Thu Mar  6 13:05:51 PST 2025
 
 ### Changes
 
-- 🐛 **Fixed**: Fixes [`toInstant`](/functions/toInstant)'s schema not requiring the `ms` parameter.
+- 🐛 **Fixed**: Fixes `toInstant`'s schema not requiring the `ms` parameter.
 
 ---
 
@@ -4704,7 +4704,7 @@ Mon Sep 23 10:53:46 PDT 2024
 
 ### Changes
 
-- ✅ **Added**: Adds new Kafka type hints for Protobuf serialization: [`kafkaKeyProtobufHint`](/generator-configuration/kafkaKeyProtobufHint) and [`kafkaValueProtobufHint`](/generator-configuration/kafkaValueProtobufHint).
+- ✅ **Added**: Adds new Kafka type hints for Protobuf serialization: `kafkaKeyProtobufHint` and `kafkaValueProtobufHint`.
 
 ---
 
@@ -27273,19 +27273,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-14 08:36:51.822994797",
+    "value": "2022-12-18 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-23 14:04:32.730806236",
+    "value": "2023-04-27 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-12 07:28:35.21634256",
+    "value": "2023-01-16 07:28:35.21634256",
     "headers": null
   }
 ]
@@ -28728,8 +28728,6 @@ Randomly selects a choice using the supplied probabilities.
 
 Explicitly defines the Avro schema for generated data. Takes a map of generator keys to Avro schemas.
 
-Note that when writing data to Kafka, this configuration takes precedence over the deprecated [`kafkaKeyAvroSchemaHint`](/generator-configuration/kafkaKeyAvroSchemaHint) and [`kafkaValueAvroSchemaHint`](/generator-configuration/kafkaValueAvroSchemaHint) configs.
-
 ---
 
 ## Examples
@@ -30139,8 +30137,6 @@ Use `globalConfigs` to set `maxMs` globally for all generators.
 [Badges]
 
 Explicitly defines the Protobuf schema and message for generated data. Takes a map of generator keys to schema and message objects.
-
-Note that when writing data to Kafka, this configuration takes precedence over the deprecated [`kafkaKeyProtobufHint`](/generator-configuration/kafkaKeyProtobufHint) and [`kafkaValueProtobufHint`](/generator-configuration/kafkaValueProtobufHint) configs.
 
 ---
 
