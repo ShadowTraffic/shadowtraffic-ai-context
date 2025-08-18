@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.5.6
+
+Mon Aug 18 15:12:51 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds new [`sample`](/function-modifiers/sample) function modifier.
+
+---
+
 ###  1.5.5
 
 Thu Aug 14 14:05:32 PDT 2025
@@ -6659,14 +6669,17 @@ Other useful function modifiers include [`path`](/function-modifiers/path.mdx), 
 
 As a reference, modifiers execute in the following order:
 
+- [`cardinality`](/function-modifiers/cardinality)
 - [`elide`](/function-modifiers/elide)
 - [`null`](/function-modifiers/null)
 - [`keyNames`](/function-modifiers/keyNames)
 - [`selectKeys`](/function-modifiers/selectKeys)
 - [`clamp`](/function-modifiers/clamp)
 - [`decimals`](/function-modifiers/decimals)
-- [`path`](/function-modifiers/path)
 - [`cast`](/function-modifiers/cast)
+- [`path`](/function-modifiers/path)
+- [`sample`](/function-modifiers/sample)
+- [`serialize`](/function-modifiers/serialize)
 
 If you need to change the order (perhaps you need `selectKeys` to run after `path`), you can use the [`constant`](/functions/constant) function to wrap the result and apply further function modifiers, like so:
 
@@ -17678,6 +17691,191 @@ Explicitly defines how this data will be represented if ShadowTraffic automatica
 ```json
 {
   "type": "string"
+}
+```
+
+
+# function-modifiers/sample.md
+
+## Commentary
+
+[Badges]
+
+Randomly selects a subset of elements from an array.
+
+---
+
+## Examples
+
+### Static rate
+
+Set `sample` / `rate` to a decimal between `0` and `1`, representing the percentage of elements from the array to retain.
+
+**Input:**
+```json
+{
+  "_gen": "repeatedly",
+  "n": 5,
+  "target": {
+    "_gen": "oneOf",
+    "choices": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ]
+  },
+  "sample": {
+    "rate": 0.5
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": [
+      "B",
+      "A"
+    ],
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": [
+      "D",
+      "D",
+      "E"
+    ],
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": [
+      "B",
+      "A",
+      "B",
+      "F"
+    ],
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
+
+### Dynamic rate
+
+`rate` can also be a set to a function.
+
+**Input:**
+```json
+{
+  "_gen": "repeatedly",
+  "n": 5,
+  "target": {
+    "_gen": "oneOf",
+    "choices": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ]
+  },
+  "sample": {
+    "rate": {
+      "_gen": "uniformDistribution",
+      "bounds": [
+        0.2,
+        0.8
+      ]
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": [
+      "A"
+    ],
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": [
+      "B",
+      "B"
+    ],
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": [
+      "C",
+      "C"
+    ],
+    "headers": null
+  }
+]
+```
+
+*... (5 more examples)*
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "sample": {
+      "type": "object",
+      "properties": {
+        "rate": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "rate"
+      ]
+    }
+  }
 }
 ```
 
