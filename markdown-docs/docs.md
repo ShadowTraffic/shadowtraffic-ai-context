@@ -438,7 +438,7 @@ See the overview.md section in the full documentation below for the key product 
             "row": {
                 "name": {
                     "_gen": "string",
-                    "expr": "#{Name.full_name}"
+                    "expr": "#{Name.fullName}"
                 },
                 "age": {
                     "_gen": "uniformDistribution",
@@ -568,7 +568,7 @@ See the overview.md section in the full documentation below for the key product 
             "key": {
                 "name": {
                     "_gen": "string",
-                    "expr": "#{Name.full_name}"
+                    "expr": "#{Name.fullName}"
                 }
             }
         },
@@ -619,7 +619,7 @@ See the overview.md section in the full documentation below for the key product 
                 },
                 "address": {
                     "_gen": "string",
-                    "expr": "#{Address.full_address}"
+                    "expr": "#{Address.fullAddress}"
                 }
             }
         },
@@ -640,11 +640,11 @@ See the overview.md section in the full documentation below for the key product 
                 },
                 "product": {
                     "_gen": "string",
-                    "expr": "#{Commerce.product_name}"
+                    "expr": "#{Commerce.productName}"
                 },
                 "creditCard": {
                     "_gen": "string",
-                    "expr": "#{Finance.credit_card}"
+                    "expr": "#{Finance.creditCard}"
                 }
             }
         },
@@ -673,7 +673,7 @@ See the overview.md section in the full documentation below for the key product 
             "kind": "kafka",
             "producerConfigs": {
                 "bootstrap.servers": "localhost:9092",
-		"key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
                 "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
             }
         },
@@ -2321,9 +2321,9 @@ See the overview.md section in the full documentation below for the key product 
                                 "before": null,
                                 "after": {
                                     "id": { "_gen": "var", "var": "forkKey" },
-                                    "firstName": { "_gen": "string", "expr": "#{Name.first_name}" },
-                                    "lastName": { "_gen": "string", "expr": "#{Name.last_name}" },
-                                    "email": { "_gen": "string", "expr": "#{Internet.email_address}" }
+                                    "firstName": { "_gen": "string", "expr": "#{Name.firstName}" },
+                                    "lastName": { "_gen": "string", "expr": "#{Name.lastName}" },
+                                    "email": { "_gen": "string", "expr": "#{Internet.emailAddress}" }
                                 }
                             }
                         }
@@ -2336,9 +2336,9 @@ See the overview.md section in the full documentation below for the key product 
                                 "after": {
                                     "_gen": "someKeys",
                                     "object": {
-                                        "firstName": { "_gen": "string", "expr": "#{Name.first_name}" },
-                                        "lastName": { "_gen": "string", "expr": "#{Name.last_name}" },
-                                        "email": { "_gen": "string", "expr": "#{Internet.email_address}" }
+                                        "firstName": { "_gen": "string", "expr": "#{Name.firstName}" },
+                                        "lastName": { "_gen": "string", "expr": "#{Name.lastName}" },
+                                        "email": { "_gen": "string", "expr": "#{Internet.emailAddress}" }
                                     }
                                 }
                             }
@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.5.7
+
+Thu Aug 21 10:53:55 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: [`easing`](/functions/easing) can now take dynamic `to` and `from` parameters.
+
+---
+
 ###  1.5.6
 
 Mon Aug 18 15:12:51 PDT 2025
@@ -27471,19 +27481,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-18 08:36:51.822994797",
+    "value": "2022-12-21 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-27 14:04:32.730806236",
+    "value": "2023-04-30 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-16 07:28:35.21634256",
+    "value": "2023-01-19 07:28:35.21634256",
     "headers": null
   }
 ]
