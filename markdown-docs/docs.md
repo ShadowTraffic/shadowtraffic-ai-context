@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.5.8
+
+Tue Sep  2 09:00:14 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: [`multiBlob` S3 support](/connections/s3/#writing-multiple-blobs) now raises launch-time error when there are missing keys.
+
+---
+
 ###  1.5.7
 
 Thu Aug 21 10:53:55 PDT 2025
@@ -19780,10 +19790,40 @@ If the mathematically perfect curves that `easing` creates aren't realistic, you
           ]
         },
         "from": {
-          "type": "number"
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
         },
         "to": {
-          "type": "number"
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
         },
         "duration": {
           "type": "integer",
@@ -27481,19 +27521,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-21 08:36:51.822994797",
+    "value": "2023-01-02 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-30 14:04:32.730806236",
+    "value": "2023-05-12 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-19 07:28:35.21634256",
+    "value": "2023-01-31 07:28:35.21634256",
     "headers": null
   }
 ]
