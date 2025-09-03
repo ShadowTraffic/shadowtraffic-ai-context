@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.6.0
+
+Wed Sep  3 12:11:32 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds new [AI function](/functions/ai) that can generate free text from AWS Bedrock and Ollama.
+
+---
+
 ###  1.5.8
 
 Tue Sep  2 09:00:14 PDT 2025
@@ -18286,6 +18296,191 @@ Generates the sum of `args`. You can also use this function through an infix [`m
 ```
 
 
+# functions/ai.md
+
+## Commentary
+
+[Badges]
+
+Generates free text by making calls to LLM providers. [Ollama](https://ollama.com/) [Example 1](#calling-ollama) and [AWS Bedrock](https://aws.amazon.com/bedrock/) [Example 2](#calling-bedrock) and are currently supported.
+
+Each LLM call contains at least two things: a prompt of your choosing and a preprompt assembled by ShadowTraffic that contains all [variables](/overview/#variables) generated before this function call. [Example 3](#integrating-variables) This preprompt helps give the LLM more context for whatever you're generating.
+
+You can pass arbitrary custom options to the underlying model, like setting the temperature. [Example 4](#modifying-bedrock-calls)
+
+---
+
+## Examples
+
+### Calling Ollama
+
+Set `service` to `ollama` and provide the minimum required parameters. You can supply arbitrary options to the underlying model by specifying an optional `options` map under the `ollama` key. Consult [the Ollama docs](https://github.com/ollama/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values) for the content of this map.
+
+**Input:**
+```json
+{
+  "_gen": "ai",
+  "service": "ollama",
+  "ollama": {
+    "url": "http://localhost:11434",
+    "model": "mistral:7b-instruct",
+    "prompt": "What should I name my next cat?"
+  }
+}
+```
+
+This example might return strings like `Whiskers`, `Mittens`, and `Fluffy`.
+
+### Calling Bedrock
+
+Set `service` to `bedrock` and provide the minimum required parameters.
+
+**Input:**
+```json
+{
+  "_gen": "ai",
+  "service": "bedrock",
+  "bedrock": {
+    "modelId": "xxx",
+    "prompt": "Write a two sentence incident report for a software bug."
+  }
+}
+```
+
+This example returns similiar strings to the prior example.
+
+### Integrating variables
+
+Any variables that have been evaluated prior to this function call will automatically be passed as a preprompt. In this case, a map of `name` and `age` with their generated values will get sent to the LLM. The idea is that this gives the LLM more context to work with. In this example, it can generate more specific health reports.
+
+**Input:**
+```json
+{
+  "topic": "sandbox",
+  "vars": {
+    "name": {
+      "_gen": "string",
+      "expr": "#{Name.fullName}"
+    },
+    "age": {
+      "_gen": "normalDistribution",
+      "mean": 40,
+      "sd": 10,
+      "decimals": 0
+    }
+  },
+  "value": {
+    "_gen": "ai",
+    "service": "ollama",
+    "ollama": {
+      "url": "http://localhost:11434",
+      "model": "mistral:7b-instruct",
+      "prompt": "Write a health report appropriate for the age of the patient."
+    }
+  }
+}
+```
+
+As an example output, this prompt generated:
+
+```
+Name: Mr. Whitley Greenfelder
+Age: 40
+
+Health Report:
+
+Mr. Greenfelder, at the age of 40, is entering a crucial period in his life regarding maintaining optimal health and preventing potential health issues. Forty is considered middle age, and it's important to focus on overall wellness.
+
+Here are some recommendations for Mr. Greenfelder based on his current age:
+
+1. Regular Exercise: Aim for at least 150 minutes of moderate-intensity aerobic activity or 75 minutes of vigorous-intensity activity per week. Additionally, include muscle-strengthening activities on two or more days a week to maintain strong bones and muscles.
+
+
+2. Balanced Diet: Consume a diet rich in fruits, vegetables, whole grains, lean proteins, and healthy fats. Limit processed foods, sugars, sodium, saturated and trans fats.
+
+...
+```
+
+### Modifying Bedrock calls
+
+You can supply arbitrary options to the underlying Bedrock model by specifying an optional `inferenceConfig` map under the `bedrock` key. Consult [the AWS docs](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_TextInferenceConfig.html) for the content of this map.
+
+**Input:**
+```json
+{
+  "_gen": "ai",
+  "service": "bedrock",
+  "bedrock": {
+    "modelId": "xxx",
+    "prompt": "Write a hotel review.",
+    "inferenceConfig": {
+      "temperature": 0.3
+    }
+  }
+}
+```
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "service": {
+      "type": "string",
+      "enum": [
+        "ollama",
+        "bedrock"
+      ]
+    },
+    "ollama": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "options": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "url",
+        "model",
+        "prompt"
+      ]
+    },
+    "bedrock": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "inferenceConfig": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "required": [
+    "service"
+  ]
+}
+```
+
+
 # functions/boolean.md
 
 ## Commentary
@@ -27521,19 +27716,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-02 08:36:51.822994797",
+    "value": "2023-01-03 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-12 14:04:32.730806236",
+    "value": "2023-05-13 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-31 07:28:35.21634256",
+    "value": "2023-02-01 07:28:35.21634256",
     "headers": null
   }
 ]
