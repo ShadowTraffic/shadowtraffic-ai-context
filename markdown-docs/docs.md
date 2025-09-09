@@ -3068,6 +3068,18 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.7.0
+
+Tue Sep  9 09:10:11 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds new [`duration`](/functions/duration) function for expressing wallclock values.
+- 🐛 **Fixed**: Fixes `multiBlob` Parquet serialization with the file system connection.
+- 🐛 **Fixed**: Adds launch-time validation to catch illegal `lookup` function calls to future schedule `stages` that haven't yet run.
+
+---
+
 ###  1.6.3
 
 Mon Sep  8 10:26:38 PDT 2025
@@ -19597,6 +19609,191 @@ Generates the division of `args`. You can also use this function through an infi
 ```
 
 
+# functions/duration.md
+
+## Commentary
+
+[Badges]
+
+Constructs a quatity of time, expressed in hours, days, minutes, seconds, and milliseconds. [Example 1](#passing-in-parameters) The output of this function is a UNIX millisecond value intended to be used with other date/time functions. [Example 2](#performing-time-math)
+
+Use this function when you want to name a span of time, like 14 days, instead of hardcoding its opaque millisecond value equivelent (`1209600000`).
+
+Note that this function doesn't perform calendar method. For example, subtracting `900` days from [`now`](/functions/now) won't take into account things like leap years. It's intended purpose is to specify instances of wallclock time.
+
+---
+
+## Examples
+
+### Passing in parameters
+
+Supply any time units, with `days` being the largest and `milliseconds` being the smallest. Any unsupplied units default to `0`.
+
+**Input:**
+```json
+{
+  "_gen": "duration",
+  "days": 4,
+  "hours": 3,
+  "minutes": 32,
+  "seconds": 45,
+  "milliseconds": 250
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 358365000,
+    "headers": null
+  }
+]
+```
+
+### Performing time math
+
+`duration` works with other functions that expect Unix millisecond values, like [`formatDateTime`](/functions/formatDateTime).
+
+**Input:**
+```json
+{
+  "_gen": "formatDateTime",
+  "ms": {
+    "_gen": "math",
+    "expr": "now - offset",
+    "names": {
+      "now": {
+        "_gen": "now"
+      },
+      "offset": {
+        "_gen": "duration",
+        "days": 7
+      }
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "2024-04-18T13:28:47.262-07:00",
+    "headers": null
+  }
+]
+```
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "days": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "hours": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "minutes": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "seconds": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "ms": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+
 # functions/easing.md
 
 ## Commentary
@@ -27747,19 +27944,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-08 08:36:51.822994797",
+    "value": "2023-01-09 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-18 14:04:32.730806236",
+    "value": "2023-05-19 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-06 07:28:35.21634256",
+    "value": "2023-02-07 07:28:35.21634256",
     "headers": null
   }
 ]
