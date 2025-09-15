@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.7.1
+
+Mon Sep 15 11:13:32 PDT 2025
+
+### Changes
+
+- ✅ **Added**: [`easing`](/functions/easing) and [`easingChain`](/functions/easingChain) can now iterate along a number of events, not just a timed duration.
+
+---
+
 ###  1.7.0
 
 Tue Sep  9 09:10:11 PDT 2025
@@ -19827,15 +19837,19 @@ xychart-beta
 
 ---
 
-To use them, you specify a handful of parameters. The simplest ones to understand are `from` (the value you want to start at), `to` (the value you want to end at), and `duration` (the number of milliseconds to transition between the two. ShadowTraffic will use the wallclock to decide when to stop transitioning the value and emit as many events during that time as you allow it. [Example 1](#linear-easing) When the easing function reaches `to` value, it will only ever produce that value thereafter. [Example 2](#capping-the-end-value)
+To use them, you specify a handful of parameters. The simplest ones to understand are `from` (the value you want to start at) and `to` (the value you want to end at).
 
-In addition to defining those three parameters, you also define a `direction` (the shape of the line between your two values) and `degree` (the steepness of the line). These parameters follow well-known mathematical formulas. For example, `direction` [Example 3](#changing-direction) can be:
+In addition, you also specify how long the easing should take. You can do this in terms of time (`duration`) or in terms of data (`events`). If you choose `duration`, ShadowTraffic will use the wallclock to decide when to stop transitioning the value and emit as many events during that time as you allow it. [Example 1](#linear-easing) If you choose `events`, ShadowTraffic will simply scale the `from` to the `to` value over the number of events you specified. [Example 2](#counting-easings)
+
+In either case, when the easing function reaches `to` value, it will only ever produce that value thereafter. [Example 3](#capping-the-end-value)
+
+In addition to defining those parameters, you also define a `direction` (the shape of the line between your two values) and `degree` (the steepness of the line). These parameters follow well-known mathematical formulas. For example, `direction` [Example 4](#changing-direction) can be:
 
 - `easeIn`: the transition starts slowly, and then accelerates
 - `easeOut`: the transition starts fast, and then decelerates
 - `easeInOut`: the transition is slow at both ends, but fast in the middle
 
-Likewise, `degree` [Example 4](#changing-degree) has like familiar values:
+Likewise, `degree` [Example 5](#changing-degree) has like familiar values:
 
 - `linear`: a constant rate of transition, `t`
 - `quad`: a quadratic rate of transition, `t^2`
@@ -19845,9 +19859,9 @@ Likewise, `degree` [Example 4](#changing-degree) has like familiar values:
 
 When you specify an easing, you combine a `direction` and a `degree` into a pair to create transitions like `easeIn` / `linear`, or `easeInOut` / `cubic`. These pairings specify the precise slope of the line between your `from` and `to` values
 .
-If you have trouble visualizing what any of these look like, many of these pairs are helpfully graphed on [Easings.net](https://easings.net/.)
+>If you have trouble visualizing what any of these look like, many of these pairs are helpfully graphed on [Easings.net](https://easings.net/.)
 
-Lastly, in addition to the predefined easing `direction` / `degree` pairs, you may also supply your own numeric function. [Example 5](#custom-easings) This is especially useful if you want to stack easings with [`easingChain`](/functions/easingChain) and peg a value at a particular number.
+Lastly, in addition to the predefined easing `direction` / `degree` pairs, you may also supply your own numeric function. [Example 6](#custom-easings) This is especially useful if you want to stack easings with [`easingChain`](/functions/easingChain) and peg a value at a particular number.
 
 ---
 
@@ -19883,13 +19897,13 @@ In this example, ShadowTraffic will emit events for `8000` milliseconds that tra
   {
     "topic": "sandbox",
     "key": null,
-    "value": 5.015,
+    "value": 5.015001875234404,
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": 5.03,
+    "value": 5.030003750468809,
     "headers": null
   }
 ]
@@ -19911,6 +19925,48 @@ xychart-beta
     y-axis 5 --> 125
     line [5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 89, 95, 101, 107, 113, 119, 125]
 ```
+
+### Counting easings
+
+In addition to specifying easing lengths as a `duration`, you can also specify them in terms of the number of events. In this example, the easing will take 5 `events` to complete. This is particularly useful if you're generating static, batch data sets.
+
+**Input:**
+```json
+{
+  "_gen": "easing",
+  "direction": "easeInOut",
+  "degree": "linear",
+  "from": 3,
+  "to": 12,
+  "events": 5
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 3,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.25,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 7.5,
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
 
 ### Capping the end value
 
@@ -19940,13 +19996,13 @@ When the `duration` is reached, `easing` will peg the result to the value of `fr
   {
     "topic": "sandbox",
     "key": null,
-    "value": 10.4,
+    "value": 10.5,
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": 10.8,
+    "value": 11,
     "headers": null
   }
 ]
@@ -19997,13 +20053,13 @@ Use a different `direction` to change the slope of the tails of the curve. In th
   {
     "topic": "sandbox",
     "key": null,
-    "value": 50.00599940002,
+    "value": 50.00599999996,
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": 50.01199760016,
+    "value": 50.01199879979998,
     "headers": null
   }
 ]
@@ -20054,13 +20110,13 @@ Likewise, use a different `degree` to change the steepness of the curve. Higher 
   {
     "topic": "sandbox",
     "key": null,
-    "value": 99.9999999999931,
+    "value": 99.99999999999308,
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": 99.99999999988938,
+    "value": 99.99999999988924,
     "headers": null
   }
 ]
@@ -20168,13 +20224,13 @@ If the mathematically perfect curves that `easing` creates aren't realistic, you
   {
     "topic": "sandbox",
     "key": null,
-    "value": 99.2804851852396,
+    "value": 99.28048518603984,
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": 99.12853933930458,
+    "value": 99.12853934250555,
     "headers": null
   }
 ]
@@ -20253,12 +20309,25 @@ If the mathematically perfect curves that `easing` creates aren't realistic, you
           "minimum": 1
         }
       },
-      "required": [
-        "direction",
-        "degree",
-        "from",
-        "to",
-        "duration"
+      "anyOf": [
+        {
+          "required": [
+            "direction",
+            "degree",
+            "from",
+            "to",
+            "duration"
+          ]
+        },
+        {
+          "required": [
+            "direction",
+            "degree",
+            "from",
+            "to",
+            "events"
+          ]
+        }
       ]
     },
     {
@@ -20309,7 +20378,9 @@ By default, each easing function will run sequentially until completion. When th
 
 You can optionally loop the chain to make it run indefinitely. [Example 2](#looping-a-chain)
 
-Lastly, instead of an easing function, you can also supply a numeric function in its place. This is handy if you want to model a value ramping up, holding steady, and then declining. [Example 3](#supply-a-numeric-function)
+Instead of an easing function, you can also supply a numeric function in its place. This is handy if you want to model a value ramping up, holding steady, and then declining. [Example 3](#supply-a-numeric-function)
+
+Lastly, you can freely mix time-based and [counting-based](/functions/easing/#counting-easings) easings. [Example 4](#mixing-easing-types)
 
 ---
 
@@ -20364,13 +20435,13 @@ Set `stages` to a series of easing functions that will be run in a row. Each `du
   {
     "topic": "sandbox",
     "key": null,
-    "value": 5.00124947938359,
+    "value": 5.002314814814815,
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": 5.0199916701374425,
+    "value": 5.037037037037037,
     "headers": null
   }
 ]
@@ -20435,13 +20506,13 @@ Set `loop` to `true` to cause the chain to repeat indefinitely.
   {
     "topic": "sandbox",
     "key": null,
-    "value": 5.999999999999999,
+    "value": 7.75,
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": 9,
+    "value": 10,
     "headers": null
   }
 ]
@@ -20514,13 +20585,13 @@ Supply any numeric function inside of `stage` to control how values are generate
   {
     "topic": "sandbox",
     "key": null,
-    "value": 5.00124947938359,
+    "value": 5.002314814814815,
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": 5.0199916701374425,
+    "value": 5.037037037037037,
     "headers": null
   }
 ]
@@ -20542,6 +20613,62 @@ xychart-beta
     y-axis 1 --> 9
     line [5, 5.001, 5.02, 5.101, 5.32, 5.781, 6.619, 8, 8.251, 7.65, 8.199, 8.114, 8.285, 7.997, 7.891, 7.169, 4.5, 1.831, 1.109, 1.003]
 ```
+
+### Mixing easing types
+
+Easings in the chain can freely use `duration` or `events` to specify their lengths.
+
+**Input:**
+```json
+{
+  "_gen": "easingChain",
+  "loop": true,
+  "stages": [
+    {
+      "_gen": "easing",
+      "direction": "easeIn",
+      "degree": "linear",
+      "from": 1,
+      "to": 10,
+      "events": 5
+    },
+    {
+      "_gen": "easing",
+      "direction": "easeOut",
+      "degree": "quint",
+      "from": 10,
+      "to": 1,
+      "duration": 7
+    }
+  ]
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 1,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 3.25,
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": 5.5,
+    "headers": null
+  }
+]
+```
+
+*... (9 more examples)*
 
 ---
 
@@ -27944,19 +28071,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-09 08:36:51.822994797",
+    "value": "2023-01-15 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-19 14:04:32.730806236",
+    "value": "2023-05-25 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-07 07:28:35.21634256",
+    "value": "2023-02-13 07:28:35.21634256",
     "headers": null
   }
 ]
