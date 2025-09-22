@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.8.0
+
+Mon Sep 22 09:52:42 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds support for direct Iceberg writes to [S3](/connections/s3/#writing-iceberg-data), [GCS](/connections/googleCloudStorage/#writing-iceberg-data), [Azure](/connections/azureBlobStorage/#writing-iceberg-data), and [file system connections](/connections/filesystem/#writing-iceberg-data).
+
+---
+
 ###  1.7.1
 
 Mon Sep 15 11:13:32 PDT 2025
@@ -7697,6 +7707,23 @@ Additionally:
 
 - `compression` can optionally be set to `gzip`.
 
+# connections/_iceberg.md
+
+In addition to writing data as Parquet, ShadowTraffic can also directly write data to Iceberg tables. A few important notes on how this works:
+
+1. ShadowTraffic uploading your data out-of-band from Iceberg, then commits the file location the Iceberg catalog.
+
+2. Only REST catalogs like [Apache Polaris](https://polaris.apache.org/) are currently supported.
+
+3. Parquet is currently the only format ShadowTraffic can serialize Iceberg data with.
+
+4. If the table doesn't exist, it will be created for you.
+
+5. If calling `commit` to the Iceberg table fails because of concurrent writers, ShadowTraffic will retry the write operation up to 5 times before giving up.
+
+To write data to an Iceberg table, set `tableFormat` to `iceberg` and set the `iceberg` key with the required properties: `namespace`, `table` and `catalogProps`. `catalogProps` is [a map of properties](https://iceberg.apache.org/javadoc/1.9.2/org/apache/iceberg/CatalogUtil.html#loadCatalog(java.lang.String,java.lang.String,java.util.Map,java.lang.Object)) to be passed to the corresponding REST catalog.
+
+
 # connections/azureBlobStorage.md
 
 ## Commentary
@@ -8008,6 +8035,51 @@ You can change it by using the following two optional parameters under `writerCo
       "writerConfigs": {
         "bufferDepth": 16000,
         "concurrency": 8
+      }
+    }
+  }
+}
+```
+
+### Writing Iceberg data
+
+<Iceberg />
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "container": "sandbox",
+      "containerConfigs": {
+        "keyPrefix": "foo-",
+        "format": "parquet",
+        "tableFormat": "iceberg",
+        "iceberg": {
+          "namespace": "demo",
+          "table": "myTable",
+          "catalogProps": {
+            "uri": "http://your-catalog-host:8081/api/catalog",
+            "warehouse": "my_catalog",
+            "credential": "clientId:clientSecret",
+            "scope": "PRINCIPAL_ROLE:ALL",
+            "adls.account-name": "XXXXXXXX",
+            "adls.account-key": "XXXXXXXX"
+          }
+        }
+      },
+      "data": {
+        "simpleKey": {
+          "_gen": "uuid"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "azure": {
+      "kind": "azureBlobStorage",
+      "connectionConfigs": {
+        "connectionString": "xxxxxx"
       }
     }
   }
@@ -8421,6 +8493,12 @@ You can change it by using the following two optional parameters under `writerCo
                 "log"
               ]
             },
+            "tableFormat": {
+              "type": "string",
+              "enum": [
+                "iceberg"
+              ]
+            },
             "pretty": {
               "type": "boolean"
             },
@@ -8446,6 +8524,25 @@ You can change it by using the following two optional parameters under `writerCo
                     "_gen"
                   ]
                 }
+              ]
+            },
+            "iceberg": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "catalogProps": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "namespace",
+                "table",
+                "catalogProps"
               ]
             }
           },
@@ -8466,6 +8563,12 @@ You can change it by using the following two optional parameters under `writerCo
                 "log"
               ]
             },
+            "tableFormat": {
+              "type": "string",
+              "enum": [
+                "iceberg"
+              ]
+            },
             "pretty": {
               "type": "boolean"
             },
@@ -8491,6 +8594,25 @@ You can change it by using the following two optional parameters under `writerCo
                     "_gen"
                   ]
                 }
+              ]
+            },
+            "iceberg": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "catalogProps": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "namespace",
+                "table",
+                "catalogProps"
               ]
             },
             "multiBlob": {
@@ -9348,6 +9470,51 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
 }
 ```
 
+### Writing Iceberg data
+
+<Iceberg />
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "directory": "/tmp/data",
+      "fileConfigs": {
+        "filePrefix": "foo-",
+        "format": "parquet",
+        "tableFormat": "iceberg",
+        "iceberg": {
+          "namespace": "demo",
+          "table": "myTable",
+          "catalogProps": {
+            "uri": "http://your-catalog-host:8081/api/catalog",
+            "warehouse": "my_catalog",
+            "credential": "clientId:clientSecret",
+            "scope": "PRINCIPAL_ROLE:ALL"
+          }
+        }
+      },
+      "data": {
+        "x": {
+          "_gen": "oneOf",
+          "choices": [
+            1,
+            2,
+            3
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "localFs": {
+      "kind": "fileSystem"
+    }
+  }
+}
+```
+
 ---
 
 ## Specification
@@ -9726,6 +9893,12 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
                 "log"
               ]
             },
+            "tableFormat": {
+              "type": "string",
+              "enum": [
+                "iceberg"
+              ]
+            },
             "pretty": {
               "type": "boolean"
             },
@@ -9751,6 +9924,25 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
                     "_gen"
                   ]
                 }
+              ]
+            },
+            "iceberg": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "catalogProps": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "namespace",
+                "table",
+                "catalogProps"
               ]
             }
           },
@@ -9771,6 +9963,12 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
                 "log"
               ]
             },
+            "tableFormat": {
+              "type": "string",
+              "enum": [
+                "iceberg"
+              ]
+            },
             "pretty": {
               "type": "boolean"
             },
@@ -9796,6 +9994,25 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
                     "_gen"
                   ]
                 }
+              ]
+            },
+            "iceberg": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "catalogProps": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "namespace",
+                "table",
+                "catalogProps"
               ]
             },
             "multiFile": {
@@ -10095,6 +10312,52 @@ If you have multiple generators writing to the same bucket and want to execute a
         "path": [
           "data"
         ]
+      }
+    }
+  ],
+  "connections": {
+    "gcs": {
+      "kind": "googleCloudStorage",
+      "connectionConfigs": {
+        "projectId": "myProject"
+      }
+    }
+  }
+}
+```
+
+### Writing Iceberg data
+
+<Iceberg />
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "bucket": "sandbox",
+      "bucketConfigs": {
+        "blobPrefix": "part-",
+        "format": "parquet",
+        "tableFormat": "iceberg",
+        "iceberg": {
+          "namespace": "demo",
+          "table": "myTable",
+          "catalogProps": {
+            "uri": "http://your-catalog-host:8081/api/catalog",
+            "warehouse": "my_catalog",
+            "credential": "clientId:clientSecret",
+            "scope": "PRINCIPAL_ROLE:ALL",
+            "gcs.project-id": "XXXXXXX",
+            "gcs.service-account-email": "XXXXXXX",
+            "gcs.service-account-private-key": "XXXXXXX"
+          }
+        }
+      },
+      "data": {
+        "simpleKey": {
+          "_gen": "uuid"
+        }
       }
     }
   ],
@@ -10501,6 +10764,12 @@ If you have multiple generators writing to the same bucket and want to execute a
             "log"
           ]
         },
+        "tableFormat": {
+          "type": "string",
+          "enum": [
+            "iceberg"
+          ]
+        },
         "pretty": {
           "type": "boolean"
         },
@@ -10526,6 +10795,25 @@ If you have multiple generators writing to the same bucket and want to execute a
                 "_gen"
               ]
             }
+          ]
+        },
+        "iceberg": {
+          "type": "object",
+          "properties": {
+            "namespace": {
+              "type": "string"
+            },
+            "table": {
+              "type": "string"
+            },
+            "catalogProps": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "namespace",
+            "table",
+            "catalogProps"
           ]
         }
       },
@@ -14305,6 +14593,48 @@ You can change it by using the following two optional parameters under `writerCo
 }
 ```
 
+### Writing Iceberg data
+
+<Iceberg />
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "bucket": "sandbox",
+      "bucketConfigs": {
+        "keyPrefix": "part-",
+        "format": "parquet",
+        "tableFormat": "iceberg",
+        "iceberg": {
+          "namespace": "demo",
+          "table": "myTable",
+          "catalogProps": {
+            "uri": "http://your-catalog-host:8081/api/catalog",
+            "warehouse": "my_catalog",
+            "credential": "clientId:clientSecret",
+            "scope": "PRINCIPAL_ROLE:ALL",
+            "s3.access-key-id": "XXXXXXXX",
+            "s3.secret-access-key": "XXXXXXXX"
+          }
+        }
+      },
+      "data": {
+        "simpleKey": {
+          "_gen": "uuid"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "s3-staging-org": {
+      "kind": "s3"
+    }
+  }
+}
+```
+
 ---
 
 ## Specification
@@ -14705,6 +15035,12 @@ You can change it by using the following two optional parameters under `writerCo
                 "log"
               ]
             },
+            "tableFormat": {
+              "type": "string",
+              "enum": [
+                "iceberg"
+              ]
+            },
             "pretty": {
               "type": "boolean"
             },
@@ -14730,6 +15066,25 @@ You can change it by using the following two optional parameters under `writerCo
                     "_gen"
                   ]
                 }
+              ]
+            },
+            "iceberg": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "catalogProps": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "namespace",
+                "table",
+                "catalogProps"
               ]
             }
           },
@@ -14750,6 +15105,12 @@ You can change it by using the following two optional parameters under `writerCo
                 "log"
               ]
             },
+            "tableFormat": {
+              "type": "string",
+              "enum": [
+                "iceberg"
+              ]
+            },
             "pretty": {
               "type": "boolean"
             },
@@ -14775,6 +15136,25 @@ You can change it by using the following two optional parameters under `writerCo
                     "_gen"
                   ]
                 }
+              ]
+            },
+            "iceberg": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "catalogProps": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "namespace",
+                "table",
+                "catalogProps"
               ]
             },
             "multiBlob": {
@@ -28071,19 +28451,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-15 08:36:51.822994797",
+    "value": "2023-01-22 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-25 14:04:32.730806236",
+    "value": "2023-06-01 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-13 07:28:35.21634256",
+    "value": "2023-02-20 07:28:35.21634256",
     "headers": null
   }
 ]
