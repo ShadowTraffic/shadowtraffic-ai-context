@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.8.1
+
+Wed Sep 24 13:44:26 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Performs a deep merge when [`loadJsonFile`](/functions/loadJsonFile) is used with an array of files, making it easier to specify nested overrides.
+
+---
+
 ###  1.8.0
 
 Mon Sep 22 09:52:42 PDT 2025
@@ -28451,19 +28461,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-22 08:36:51.822994797",
+    "value": "2023-01-24 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-01 14:04:32.730806236",
+    "value": "2023-06-03 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-20 07:28:35.21634256",
+    "value": "2023-02-22 07:28:35.21634256",
     "headers": null
   }
 ]
