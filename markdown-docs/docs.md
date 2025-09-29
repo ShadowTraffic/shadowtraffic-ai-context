@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.8.3
+
+Mon Sep 29 10:22:12 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Adds support for [v7 UUIDs](/functions/uuid).
+
+---
+
 ###  1.8.2
 
 Thu Sep 25 14:12:03 PDT 2025
@@ -28549,19 +28559,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-25 08:36:51.822994797",
+    "value": "2023-01-29 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-04 14:04:32.730806236",
+    "value": "2023-06-08 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-23 07:28:35.21634256",
+    "value": "2023-02-27 07:28:35.21634256",
     "headers": null
   }
 ]
@@ -29345,13 +29355,15 @@ Use the `decimals` function modifier to generate integers.
 
 [Badges]
 
-Generates type-4 instances of java.util.UUID.
+Generates UUIDs values.
 
 ---
 
 ## Examples
 
-### Generating UUID values
+### Generating v4 UUIDs
+
+By default, this function will generate version 4 UUIDs.
 
 **Input:**
 ```json
@@ -29386,6 +29398,44 @@ Generates type-4 instances of java.util.UUID.
 
 *... (2 more examples)*
 
+### Generating v7 UUIDs
+
+It can also generate time-based (v7) UUIDs.
+
+**Input:**
+```json
+{
+  "_gen": "uuid",
+  "version": 7
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "018f16f2-451e-743c-884f-4bbb2bf1839d",
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "018f16f2-451f-7d85-acb5-be6a61aa9a0c",
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "018f16f2-4520-7d67-83e7-dc978573998e",
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
+
 ---
 
 ## Specification
@@ -29395,7 +29445,15 @@ Generates type-4 instances of java.util.UUID.
 ```json
 {
   "type": "object",
-  "properties": {}
+  "properties": {
+    "version": {
+      "type": "number",
+      "enum": [
+        4,
+        7
+      ]
+    }
+  }
 }
 ```
 
