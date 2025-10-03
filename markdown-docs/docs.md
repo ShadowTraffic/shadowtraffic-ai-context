@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.8.7
+
+Fri Oct  3 09:51:23 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Extends [`serialize`](/function-modifiers/serialize) to handle SQL Server native datetime columns.
+
+---
+
 ###  1.8.6
 
 Fri Oct  3 09:16:45 PDT 2025
@@ -18661,6 +18671,54 @@ Use `type` set to `postgresTimestamp` to coerce the value into a Postgres `TIMES
 
 *... (2 more examples)*
 
+### Serialize to SQL Server timestamp
+
+Use `type` set to `sqlServerTimestamp` to coerce the value into a SQL Server `datetime` type.
+
+**Input:**
+```json
+{
+  "timestamp": {
+    "_gen": "now",
+    "serialize": {
+      "type": "sqlServerTimestamp"
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "table": "sandbox",
+    "row": {
+      "timestamp": "2024-04-25T20:28:47.262Z"
+    },
+    "op": null,
+    "where": null
+  },
+  {
+    "table": "sandbox",
+    "row": {
+      "timestamp": "2024-04-25T20:28:47.263Z"
+    },
+    "op": null,
+    "where": null
+  },
+  {
+    "table": "sandbox",
+    "row": {
+      "timestamp": "2024-04-25T20:28:47.264Z"
+    },
+    "op": null,
+    "where": null
+  }
+]
+```
+
+*... (2 more examples)*
+
 ---
 
 ## Specification
@@ -18675,7 +18733,9 @@ Use `type` set to `postgresTimestamp` to coerce the value into a Postgres `TIMES
       "type": "string",
       "enum": [
         "avroFixed",
-        "avroDecimal"
+        "avroDecimal",
+        "postgresTimestamp",
+        "sqlServerTimestamp"
       ]
     }
   },
