@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.8.6
+
+Fri Oct  3 09:16:45 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Removes hanging debug statement from previous release.
+
+---
+
 ###  1.8.5
 
 Fri Oct  3 08:58:27 PDT 2025
