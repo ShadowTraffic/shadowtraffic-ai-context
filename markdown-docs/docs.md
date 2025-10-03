@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.8.5
+
+Fri Oct  3 08:58:27 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: The metrics port can now be set with `--metrics-port`, and set to `0` to randomize its value.
+
+---
+
 ###  1.8.4
 
 Wed Oct  1 13:21:30 PDT 2025
@@ -6447,7 +6457,7 @@ shadowtraffic:
 ### CLI switches
 
 ```
-      --action <action>                          What ShadowTraffic should do (run, bootstrap). Defaults to run.
+      --action <action>                          What ShadowTraffic should do (bootstrap, run, sign-lease). Defaults to run.
       --bootstrap-from-avro-schema <file>        Uses the provided Avro Schema file to approximate the ShadowTraffic configuration.
       --bootstrap-from-json-schema <file>        Uses the provided JSON Schema file to approximate the ShadowTraffic configuration.
       --bootstrap-to <to>                        The target connection type to bootstrap the ShadowTraffic configuration file to.
@@ -6455,6 +6465,10 @@ shadowtraffic:
       --config-base64 <text>                     Instead of a file, use this Base64 encoded configuration data.
       --config-format <format>             json  Format of the config file: must be one of (json, yaml). Default is json.
   -h, --help                                     Display this information.
+      --lease-expiration <expiration>            The date this lease will expire.
+      --lease-name <team-name>                   The team name to issue the lease to.
+      --lease-signing-aws-kms-key-id <id>        ID for your AWS KMS key to sign leases.
+      --metrics-port <n>                         Makes Prometheus metrics available at the specified port. Defaults to 9400 if unset.
       --no-pretty                                Do not use a pretty printer with --stdout when generating data.
   -q, --quiet                                    Do not print any status text other than generated data to the command line.
       --report-benchmark                         Prints performance statistics after all generators complete.
@@ -6472,6 +6486,8 @@ shadowtraffic:
 ### Prometheus metrics
 
 ShadowTraffic exposes metrics through Prometheus. Inside the container, curl `http://localhost:9400` to see the metrics, and forward port `9400` to your host if you want to ingest or graph the metrics into your own observability platform.
+
+You can also set the port yourself with the command-line argument `--metrics-port`. A value of `0` will randomize the port, and ShadowTraffic will log out the port it bound to.
 
 All metrics use two labels - connection name, and output target. For example, if you're connection is to Kafka and it's named "kafka", and the topic you're writing to is named "clicks", you'll see a label `("kafka", "clicks")`.
 
@@ -28570,19 +28586,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-31 08:36:51.822994797",
+    "value": "2023-02-02 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-10 14:04:32.730806236",
+    "value": "2023-06-12 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-01 07:28:35.21634256",
+    "value": "2023-03-03 07:28:35.21634256",
     "headers": null
   }
 ]
