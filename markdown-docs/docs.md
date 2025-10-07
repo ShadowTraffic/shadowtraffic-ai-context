@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.8.8
+
+Mon Oct  6 19:31:13 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes bug where Avro schemas would be incorrectly constructed on dynamically nested arrays.
+
+---
+
 ###  1.8.7
 
 Fri Oct  3 09:51:23 PDT 2025
@@ -28656,19 +28666,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-02 08:36:51.822994797",
+    "value": "2023-02-05 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-12 14:04:32.730806236",
+    "value": "2023-06-15 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-03 07:28:35.21634256",
+    "value": "2023-03-06 07:28:35.21634256",
     "headers": null
   }
 ]
