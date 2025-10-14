@@ -3068,6 +3068,18 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.9.0
+
+Tue Oct 14 15:03:55 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Upgrades the dependencies underpinning [Kafka](/connections/kafka) to Confluent 8.
+0.
+- ⚡ **Improved**: Upgrades the EventStore connection to the latest, newly branded [KurrentDB](/connections/kurrentdb).
+
+---
+
 ###  1.8.9
 
 Wed Oct  8 11:56:03 PDT 2025
@@ -12219,6 +12231,485 @@ Notice that `"value.subject.name.strategy"` is set to `"io.confluent.kafka.seria
         "value"
       ]
     }
+  ]
+}
+```
+
+
+# connections/kurrentdb.md
+
+## Commentary
+
+[Badges]
+
+Connects to KurrentDB. Credentials are supplied through the `connectionConfig`'s `url` parameter.
+
+---
+
+## Examples
+
+### Configuring the connection
+
+Basic connection configuration for KurrentDB.
+
+**Input:**
+```json
+{
+  "connections": {
+    "kurrent": {
+      "kind": "kurrentdb",
+      "connectionConfigs": {
+        "url": "kurrentdb://myhost:2113"
+      }
+    }
+  }
+}
+```
+
+### Setting event data
+
+Use the `data` and `metadata` fields to set event payload data.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "stream": "sandbox",
+      "eventId": {
+        "_gen": "uuid"
+      },
+      "eventType": "publicationEvents",
+      "data": {
+        "n": {
+          "_gen": "normalDistribution",
+          "mean": 40,
+          "sd": 2
+        }
+      },
+      "metadata": {
+        "tag": "v1",
+        "timestamp": {
+          "_gen": "now"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "kurrent": {
+      "kind": "kurrentdb",
+      "connectionConfigs": {
+        "url": "kurrentdb://myhost:2113"
+      }
+    }
+  }
+}
+```
+
+---
+
+## Specification
+
+### Connection JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "kurrentdb"
+    },
+    "connectionConfigs": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    }
+  },
+  "required": [
+    "connectionConfigs"
+  ]
+}
+```
+
+### Generator JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "stream": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "streamSuffix": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "eventId": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "eventType": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "data": {
+      "type": "object"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "localConfigs": {
+      "type": "object",
+      "properties": {
+        "throttleMs": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "maxEvents": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "kafkaKeyProtobufHint": {
+          "type": "object",
+          "properties": {
+            "schemaFile": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schemaFile",
+            "message"
+          ]
+        },
+        "jsonSchemaHint": {
+          "type": "object"
+        },
+        "maxBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "discard": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "retainHistory": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "rate"
+          ]
+        },
+        "repeat": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "times": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "rate",
+            "times"
+          ]
+        },
+        "protobufSchemaHint": {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "object",
+              "properties": {
+                "schemaFile": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schemaFile",
+                "message"
+              ]
+            }
+          }
+        },
+        "maxHistoryEvents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "time": {
+          "type": "integer"
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "exactly": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "delay": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "ms": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "rate",
+            "ms"
+          ]
+        },
+        "history": {
+          "type": "object",
+          "properties": {
+            "events": {
+              "type": "object",
+              "properties": {
+                "max": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "avroSchemaHint": {
+          "type": "object"
+        },
+        "throttle": {
+          "type": "object",
+          "properties": {
+            "ms": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "throughput": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "timeMultiplier": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "kafkaValueProtobufHint": {
+          "type": "object",
+          "properties": {
+            "schemaFile": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schemaFile",
+            "message"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "stream",
+    "eventType",
+    "data"
   ]
 }
 ```
@@ -24012,7 +24503,7 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
-    "name": "EventStore",
+    "name": "KurrentDB",
     "schema": {
       "type": "object",
       "properties": {
@@ -28676,19 +29167,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-07 08:36:51.822994797",
+    "value": "2023-02-13 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-17 14:04:32.730806236",
+    "value": "2023-06-23 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-08 07:28:35.21634256",
+    "value": "2023-03-14 07:28:35.21634256",
     "headers": null
   }
 ]
