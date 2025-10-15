@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.9.1
+
+Wed Oct 15 12:08:08 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Introduces batching to the [KurrentDB](/connections/kurrentdb) connection.
+
+---
+
 ###  1.9.0
 
 Tue Oct 14 15:03:55 PDT 2025
@@ -12244,13 +12254,15 @@ Notice that `"value.subject.name.strategy"` is set to `"io.confluent.kafka.seria
 
 Connects to KurrentDB. Credentials are supplied through the `connectionConfig`'s `url` parameter.
 
+A new write request will be executed every `20` ms or `500` events, whichever happens first. You can override event count/write timing with `batchConfigs`. [Example 1](#configuring-the-connection)
+
 ---
 
 ## Examples
 
 ### Configuring the connection
 
-Basic connection configuration for KurrentDB.
+Basic connection configuration for KurrentDB. Optionally, set `batchConfigs` to control how frequently writes are issued. In this example, a write request is executed whenever `500` milliseconds pass or `5000` events are accumulated—whichever comes first.
 
 **Input:**
 ```json
@@ -12260,6 +12272,10 @@ Basic connection configuration for KurrentDB.
       "kind": "kurrentdb",
       "connectionConfigs": {
         "url": "kurrentdb://myhost:2113"
+      },
+      "batchConfigs": {
+        "lingerMs": 500,
+        "batchEvents": 5000
       }
     }
   }
@@ -14131,7 +14147,7 @@ A random snapshot of the table might look like:
 
 Connects to a Postgres database instance.
 
-A new transaction will be executed every `20` ms or `500` rows, whichever happens first. You can override row size/write timing with batchConfigs. [Example 1](#configuring-the-connection)
+A new transaction will be executed every `20` ms or `500` rows, whichever happens first. You can override row size/write timing with `batchConfigs`. [Example 1](#configuring-the-connection)
 
 ### Automatic table creation
 
@@ -29167,19 +29183,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-13 08:36:51.822994797",
+    "value": "2023-02-14 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-23 14:04:32.730806236",
+    "value": "2023-06-24 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-14 07:28:35.21634256",
+    "value": "2023-03-15 07:28:35.21634256",
     "headers": null
   }
 ]
