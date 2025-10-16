@@ -3068,6 +3068,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.9.2
+
+Thu Oct 16 10:25:52 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Kafka connections will now log [how their schemas were selected from Schema registry](/connections/kafka/#schema-selection).
+- 🐛 **Fixed**: Fixes vars not correctly getting passed to [`customFunction`](/functions/customFunction) calls.
+
+---
+
 ###  1.9.1
 
 Wed Oct 15 12:08:08 PDT 2025
@@ -29183,19 +29194,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-14 08:36:51.822994797",
+    "value": "2023-02-15 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-24 14:04:32.730806236",
+    "value": "2023-06-25 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-15 07:28:35.21634256",
+    "value": "2023-03-16 07:28:35.21634256",
     "headers": null
   }
 ]
