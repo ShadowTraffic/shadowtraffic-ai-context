@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.9.3
+
+Thu Oct 16 13:39:15 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes a bug that caused `maxEvents` to prematurely terminate a generator under certain conditions, like forks with high number of contending keys.
+
+---
+
 ###  1.9.2
 
 Thu Oct 16 10:25:52 PDT 2025
