@@ -3056,7 +3056,7 @@ See [the full library](/video-guides.mdx).
 
 ### Build with AI
 
-✨ If you use Claude, Cursor, or any other agentic coding assistant, load up [ShadowTraffic's AI context](https://github.com/ShadowTraffic/shadowtraffic-ai-context). These LLM-optimized will artifacts strongly increase the accuracy of your AI.
+✨ If you use Claude, Cursor, or any other agentic coding assistant, load up [ShadowTraffic's AI context](https://github.com/ShadowTraffic/shadowtraffic-ai-context). These LLM-optimized artifacts will strongly increase the accuracy of your AI.
 
 ### Videos
 
@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.10.0
+
+Mon Oct 20 15:26:16 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds new connection for [MotherDuck](/connections/motherduck).
+
+---
+
 ###  1.9.3
 
 Thu Oct 16 13:39:15 PDT 2025
@@ -12752,6 +12762,784 @@ Use the `data` and `metadata` fields to set event payload data.
 ```
 
 
+# connections/motherduck.md
+
+## Commentary
+
+[Badges]
+
+Connects to a Motherduck database.
+
+You can connect by either supplying a MotherDuck token and database name [Example 1](#connecting-with-a-token) or a JDBC url [Example 2](#connecting-with-a-jdbc-url).
+
+The MotherDuck connection writes data asynchronously. A new transaction will be executed every `20` ms or `500` rows, whichever happens first. You can override row size/write timing with `batchConfigs`. [Example 3](#setting-batch-parameters)
+
+### Automatic table creation
+
+By default for convenience, any tables ShadowTraffic writes to will be automatically created. This makes it easier to iterate on your generators without flipping back and forth between ShadowTraffic and MotherDuck.
+
+ShadowTraffic does this by scanning the structure of your generators and creating a suitable DDL, then executing it on your behalf.
+
+If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`sqlHint`](/function-modifiers/sqlHint) function modifier. [Example 4](#overriding-column-types)
+
+If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 5](#automatic-table-truncation)
+
+### Manual table control
+
+If you don't ShadowTraffic to control your tables, you can turn this behavior off by setting `tablePolicy` to `manual` in the connection map. It'll then be up to you to make sure your tables exist before trying to write to them. [Example 6](#manual-table-creation)
+
+### Generating updates and deletes
+
+By default, ShadowTraffic only issues `INSERT` statements to your tables. But sometimes, it might be useful to issue `UPDATE` and `DELETE` statements too.
+
+You can control the statement type by setting the `op` key on your generator. `op` must be one of `insert`, `update`, or `delete`.
+
+For the latter two, you must also include a `where` key on your generator, which contains a map of column name to value. You need this because when you issue an update or a delete, you need to tell MotherDuck what rows you want to change. The `where` map is used to check equality and select rows that match. [Example 7](#upserts-and-deletes)
+
+---
+
+## Examples
+
+### Connecting with a token
+
+You can authenticate with MotherDuck in two different ways. The first, shown here, is to supply a `token` and `db`. ShadowTraffic will figure out the right connection endpoint based on these two parameters. You can read about how to obtain a token [from MotherDuck's docs](https://motherduck.com/docs/key-tasks/authenticating-and-connecting-to-motherduck/authenticating-to-motherduck/#authentication-using-an-access-token).
+
+It's advisable to keep your token in an [environment variable](/functions/env) (shown here) to avoid hardcoding it in your ShadowTraffic file.
+
+**Input:**
+```json
+{
+  "connections": {
+    "md": {
+      "kind": "motherduck",
+      "connectionConfigs": {
+        "token": {
+          "_gen": "env",
+          "var": "MOTHERDUCK_TOKEN"
+        },
+        "db": "mydb"
+      }
+    }
+  }
+}
+```
+
+### Connecting with a JDBC URL
+
+The second way you can authenticate is to [directly pass a JDBC url](https://motherduck.com/docs/integrations/language-apis-and-drivers/jdbc-driver/). This is useful if you want to control the entire connection string, or perhaps transparently redirect the data to DuckDB.
+
+**Input:**
+```json
+{
+  "connections": {
+    "md": {
+      "kind": "motherduck",
+      "connectionConfigs": {
+        "jdbcUrl": "jdbc:duckdb:md:my_db?motherduck_token"
+      }
+    }
+  }
+}
+```
+
+### Setting batch parameters
+
+Set `batchConfigs` to control how frequently transactions are written. In this example, a transaction is executed whenever `500` milliseconds pass or `5000` rows are accumulated—whichever comes first.
+
+**Input:**
+```json
+{
+  "connections": {
+    "md": {
+      "kind": "motherduck",
+      "connectionConfigs": {
+        "token": {
+          "_gen": "env",
+          "var": "MOTHERDUCK_TOKEN"
+        },
+        "db": "mydb"
+      },
+      "batchConfigs": {
+        "lingerMs": 500,
+        "batchRows": 5000
+      }
+    }
+  }
+}
+```
+
+### Automatic table creation
+
+By default, table `sandbox` doesn't need to be defined. ShadowTraffic will automatically create it for you.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "table": "sandbox",
+      "row": {
+        "id": {
+          "_gen": "uuid"
+        },
+        "level": {
+          "_gen": "uniformDistribution",
+          "bounds": [
+            1,
+            10
+          ]
+        },
+        "active": {
+          "_gen": "boolean"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "md": {
+      "kind": "motherduck",
+      "connectionConfigs": {
+        "token": {
+          "_gen": "env",
+          "var": "MOTHERDUCK_TOKEN"
+        },
+        "db": "mydb"
+      }
+    }
+  }
+}
+```
+
+In this case, `sandbox` will be created like so:
+
+```
+┌─────────────┬─────────────┬──────┬─────┬─────────┬───────┐
+│ column_name ┆ column_type ┆ null ┆ key ┆ default ┆ extra │
+╞═════════════╪═════════════╪══════╪═════╪═════════╪═══════╡
+│ id          ┆ VARCHAR     ┆ YES  ┆     ┆         ┆       │
+│ level       ┆ DOUBLE      ┆ YES  ┆     ┆         ┆       │
+│ active      ┆ BOOLEAN     ┆ YES  ┆     ┆         ┆       │
+└─────────────┴─────────────┴──────┴─────┴─────────┴───────┘
+```
+
+### Automatic table truncation
+
+Use `dropAndCreate` to automatically clear out any rows in an existing target table. This will executing a cascading drop, deleting any dependent objects too.
+
+**Input:**
+```json
+{
+  "kind": "motherduck",
+  "tablePolicy": "dropAndCreate",
+  "connectionConfigs": {
+    "token": {
+      "_gen": "env",
+      "var": "MOTHERDUCK_TOKEN"
+    },
+    "db": "mydb"
+  }
+}
+```
+
+### Overriding column types
+
+Use the optional [`sqlHint`](/function-modifiers/sqlHint) function modifier on any generator to override how its column is defined.
+
+**Input:**
+```json
+{
+  "table": "sandbox",
+  "row": {
+    "id": {
+      "_gen": "uuid",
+      "sqlHint": "TEXT NOT NULL"
+    },
+    "level": {
+      "_gen": "uniformDistribution",
+      "bounds": [
+        1,
+        10
+      ],
+      "sqlHint": "INTEGER"
+    },
+    "active": {
+      "_gen": "boolean"
+    }
+  }
+}
+```
+
+Now, `sandbox` will like this:
+```
+┌─────────────┬─────────────┬──────┬─────┬─────────┬───────┐
+│ column_name ┆ column_type ┆ null ┆ key ┆ default ┆ extra │
+╞═════════════╪═════════════╪══════╪═════╪═════════╪═══════╡
+│ id          ┆ VARCHAR     ┆ NO   ┆     ┆         ┆       │
+│ level       ┆ INTEGER     ┆ YES  ┆     ┆         ┆       │
+│ active      ┆ BOOLEAN     ┆ YES  ┆     ┆         ┆       │
+└─────────────┴─────────────┴──────┴─────┴─────────┴───────┘
+```
+
+### Manual table creation
+
+Use `manual` to prevent ShadowTraffic from automatically creating tables for you. When you do this, your tables must already exist before ShadowTraffic tries to write to them.
+
+**Input:**
+```json
+{
+  "kind": "motherduck",
+  "tablePolicy": "manual",
+  "connectionConfigs": {
+    "token": {
+      "_gen": "env",
+      "var": "MOTHERDUCK_TOKEN"
+    },
+    "db": "mydb"
+  }
+}
+```
+
+### Upserts and deletes
+
+Use `op` and `where` to issue upserts and deletes. It's up to you to make sure that you don't try to update or delete rows that don't exist.
+
+This example uses `fork` and `stateMachine` to generate many simultaneous rows being inserted, updated, and deleted.
+
+In the first state, `insertIt`, a random value of about `50` is generated. In the second state, `updateIt`, the value gets updated to one of `1`, `5`, or `10`. Finally, in `deleteIt`, the entire row is deleted.
+
+`id` is generated once as a fork key and used as the basis for equality to perform updates and deletes.
+
+**Input:**
+```json
+{
+  "table": "sandbox",
+  "fork": {
+    "key": {
+      "_gen": "uuid"
+    }
+  },
+  "row": {
+    "id": {
+      "_gen": "var",
+      "var": "forkKey"
+    }
+  },
+  "stateMachine": {
+    "_gen": "stateMachine",
+    "initial": "insertIt",
+    "transitions": {
+      "insertIt": "updateIt",
+      "updateIt": "deleteIt"
+    },
+    "states": {
+      "insertIt": {
+        "row": {
+          "value": {
+            "_gen": "normalDistribution",
+            "mean": 50,
+            "sd": 15
+          }
+        }
+      },
+      "updateIt": {
+        "op": "update",
+        "where": {
+          "id": {
+            "_gen": "var",
+            "var": "forkKey"
+          }
+        },
+        "row": {
+          "value": {
+            "_gen": "oneOf",
+            "choices": [
+              1,
+              5,
+              10
+            ]
+          }
+        }
+      },
+      "deleteIt": {
+        "op": "delete",
+        "where": {
+          "id": {
+            "_gen": "var",
+            "var": "forkKey"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+A random snapshot of the table might look like:
+
+```
+duckdb> select * from sandbox limit 10;
+┌───────────────────────────────────────┬───────┐
+│ id                                    ┆ value │
+╞═══════════════════════════════════════╪═══════╡
+│ 07f217c6-1c82-e1cb-6dd8-fc614ff1a6e3  ┆    49 │
+│ 83d35207-ac3f-b8a7-fd7e-c82e1bdc3b05  ┆    10 │
+│ 184a0e26-237f-915b-4d97-5dc1808d91df  ┆    37 │
+└───────────────────────────────────────┴───────┘
+```
+
+### Timestamp types
+
+If your schema uses a timestamp type (`timestamp`, `timestamp with time zone` and friends), use [`serialize`](/function-modifiers/serialize#serialize-to-postgres-timestamp) around your timestamp (Unix ms) to write it with a compatible type. This works because MotherDuck is wire-compatible with Postgres.
+
+The specific format of the timestamp will defer to the schema set in MotherDuck.
+
+**Input:**
+```json
+{
+  "table": "sandbox",
+  "row": {
+    "createdAt": {
+      "_gen": "now",
+      "serialize": {
+        "type": "postgresTimestamp"
+      }
+    }
+  }
+}
+```
+
+---
+
+## Specification
+
+### Connection JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "motherduck"
+    },
+    "connectionConfigs": {
+      "type": "object",
+      "properties": {
+        "jdbcUrl": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "db ": {
+          "type": "string"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "jdbcUrl"
+          ]
+        },
+        {
+          "required": [
+            "token",
+            "db"
+          ]
+        }
+      ]
+    },
+    "batchConfigs": {
+      "type": "object",
+      "properties": {
+        "lingerMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "batchRows": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "tablePolicy": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "create",
+        "dropAndCreate"
+      ]
+    }
+  },
+  "required": [
+    "connectionConfigs"
+  ]
+}
+```
+
+### Generator JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "connection": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "table": {
+      "type": "string"
+    },
+    "row": {
+      "type": "object"
+    },
+    "op": {
+      "type": "string",
+      "enum": [
+        "insert",
+        "update",
+        "delete"
+      ]
+    },
+    "where": {
+      "type": "object"
+    },
+    "localConfigs": {
+      "type": "object",
+      "properties": {
+        "throttleMs": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "maxEvents": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "kafkaKeyProtobufHint": {
+          "type": "object",
+          "properties": {
+            "schemaFile": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schemaFile",
+            "message"
+          ]
+        },
+        "jsonSchemaHint": {
+          "type": "object"
+        },
+        "maxBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "discard": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "retainHistory": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "rate"
+          ]
+        },
+        "repeat": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "times": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "rate",
+            "times"
+          ]
+        },
+        "protobufSchemaHint": {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "object",
+              "properties": {
+                "schemaFile": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schemaFile",
+                "message"
+              ]
+            }
+          }
+        },
+        "maxHistoryEvents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "time": {
+          "type": "integer"
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "exactly": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "delay": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "ms": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "rate",
+            "ms"
+          ]
+        },
+        "history": {
+          "type": "object",
+          "properties": {
+            "events": {
+              "type": "object",
+              "properties": {
+                "max": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "avroSchemaHint": {
+          "type": "object"
+        },
+        "throttle": {
+          "type": "object",
+          "properties": {
+            "ms": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "throughput": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "timeMultiplier": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "kafkaValueProtobufHint": {
+          "type": "object",
+          "properties": {
+            "schemaFile": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schemaFile",
+            "message"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "table",
+    "row"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "op": {
+            "const": "update"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "where"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "op": {
+            "const": "delete"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "where"
+        ]
+      }
+    }
+  ]
+}
+```
+
+
 # connections/mysql.md
 
 ## Commentary
@@ -12770,7 +13558,7 @@ ShadowTraffic does this by scanning the structure of your generators and creatin
 
 If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`sqlHint`](/function-modifiers/sqlHint) function modifier. [Example 2](#overriding-column-types)
 
-If the table already exists, but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
+If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
 
 ### Manual table control
 
@@ -13472,7 +14260,7 @@ ShadowTraffic does this by scanning the structure of your generators and creatin
 
 If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the `sqlHint` function modifier. [Example 2](#overriding-column-types)
 
-If the table already exists, but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
+If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
 
 ### Manual table control
 
@@ -14178,7 +14966,7 @@ ShadowTraffic does this by scanning the structure of your generators and creatin
 
 If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`pgHint`](/function-modifiers/pgHint) function modifier. [Example 2](#overriding-column-types)
 
-If the table already exists, but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
+If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
 
 ### Manual table control
 
@@ -15865,7 +16653,7 @@ ShadowTraffic does this by scanning the structure of your generators and creatin
 
 If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the `sqlHint` function modifier. [Example 2](#overriding-column-types)
 
-If the table already exists, but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
+If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
 
 ### Manual table control
 
@@ -24174,6 +24962,57 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
+    "name": "MotherDuck",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "string"
+        },
+        "table": {
+          "type": "string"
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "first",
+            "last",
+            "random"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "table"
+          ]
+        },
+        {
+          "required": [
+            "name"
+          ]
+        }
+      ]
+    }
+  },
+  {
     "name": "MySQL",
     "schema": {
       "type": "object",
@@ -29204,19 +30043,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-15 08:36:51.822994797",
+    "value": "2023-02-19 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-25 14:04:32.730806236",
+    "value": "2023-06-29 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-16 07:28:35.21634256",
+    "value": "2023-03-20 07:28:35.21634256",
     "headers": null
   }
 ]
