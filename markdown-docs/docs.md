@@ -3068,6 +3068,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.10.1
+
+Tue Oct 21 19:18:14 PDT 2025
+
+### Changes
+
+- ⚡ **Improved**: Dramatically improves MotherDuck insertion performance.
+- 🐛 **Fixed**: Fixes Postgres table creation bug introduced in previous release.
+
+---
+
 ###  1.10.0
 
 Mon Oct 20 15:26:16 PDT 2025
@@ -30043,19 +30054,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-19 08:36:51.822994797",
+    "value": "2023-02-20 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-29 14:04:32.730806236",
+    "value": "2023-06-30 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-20 07:28:35.21634256",
+    "value": "2023-03-21 07:28:35.21634256",
     "headers": null
   }
 ]
