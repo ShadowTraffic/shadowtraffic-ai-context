@@ -3068,6 +3068,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.0
+
+Thu Oct 23 18:54:19 PDT 2025
+
+### Changes
+
+- ✅ **Added**: Adds new [`interpolate`](/functions/interpolate) function.
+- ✅ **Added**: Adds the ability to issue [reader traffic](/connections/motherduck/#generating-reads) to MotherDuck connections.
+
+---
+
 ###  1.10.1
 
 Tue Oct 21 19:18:14 PDT 2025
@@ -12783,7 +12794,7 @@ Connects to a Motherduck database.
 
 You can connect by either supplying a MotherDuck token and database name [Example 1](#connecting-with-a-token) or a JDBC url [Example 2](#connecting-with-a-jdbc-url).
 
-The MotherDuck connection writes data asynchronously. A new transaction will be executed every `20` ms or `500` rows, whichever happens first. You can override row size/write timing with `batchConfigs`. [Example 3](#setting-batch-parameters)
+The MotherDuck connection writes data asynchronously. A new transaction will be executed every `1000` ms or `10000` rows, whichever happens first. You can override row size/write timing with `batchConfigs`. [Example 3](#setting-batch-parameters)
 
 ### Automatic table creation
 
@@ -12806,6 +12817,10 @@ By default, ShadowTraffic only issues `INSERT` statements to your tables. But so
 You can control the statement type by setting the `op` key on your generator. `op` must be one of `insert`, `update`, or `delete`.
 
 For the latter two, you must also include a `where` key on your generator, which contains a map of column name to value. You need this because when you issue an update or a delete, you need to tell MotherDuck what rows you want to change. The `where` map is used to check equality and select rows that match. [Example 7](#upserts-and-deletes)
+
+### Generating reader traffic
+
+In addition to mutating events (inserts, updates, and deletes), this connection also has the ability to issue read traffic. In other words, it's able to send arbitrary SQL to MotherDuck with the intent of running ordinary `SELECT` queries. Query results are realized in memory and discard. [Example 8](#generating-reads)
 
 ---
 
@@ -13119,6 +13134,65 @@ The specific format of the timestamp will defer to the schema set in MotherDuck.
 }
 ```
 
+### Generating reads
+
+To generate read events, mark the top-level generator with `kind` set to `reader` (generator `kind` is default set to `writer`, but it is explicitly shown here). Then set `query` to the SQL query you want to execute.
+
+In this example, there are two generators.
+
+
+1. The first writes data to the table `foo`.
+
+2. The second looks up data previously written to `foo` and uses to run targeted `SELECT` queries against that same table. It uses [`interpolate`](/functions/interpolate) to build the SQL strings.
+
+These two generators interleave, issuing a mix of read and write traffic to MotherDuck.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "kind": "writer",
+      "table": "foo",
+      "row": {
+        "bar": {
+          "_gen": "uuid"
+        }
+      }
+    },
+    {
+      "kind": "reader",
+      "query": {
+        "_gen": "interpolate",
+        "template": "SELECT * FROM foo WHERE bar=':id';",
+        "params": {
+          "id": {
+            "_gen": "lookup",
+            "table": "foo",
+            "path": [
+              "row",
+              "bar"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "md": {
+      "kind": "motherduck",
+      "connectionConfigs": {
+        "token": {
+          "_gen": "env",
+          "var": "MOTHERDUCK_TOKEN"
+        },
+        "db": "mydb"
+      }
+    }
+  }
+}
+```
+
 ---
 
 ## Specification
@@ -13188,7 +13262,7 @@ The specific format of the timestamp will defer to the schema set in MotherDuck.
 }
 ```
 
-### Generator JSON schema
+### Writer generator JSON schema
 
 ```json
 {
@@ -13548,6 +13622,12 @@ The specific format of the timestamp will defer to the schema set in MotherDuck.
     }
   ]
 }
+```
+
+### Reader generator JSON schema
+
+```json
+[Schema - reference not found]
 ```
 
 
@@ -23551,6 +23631,88 @@ Selects elements from a population according to the supplied bins and frequencie
 ```
 
 
+# functions/interpolate.md
+
+## Commentary
+
+[Badges]
+
+Interpolates named tokens in a string. Tokens are denoted with a leading colon (`:foo`).
+
+This function preparses and caches the templatized string so repeated runs are fast.
+
+---
+
+## Examples
+
+### Interpolating tokens
+
+Supply a `template` string containing tokens with leading colons and a `params` map of token name to value.
+
+**Input:**
+```json
+{
+  "_gen": "interpolate",
+  "template": "SELECT * FROM table1 WHERE column1=':id';",
+  "params": {
+    "id": {
+      "_gen": "uuid"
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "SELECT * FROM table1 WHERE column1='aa616abe-1761-0c9a-e743-67bd738597dc';",
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "SELECT * FROM table1 WHERE column1='5e688e99-61b3-5c88-4697-6cf7b0bfbe20';",
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "SELECT * FROM table1 WHERE column1='76b20010-c318-5754-c86c-400eff88a1e3';",
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "template": {
+      "type": "string"
+    },
+    "params": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "template",
+    "params"
+  ]
+}
+```
+
+
 # functions/intervals.md
 
 ## Commentary
@@ -30054,19 +30216,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-20 08:36:51.822994797",
+    "value": "2023-02-22 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-30 14:04:32.730806236",
+    "value": "2023-07-02 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-21 07:28:35.21634256",
+    "value": "2023-03-23 07:28:35.21634256",
     "headers": null
   }
 ]
