@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.1
+
+Fri Oct 24 13:12:02 PDT 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes spurious stacktrace during shutdown of a long running MotherDuck connection.
+
+---
+
 ###  1.11.0
 
 Thu Oct 23 18:54:19 PDT 2025
@@ -30216,19 +30226,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-22 08:36:51.822994797",
+    "value": "2023-02-23 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-02 14:04:32.730806236",
+    "value": "2023-07-03 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-23 07:28:35.21634256",
+    "value": "2023-03-24 07:28:35.21634256",
     "headers": null
   }
 ]
