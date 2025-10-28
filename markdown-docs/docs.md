@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.2
+
+Mon Oct 27 18:55:55 CDT 2025
+
+### Changes
+
+- ⚡ **Improved**: [`stateMachine`](/functions/stateMachine) can now take functional arguments for both its `initial` and `transitions` parameter, making it more customizable.
+
+---
+
 ###  1.11.1
 
 Fri Oct 24 13:12:02 PDT 2025
@@ -13253,7 +13263,7 @@ These two generators interleave, issuing a mix of read and write traffic to Moth
         },
         "batchRows": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         }
       }
     },
@@ -13961,7 +13971,7 @@ postgres=# SELECT * FROM sandbox LIMIT 10;
         },
         "batchRows": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         }
       }
     },
@@ -14667,7 +14677,7 @@ A random snapshot of the table might look like:
         },
         "batchRows": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         }
       }
     },
@@ -15393,7 +15403,7 @@ The specific format of the timestamp will defer to the schema set in Postgres.
         },
         "batchRows": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         }
       }
     },
@@ -17059,7 +17069,7 @@ A random snapshot of the table might look like:
         },
         "batchRows": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         }
       }
     },
@@ -28743,6 +28753,79 @@ When all of this is put together, you'll see output that makes sense across all 
 ]
 ```
 
+### Dynamic transitions
+
+`transitions` (as well as `initial`, where required) may also be functions. Note that the value of the each is taken only once at startup, and the values of each are locked for the duration of the functions lifetime.
+
+**Input:**
+```json
+{
+  "topic": "sandbox",
+  "vars": {
+    "transitions": [
+      "a",
+      "b",
+      "c"
+    ]
+  },
+  "value": {},
+  "stateMachine": {
+    "_gen": "stateMachine",
+    "transitions": {
+      "_gen": "var",
+      "var": "transitions"
+    },
+    "states": {
+      "a": {
+        "value": {
+          "x": 1
+        }
+      },
+      "b": {
+        "value": {
+          "x": 2
+        }
+      },
+      "c": {
+        "value": {
+          "x": 3
+        }
+      }
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "x": 1
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "x": 2
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "x": 3
+    },
+    "headers": null
+  }
+]
+```
+
 ---
 
 ## Specification
@@ -28776,7 +28859,22 @@ When all of this is put together, you'll see output that makes sense across all 
     {
       "properties": {
         "initial": {
-          "type": "string"
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
         },
         "transitions": {
           "type": "object"
@@ -28785,6 +28883,39 @@ When all of this is put together, you'll see output that makes sense across all 
       "required": [
         "initial"
       ]
+    },
+    {
+      "properties": {
+        "transitions": {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        },
+        "initial": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "properties": {
@@ -30226,19 +30357,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-23 08:36:51.822994797",
+    "value": "2023-02-26 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-03 14:04:32.730806236",
+    "value": "2023-07-06 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-24 07:28:35.21634256",
+    "value": "2023-03-27 07:28:35.21634256",
     "headers": null
   }
 ]
