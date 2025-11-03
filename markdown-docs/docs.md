@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.3
+
+Mon Nov  3 09:51:08 PST 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes reader generator metrics on the MotherDuck connection.
+
+---
+
 ###  1.11.2
 
 Mon Oct 27 18:55:55 CDT 2025
@@ -25053,7 +25063,7 @@ Lookups against different connection types have different schemas. Each schema i
 ```json
 [
   {
-    "name": "Kafka",
+    "name": "kafka",
     "schema": {
       "type": "object",
       "properties": {
@@ -25104,7 +25114,7 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
-    "name": "Postgres",
+    "name": "postgres",
     "schema": {
       "type": "object",
       "properties": {
@@ -25155,7 +25165,7 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
-    "name": "MotherDuck",
+    "name": "motherduck",
     "schema": {
       "type": "object",
       "properties": {
@@ -25206,7 +25216,7 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
-    "name": "MySQL",
+    "name": "mysql",
     "schema": {
       "type": "object",
       "properties": {
@@ -25359,7 +25369,7 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
-    "name": "S3",
+    "name": "s3",
     "schema": {
       "type": "object",
       "properties": {
@@ -25572,7 +25582,7 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
-    "name": "KurrentDB",
+    "name": "kurrentdb",
     "schema": {
       "type": "object",
       "properties": {
@@ -25623,7 +25633,7 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
-    "name": "Webhook",
+    "name": "webhook",
     "schema": {
       "type": "object",
       "properties": {
@@ -30357,19 +30367,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-26 08:36:51.822994797",
+    "value": "2023-03-05 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-06 14:04:32.730806236",
+    "value": "2023-07-13 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-27 07:28:35.21634256",
+    "value": "2023-04-03 07:28:35.21634256",
     "headers": null
   }
 ]
