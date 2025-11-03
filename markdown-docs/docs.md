@@ -15931,7 +15931,7 @@ Set `endpoint` to the Tigris global endpoint. By contrast to the Tigris docs, yo
 
 ### Connecting to MinIO
 
-Set `endpoint` to the MinIO server and set the respective `AWS_*` variables to connect to the instance. You want also need to enable [path style access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access), which can be done with the respective parameter below.
+Set `endpoint` to the MinIO server and set the respective `AWS_*` variables to connect to the instance. You also need to enable [path style access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access), which can be done with the respective parameter below.
 
 **Input:**
 ```json
