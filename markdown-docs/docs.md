@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.4
+
+Tue Nov  4 13:08:26 PST 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes bug where MotherDuck tables were always created in the default schema. Tables can now be fully qualified with `db.schema.table` syntax.
+
+---
+
 ###  1.11.3
 
 Mon Nov  3 09:51:08 PST 2025
@@ -30367,19 +30377,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-05 08:36:51.822994797",
+    "value": "2023-03-06 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-13 14:04:32.730806236",
+    "value": "2023-07-14 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-03 07:28:35.21634256",
+    "value": "2023-04-04 07:28:35.21634256",
     "headers": null
   }
 ]
