@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.5
+
+Wed Nov  5 10:49:29 PST 2025
+
+### Changes
+
+- ✅ **Added**: Adds support for [connection pooling](/connections/motherduck/#connection-pooling) in a single MotherDuck connection.
+
+---
+
 ###  1.11.4
 
 Tue Nov  4 13:08:26 PST 2025
@@ -13233,6 +13243,31 @@ These two generators interleave, issuing a mix of read and write traffic to Moth
 }
 ```
 
+### Connection pooling
+
+By default, each MotherDuck connection instance establishes one network connection to the database. You can increase this by setting `poolSize`, which will establish `n` unique connections (and sessions). ShadowTraffic will then emit events evenly across each connection in the pool. This is useful if you want stripe traffic across many nodes in a MotherDuck cluster from a single ShadowTraffic generator.
+
+Note that ShadowTraffic makes no gaurantees about which events will sent on which connection. If your workload requires atomicity, you probably don't want to enable this.
+
+**Input:**
+```json
+{
+  "connections": {
+    "md": {
+      "kind": "motherduck",
+      "poolSize": 3,
+      "connectionConfigs": {
+        "token": {
+          "_gen": "env",
+          "var": "MOTHERDUCK_TOKEN"
+        },
+        "db": "mydb"
+      }
+    }
+  }
+}
+```
+
 ---
 
 ## Specification
@@ -13286,6 +13321,10 @@ These two generators interleave, issuing a mix of read and write traffic to Moth
           "minimum": 0
         }
       }
+    },
+    "poolSize": {
+      "type": "integer",
+      "minimum": 1
     },
     "tablePolicy": {
       "type": "string",
@@ -30377,19 +30416,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-06 08:36:51.822994797",
+    "value": "2023-03-07 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-14 14:04:32.730806236",
+    "value": "2023-07-15 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-04 07:28:35.21634256",
+    "value": "2023-04-05 07:28:35.21634256",
     "headers": null
   }
 ]
