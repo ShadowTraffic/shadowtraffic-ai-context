@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.6
+
+Wed Nov  5 13:45:28 PST 2025
+
+### Changes
+
+- ⚡ **Improved**: S3, Google Cloud Storage, Azure Blob Storage, and file system connectors can now specify `customSuffix` to override their file output extensions.
+
+---
+
 ###  1.11.5
 
 Wed Nov  5 10:49:29 PST 2025
@@ -7928,6 +7938,8 @@ Additionally:
 - `format` set to `log` means that `data` must be a string.
 
 - `compression` can optionally be set to `gzip`.
+
+Each file's extension will be set to the literal value of `format`, but you can optionally override it by setting `customSuffix`.
 
 # connections/_iceberg.md
 
