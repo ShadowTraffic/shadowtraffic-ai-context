@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.7
+
+Wed Nov 12 15:05:45 PST 2025
+
+### Changes
+
+- ✅ **Added**: Adds new [built-in linter](/cheatsheet/#linting-your-configuration) to detect unrecognized ShadowTraffic parameters.
+
+---
+
 ###  1.11.6
 
 Wed Nov  5 13:45:28 PST 2025
@@ -6632,7 +6642,7 @@ shadowtraffic:
 ### CLI switches
 
 ```
-      --action <action>                          What ShadowTraffic should do (bootstrap, run, sign-lease). Defaults to run.
+      --action <action>                          What ShadowTraffic should do (bootstrap, lint, run, sign-lease). Defaults to run.
       --bootstrap-from-avro-schema <file>        Uses the provided Avro Schema file to approximate the ShadowTraffic configuration.
       --bootstrap-from-json-schema <file>        Uses the provided JSON Schema file to approximate the ShadowTraffic configuration.
       --bootstrap-to <to>                        The target connection type to bootstrap the ShadowTraffic configuration file to.
@@ -6788,6 +6798,32 @@ In debug mode, ShadowTraffic will complete its run by printing:
 5. The Java properties it was set with
 
 Additionally, ShadowTraffic will indefinitely suspend its process to stay running. This makes it easier to log into the container and further investigating you might want to do.
+
+### Linting your configuration
+
+ShadowTraffic parses configuration files in an _open_ manner. That means that if you supply parameters that ShadowTraffic doesn't recognize, it silently ignores them. This works in contrast to _closed_ configuration, which raises errors when parameters aren't recognized.
+
+Open configuration (in the author's opinion) is generally a good design approach in that it permits extensibility and minimizes fuss, but it can sometimes leave you a bit stuck. For instance, you might have a valid parameter, but supplied it in the wrong place.
+
+To get the best of both worlds, ShadowTraffic supplies a built-in linter. When you run it (like below), ShadowTraffic will name all of the keys it doesn't recognize.
+
+```
+docker run --env-file license.env shadowtraffic/shadowtraffic:latest --action lint --config /your/path/to/config.json
+```
+
+As an example, it might output something like:
+
+```
+✔ Linting your configuration file /your/path/to/config.json...
+
+✱ Unrecognized generator keys:
+✘ Unrecognized key unexpected at path [ "generators", 0 ]
+
+✱ Unrecognized local configuration keys:
+✘ Unrecognized key maxEvents_typo at path [ "generators", 0, "localConfigs" ]
+
+✔ Complete.
+```
 
 ### Creating short-term leases
 
@@ -8727,6 +8763,9 @@ You can change it by using the following two optional parameters under `writerCo
                 "log"
               ]
             },
+            "customSuffix": {
+              "type": "string"
+            },
             "tableFormat": {
               "type": "string",
               "enum": [
@@ -8796,6 +8835,9 @@ You can change it by using the following two optional parameters under `writerCo
                 "parquet",
                 "log"
               ]
+            },
+            "customSuffix": {
+              "type": "string"
             },
             "tableFormat": {
               "type": "string",
@@ -10127,6 +10169,9 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
                 "log"
               ]
             },
+            "customSuffix": {
+              "type": "string"
+            },
             "tableFormat": {
               "type": "string",
               "enum": [
@@ -10196,6 +10241,9 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
                 "parquet",
                 "log"
               ]
+            },
+            "customSuffix": {
+              "type": "string"
             },
             "tableFormat": {
               "type": "string",
@@ -10997,6 +11045,9 @@ If you have multiple generators writing to the same bucket and want to execute a
             "parquet",
             "log"
           ]
+        },
+        "customSuffix": {
+          "type": "string"
         },
         "tableFormat": {
           "type": "string",
@@ -16630,6 +16681,9 @@ You can change it by using the following two optional parameters under `writerCo
                 "log"
               ]
             },
+            "customSuffix": {
+              "type": "string"
+            },
             "tableFormat": {
               "type": "string",
               "enum": [
@@ -16699,6 +16753,9 @@ You can change it by using the following two optional parameters under `writerCo
                 "parquet",
                 "log"
               ]
+            },
+            "customSuffix": {
+              "type": "string"
             },
             "tableFormat": {
               "type": "string",
@@ -30428,19 +30485,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-07 08:36:51.822994797",
+    "value": "2023-03-14 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-15 14:04:32.730806236",
+    "value": "2023-07-22 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-05 07:28:35.21634256",
+    "value": "2023-04-12 07:28:35.21634256",
     "headers": null
   }
 ]
