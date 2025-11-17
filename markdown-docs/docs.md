@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.11
+
+Mon Nov 17 15:19:44 PST 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes linter bug misapplied to reader generators.
+
+---
+
 ###  1.11.10
 
 Mon Nov 17 10:45:58 PST 2025
