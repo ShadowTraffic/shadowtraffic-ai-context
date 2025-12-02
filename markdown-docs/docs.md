@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.12
+
+Tue Dec  2 10:06:28 PST 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes [`repeatedly`](/functions/repeatedly) to correctly track stateful, nested function calls.
+
+---
+
 ###  1.11.11
 
 Mon Nov 17 15:19:44 PST 2025
@@ -27592,7 +27602,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
 
 ### Re-evaluating variables
 
-Set `iterateVars` to an array of variable names to re-evaluate them on each iteration of `repeatedly`. Notice how `a` and `b` hold the same value for each element, but vary between elements.
+Set `iterateVars` to an array of variable names to re-evaluate them on each iteration of `repeatedly`. Notice how `a` and `b` hold the same value for each element, but vary between iterations.
 
 **Input:**
 ```json
@@ -30677,19 +30687,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-19 08:36:51.822994797",
+    "value": "2023-04-03 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-27 14:04:32.730806236",
+    "value": "2023-08-11 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-17 07:28:35.21634256",
+    "value": "2023-05-02 07:28:35.21634256",
     "headers": null
   }
 ]
