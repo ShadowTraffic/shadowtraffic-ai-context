@@ -3068,6 +3068,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.11.13
+
+Wed Dec  3 14:50:26 PST 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes collision when the [built-in linter](/cheatsheet/#linting-your-configuration) doesn't correctly run preprocessing functions (like [`loadJsonFile`](/functions/loadJsonFile)) ahead of time.
+
+---
+
 ###  1.11.12
 
 Tue Dec  2 10:06:28 PST 2025
@@ -30687,19 +30697,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-03 08:36:51.822994797",
+    "value": "2023-04-04 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-08-11 14:04:32.730806236",
+    "value": "2023-08-12 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-02 07:28:35.21634256",
+    "value": "2023-05-03 07:28:35.21634256",
     "headers": null
   }
 ]
