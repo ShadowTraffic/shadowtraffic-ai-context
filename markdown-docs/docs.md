@@ -3068,6 +3068,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.12.0
+
+Mon Dec  8 14:14:26 PST 2025
+
+### Changes
+
+- 🐛 **Fixed**: Fixes a deadlock bug that prevents shutdown when using the MotherDuck connection with a > 1 pool size.
+- ⚡ **Improved**: Adds logging to show MotherDuck connection acquisition timing.
+
+---
+
 ###  1.11.14
 
 Fri Dec  5 08:29:37 PST 2025
@@ -30707,19 +30718,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-06 08:36:51.822994797",
+    "value": "2023-04-09 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-08-14 14:04:32.730806236",
+    "value": "2023-08-17 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-05 07:28:35.21634256",
+    "value": "2023-05-08 07:28:35.21634256",
     "headers": null
   }
 ]
