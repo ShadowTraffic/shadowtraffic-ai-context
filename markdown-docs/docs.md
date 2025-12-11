@@ -3811,6 +3811,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.12.2
+
+Thu Dec 11 15:33:33 PST 2025
+
+### Changes
+
+- ⚡ **Improved**: Echos the version of ShadowTraffic you're running on startup.
+- 🐛 **Fixed**: Fixes spurious linter warnings on the `easing` and `easingChain` functions.
+
+---
+
 ###  1.12.1
 
 Wed Dec 10 13:31:31 PST 2025
@@ -31471,19 +31482,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-11 08:36:51.822994797",
+    "value": "2023-04-12 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-08-19 14:04:32.730806236",
+    "value": "2023-08-20 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-10 07:28:35.21634256",
+    "value": "2023-05-11 07:28:35.21634256",
     "headers": null
   }
 ]
