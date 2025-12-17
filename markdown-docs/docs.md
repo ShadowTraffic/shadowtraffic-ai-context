@@ -3811,6 +3811,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.12.4
+
+Wed Dec 17 11:57:02 PST 2025
+
+### Changes
+
+- ⚡ **Improved**: MotherDuck connection can now supply [table/column comments](/connections/motherduck/#object-comments).
+
+---
+
 ###  1.12.3
 
 Mon Dec 15 13:59:44 PST 2025
@@ -14186,6 +14196,36 @@ Note that ShadowTraffic makes no gaurantees about which events will sent on whic
 }
 ```
 
+### Object comments
+
+When ShadowTraffic is responsible for creating your tables, you can optionally [supply comments](https://duckdb.org/docs/stable/sql/statements/comment_on) at both the table and column-level. Set `comments` to a map of `table` and/or `columns` with your respective text.
+
+Note that ShadowTraffic won't register comments for pre-existing tables.
+
+**Input:**
+```json
+{
+  "table": "time_series_data",
+  "row": {
+    "id": {
+      "_gen": "uuid"
+    },
+    "timestamp": {
+      "gen": "now"
+    }
+  },
+  "comments": {
+    "table": "data captured from registered devices",
+    "columns": {
+      "id": "uuid v4 from legacy devices",
+      "timestamp": "the timestamp on the device itself"
+    }
+  }
+}
+```
+
+Follow the DuckDB docs to query comments on the respective objects.
+
 ---
 
 ## Specification
@@ -14287,6 +14327,20 @@ Note that ShadowTraffic makes no gaurantees about which events will sent on whic
     },
     "where": {
       "type": "object"
+    },
+    "comments": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
     },
     "localConfigs": {
       "type": "object",
@@ -31492,19 +31546,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-16 08:36:51.822994797",
+    "value": "2023-04-18 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-08-24 14:04:32.730806236",
+    "value": "2023-08-26 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-15 07:28:35.21634256",
+    "value": "2023-05-17 07:28:35.21634256",
     "headers": null
   }
 ]
@@ -32969,8 +33023,23 @@ Randomly selects a choice using the supplied probabilities.
         "type": "object",
         "properties": {
           "weight": {
-            "type": "number",
-            "minimum": 0
+            "oneOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_gen": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "_gen"
+                ]
+              }
+            ]
           }
         },
         "required": [
