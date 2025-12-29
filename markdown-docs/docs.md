@@ -24150,6 +24150,9 @@ By default, all timestamps are printed in UTC, but you can change this by supply
     },
     "format": {
       "type": "string"
+    },
+    "timezone": {
+      "type": "string"
     }
   },
   "required": [
