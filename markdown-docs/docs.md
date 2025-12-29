@@ -3811,6 +3811,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.12.7
+
+Mon Dec 29 14:34:22 PST 2025
+
+### Changes
+
+- ⚡ **Improved**: `formatDateTime` can now [supply a timezone](/functions/formatDateTime/#set-the-timezone).
+
+---
+
 ###  1.12.6
 
 Mon Dec 22 10:58:08 PST 2025
@@ -24083,6 +24093,33 @@ In this example, timestamps are generated anywhere between 1 and 6 months in the
 
 *... (2 more examples)*
 
+### Set the timezone
+
+By default, all timestamps are printed in UTC, but you can change this by supplying a `timezone` parameter. The value of `timezone` must correspond to a [JodaTime timezone ID](https://www.joda.org/joda-time/timezones.html) (like `Asia/Bahrain`) or the value `System`, which will pick up the default timezone on the system where ShadowTraffic is currently running.
+
+**Input:**
+```json
+{
+  "_gen": "formatDateTime",
+  "ms": {
+    "_gen": "now"
+  },
+  "timezone": "America/Los_Angeles"
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": "2024-04-25T13:28:47.262-07:00",
+    "headers": null
+  }
+]
+```
+
 ---
 
 ## Specification
@@ -31579,19 +31616,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-23 08:36:51.822994797",
+    "value": "2023-04-30 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-08-31 14:04:32.730806236",
+    "value": "2023-09-07 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-22 07:28:35.21634256",
+    "value": "2023-05-29 07:28:35.21634256",
     "headers": null
   }
 ]
