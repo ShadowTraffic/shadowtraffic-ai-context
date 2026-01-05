@@ -3811,6 +3811,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.13.0
+
+Mon Jan  5 12:02:05 PST 2026
+
+### Changes
+
+- ✅ **Added**: Adds new Google [PubSub connection](/connections/pubsub).
+
+---
+
 ###  1.12.7
 
 Mon Dec 29 14:34:22 PST 2025
@@ -16859,6 +16869,490 @@ The specific format of the timestamp will defer to the schema set in Postgres.
 ```
 
 
+# connections/pubsub.md
+
+## Commentary
+
+[Badges]
+
+Connects to a Google PubSub endpoint.
+
+Unless you're using a PubSub emulator [Example 1](#using-an-emulator), you must set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the location of a [credential configuration file](https://cloud.google.com/docs/authentication/application-default-credentials#GAC) within your container. You can set [Docker environment variables](https://stackoverflow.com/questions/30494050/how-do-i-pass-environment-variables-to-docker-containers) with either `-e` or `--env-file`, similar to how the license environment variables are passed.
+
+By default for convenience, any topics ShadowTraffic writes to will be automatically created if they don't exist. This makes it easier to iterate on your generators without flipping back and forth between ShadowTraffic and the PubSub admin tools.
+
+### Basic connection
+
+This connection doesn't require any extra information since all the relevant authentication data is pulled from the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
+
+**Input:**
+```json
+{
+  "connections": {
+    "pubSubDev": {
+      "kind": "pubsub"
+    }
+  }
+}
+```
+
+### Writing Avro data
+
+To write events to a topic, set the required `projectId`, `topicId`, and `topicConfigs` keys that detail the location to write to. Also set the `data` key with the relevant payload.
+
+Right now, only Avro serialization is the only option, and an explict schema must be supplied through [`avroSchemaHint`](/generator-configuration/avroSchemaHint/).
+
+Any schemas used will automatically be registered to your PubSub account.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "projectId": "superbProject",
+      "topicId": "amazingTopic",
+      "topicConfigs": {
+        "serialization": "avro",
+        "schemaId": "fantasticSchema"
+      },
+      "data": {
+        "x": {
+          "_gen": "normalDistribution",
+          "mean": 100,
+          "sd": 10
+        }
+      },
+      "localConfigs": {
+        "avroSchemaHint": {
+          "data": {
+            "type": "record",
+            "name": "ChillRecord",
+            "fields": [
+              {
+                "name": "x",
+                "type": "double"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "pubsubEnv": {
+      "kind": "pubsub"
+    }
+  }
+}
+```
+
+### Using an emulator
+
+If you're running a [PubSub emulator](https://docs.cloud.google.com/pubsub/docs/emulator) for testing, set `emulatorHost` with the relevant connection string. You also don't need to set the environment variable `GOOGLE_APPLICATION_CREDENTIALS`.
+
+**Input:**
+```json
+{
+  "connections": {
+    "pubSubTransient": {
+      "kind": "pubsub",
+      "connectionConfigs": {
+        "emulatorHost": "http://localhost:8085"
+      }
+    }
+  }
+}
+```
+
+---
+
+## Specification
+
+### Connection JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "pubsub"
+    },
+    "connectionConfigs": {
+      "type": "object",
+      "properties": {
+        "emulatorHost": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "topicPolicy": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "create",
+            "dropAndCreate"
+          ]
+        }
+      },
+      "required": [
+        "policy"
+      ]
+    }
+  },
+  "required": [
+    "kind"
+  ]
+}
+```
+
+### Generator JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "connection": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "topicConfigs": {
+      "type": "object",
+      "properties": {
+        "serialization": {
+          "type": "string",
+          "enum": [
+            "avro"
+          ]
+        },
+        "schemaId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "serialization",
+        "schemaId"
+      ]
+    },
+    "projectId": {
+      "type": "string"
+    },
+    "topicId": {
+      "type": "string"
+    },
+    "data": {},
+    "localConfigs": {
+      "type": "object",
+      "properties": {
+        "throttleMs": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "maxEvents": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "kafkaKeyProtobufHint": {
+          "type": "object",
+          "properties": {
+            "schemaFile": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schemaFile",
+            "message"
+          ]
+        },
+        "jsonSchemaHint": {
+          "type": "object"
+        },
+        "maxBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "discard": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "retainHistory": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "rate"
+          ]
+        },
+        "repeat": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "times": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "rate",
+            "times"
+          ]
+        },
+        "protobufSchemaHint": {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "object",
+              "properties": {
+                "schemaFile": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schemaFile",
+                "message"
+              ]
+            }
+          }
+        },
+        "maxHistoryEvents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "time": {
+          "type": "integer"
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "exactly": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "delay": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "ms": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "rate",
+            "ms"
+          ]
+        },
+        "history": {
+          "type": "object",
+          "properties": {
+            "events": {
+              "type": "object",
+              "properties": {
+                "max": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "avroSchemaHint": {
+          "type": "object"
+        },
+        "throttle": {
+          "type": "object",
+          "properties": {
+            "ms": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "throughput": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "timeMultiplier": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "kafkaValueProtobufHint": {
+          "type": "object",
+          "properties": {
+            "schemaFile": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schemaFile",
+            "message"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "projectId",
+    "topicId",
+    "topicConfigs",
+    "data"
+  ]
+}
+```
+
+
 # connections/s3.md
 
 ## Commentary
@@ -26225,6 +26719,72 @@ Lookups against different connection types have different schemas. Each schema i
     }
   },
   {
+    "name": "pubsub",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "string"
+        },
+        "projectId": {
+          "type": "string"
+        },
+        "topicId": {
+          "type": "string"
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "first",
+            "last",
+            "random"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "histogram": {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "projectId",
+            "topicId"
+          ]
+        },
+        {
+          "required": [
+            "name"
+          ]
+        }
+      ]
+    }
+  },
+  {
     "name": "postgres",
     "schema": {
       "type": "object",
@@ -31619,19 +32179,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-04-30 08:36:51.822994797",
+    "value": "2023-05-07 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-09-07 14:04:32.730806236",
+    "value": "2023-09-14 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-29 07:28:35.21634256",
+    "value": "2023-06-05 07:28:35.21634256",
     "headers": null
   }
 ]
