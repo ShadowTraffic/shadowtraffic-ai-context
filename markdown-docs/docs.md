@@ -3811,6 +3811,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.13.1
+
+Tue Jan  6 10:25:45 PST 2026
+
+### Changes
+
+- ✅ **Added**: Adds new [`--reload` CLI flag](/cheatsheet/#cli-switches) to control when `--watch` interrupts existing runs.
+- ⚡ **Improved**: Updates the MotherDuck connection to permit [arbitrary query parameters](/connections/motherduck/#connecting-with-a-token) on the backing URL.
+
+---
+
 ###  1.13.0
 
 Mon Jan  5 12:02:05 PST 2026
@@ -7547,7 +7558,7 @@ shadowtraffic:
 ### CLI switches
 
 ```
-      --action <action>                          What ShadowTraffic should do (bootstrap, lint, run, sign-lease). Defaults to run.
+      --action <action>                          What ShadowTraffic should do (bootstrap, run, lint, sign-lease). Defaults to run.
       --bootstrap-from-avro-schema <file>        Uses the provided Avro Schema file to approximate the ShadowTraffic configuration.
       --bootstrap-from-json-schema <file>        Uses the provided JSON Schema file to approximate the ShadowTraffic configuration.
       --bootstrap-to <to>                        The target connection type to bootstrap the ShadowTraffic configuration file to.
@@ -7561,6 +7572,7 @@ shadowtraffic:
       --metrics-port <n>                         Makes Prometheus metrics available at the specified port. Defaults to 9400 if unset.
       --no-pretty                                Do not use a pretty printer with --stdout when generating data.
   -q, --quiet                                    Do not print any status text other than generated data to the command line.
+      --reload <policy>                          Pair with --watch to control when your configuration file reloads. Must be one of (completion, immediate). Immediate interrupts an existing run to reload. Completion waits to reload until the run terminates. Defaults to completion.
       --report-benchmark                         Prints performance statistics after all generators complete.
       --sample <n>                               Generates the specified number of events and then stops immediately.
       --seed <n>                                 Initializes random generators with this seed, enabling repeatable runs.
@@ -13863,6 +13875,8 @@ You can authenticate with MotherDuck in two different ways. The first, shown her
 
 It's advisable to keep your token in an [environment variable](/functions/env) (shown here) to avoid hardcoding it in your ShadowTraffic file.
 
+You can also optionally supply of a map of `queryParams`, which will be tacked onto the end of the URL ShadowTraffic uses to connect to MotherDuck. This is useful if you want to set arbitrary connection parameters like `attach_mode` and `dbinstance_inactivity_ttl`. Note that one query parameter you can't set set is `session_hint`, because it's controlled by ShadowTraffic to multiplex connections under the hood.
+
 **Input:**
 ```json
 {
@@ -13874,7 +13888,11 @@ It's advisable to keep your token in an [environment variable](/functions/env) (
           "_gen": "env",
           "var": "MOTHERDUCK_TOKEN"
         },
-        "db": "mydb"
+        "db": "mydb",
+        "queryParams": {
+          "attach_mode": "single",
+          "dbinstance_inactivity_ttl": "600"
+        }
       }
     }
   }
@@ -14301,6 +14319,9 @@ Follow the DuckDB docs to query comments on the respective objects.
         },
         "token": {
           "type": "string"
+        },
+        "queryParams": {
+          "type": "object"
         },
         "db ": {
           "type": "string"
@@ -32179,19 +32200,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-07 08:36:51.822994797",
+    "value": "2023-05-08 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-09-14 14:04:32.730806236",
+    "value": "2023-09-15 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-05 07:28:35.21634256",
+    "value": "2023-06-06 07:28:35.21634256",
     "headers": null
   }
 ]
