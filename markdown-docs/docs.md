@@ -3811,6 +3811,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.13.2
+
+Wed Jan  7 13:01:17 PST 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes `histogram` in [`lookup`](/functions/lookup) calls with multiple depending generators.
+
+---
+
 ###  1.13.1
 
 Tue Jan  6 10:25:45 PST 2026
@@ -32200,19 +32210,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-08 08:36:51.822994797",
+    "value": "2023-05-09 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-09-15 14:04:32.730806236",
+    "value": "2023-09-16 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-06 07:28:35.21634256",
+    "value": "2023-06-07 07:28:35.21634256",
     "headers": null
   }
 ]
