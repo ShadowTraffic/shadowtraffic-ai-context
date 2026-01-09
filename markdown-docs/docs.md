@@ -3967,6 +3967,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.13.4
+
+Fri Jan  9 14:34:33 PST 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes issue where Kafka Data Quality rules may not fire for Avro serialized data.
+
+---
+
 ###  1.13.3
 
 Fri Jan  9 08:44:38 PST 2026
@@ -32509,7 +32519,7 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
 
 ### Overriding the locale
 
-Change the locale (default United States/English) by setting `locale`: first parameter is language, second is region. This example overrides the loclae to Great Britain/English so that county names reflect the region.
+Change the locale (default United States/English) by setting `locale`: first parameter is language, second is region. This example overrides the locale to Great Britain/English so that county names reflect the region.
 
 **Input:**
 ```json
