@@ -3373,7 +3373,15 @@ See the overview.md section in the full documentation below for the key product 
                     "path": [
                         "row",
                         "supplier_id"
-                    ]
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.20, "frequency": 60 },
+                            { "bin": 0.75, "frequency": 30 },
+                            { "bin": 0.05, "frequency": 10 }
+                        ]
+                    }
                 },
                 "category_id": {
                     "_gen": "lookup",
@@ -3381,7 +3389,15 @@ See the overview.md section in the full documentation below for the key product 
                     "path": [
                         "row",
                         "category_id"
-                    ]
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.75, "frequency": 55 },
+                            { "bin": 0.15, "frequency": 30 },
+                            { "bin": 0.10, "frequency": 15 }
+                        ]
+                    }
                 },
                 "quantity_per_unit": {
                     "_gen": "oneOf",
@@ -3450,9 +3466,70 @@ See the overview.md section in the full documentation below for the key product 
         {
             "name": "orders",
             "table": "orders",
-            "vars": {
-                "order_date": {
+            "varsOnce": {
+                "now": {
                     "_gen": "now"
+                }
+            },
+            "vars": {
+                "customer_id": {
+                    "_gen": "lookup",
+                    "table": "customers",
+                    "path": [
+                        "row",
+                        "customer_id"
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.20, "frequency": 80 },
+                            { "bin": 0.80, "frequency": 20 }
+                        ]
+                    }
+                },
+                "stop_boundary": {
+                    "_gen": "cache",
+                    "on": {
+                        "_gen": "var",
+                        "var": "customer_id"
+                    },
+                    "to": {
+                        "_gen": "math",
+                        "expr": "now - offset",
+                        "names": {
+                            "offset": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [
+                                    0,
+                                    {
+                                        "_gen": "duration",
+                                        "days": 30
+                                    }
+                                ]
+                            }
+                        },
+                        "decimals": 0
+                    }
+                },
+                "order_date": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [
+                        {
+                            "_gen": "math",
+                            "expr": "now - oneYear",
+                            "names": {
+                                "oneYear": {
+                                    "_gen": "duration",
+                                    "days": 365
+                                }
+                            }
+                        },
+                        {
+                            "_gen": "var",
+                            "var": "stop_boundary"
+                        }
+                    ],
+                    "decimals": 0
                 }
             },
             "row": {
@@ -3461,12 +3538,8 @@ See the overview.md section in the full documentation below for the key product 
                     "startingFrom": 10248
                 },
                 "customer_id": {
-                    "_gen": "lookup",
-                    "table": "customers",
-                    "path": [
-                        "row",
-                        "customer_id"
-                    ]
+                    "_gen": "var",
+                    "var": "customer_id"
                 },
                 "employee_id": {
                     "_gen": "lookup",
@@ -3474,11 +3547,20 @@ See the overview.md section in the full documentation below for the key product 
                     "path": [
                         "row",
                         "employee_id"
-                    ]
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.20, "frequency": 70 },
+                            { "bin": 0.50, "frequency": 20 },
+                            { "bin": 0.30, "frequency": 10 }
+                        ]
+                    }
                 },
                 "order_date": {
                     "_gen": "var",
-                    "var": "order_date"
+                    "var": "order_date",
+                    "sqlHint": "timestamp"
                 },
                 "required_date": {
                     "_gen": "math",
@@ -3497,7 +3579,8 @@ See the overview.md section in the full documentation below for the key product 
                                 }
                             ]
                         }
-                    }
+                    },
+                    "sqlHint": "timestamp"
                 },
                 "shipped_date": {
                     "_gen": "math",
@@ -3516,7 +3599,8 @@ See the overview.md section in the full documentation below for the key product 
                                 }
                             ]
                         }
-                    }
+                    },
+                    "sqlHint": "timestamp"
                 },
                 "ship_via": {
                     "_gen": "lookup",
@@ -3524,7 +3608,15 @@ See the overview.md section in the full documentation below for the key product 
                     "path": [
                         "row",
                         "shipper_id"
-                    ]
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.30, "frequency": 60 },
+                            { "bin": 0.67, "frequency": 30 },
+                            { "bin": 0.03, "frequency": 10 }
+                        ]
+                    }
                 },
                 "freight": {
                     "_gen": "normalDistribution",
@@ -3556,21 +3648,21 @@ See the overview.md section in the full documentation below for the key product 
                     "expr": "#{Address.zipCode}"
                 },
                 "ship_country": {
-                    "_gen": "oneOf",
+                    "_gen": "weightedOneOf",
                     "choices": [
-                        "USA",
-                        "Germany",
-                        "Mexico",
-                        "UK",
-                        "Sweden",
-                        "France",
-                        "Spain",
-                        "Canada",
-                        "Argentina",
-                        "Switzerland",
-                        "Brazil",
-                        "Austria",
-                        "Italy"
+                        { "weight": 45, "value": "USA" },
+                        { "weight": 15, "value": "Canada" },
+                        { "weight": 12, "value": "UK" },
+                        { "weight": 10, "value": "Germany" },
+                        { "weight": 5, "value": "France" },
+                        { "weight": 4, "value": "Mexico" },
+                        { "weight": 3, "value": "Spain" },
+                        { "weight": 2, "value": "Italy" },
+                        { "weight": 2, "value": "Brazil" },
+                        { "weight": 1, "value": "Argentina" },
+                        { "weight": 1, "value": "Switzerland" },
+                        { "weight": 0.5, "value": "Austria" },
+                        { "weight": 0.5, "value": "Sweden" }
                     ]
                 }
             }
@@ -3587,8 +3679,21 @@ See the overview.md section in the full documentation below for the key product 
             },
             "localConfigs": {
                 "maxEvents": {
-                    "_gen": "uniformDistribution",
-                    "bounds": [1, 7]
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        {
+                            "weight": 3,
+                            "value": 1
+                        },
+                        {
+                            "weight": 1,
+                            "value": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [2, 7]
+                            }
+                        }
+                    ],
+                    "decimals": 0
                 }
             },
             "vars": {
@@ -3597,7 +3702,15 @@ See the overview.md section in the full documentation below for the key product 
                     "table": "products",
                     "path": [
                         "row"
-                    ]
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.10, "frequency": 50 },
+                            { "bin": 0.30, "frequency": 35 },
+                            { "bin": 0.60, "frequency": 15 }
+                        ]
+                    }
                 }
             },
             "row": {
@@ -3624,10 +3737,23 @@ See the overview.md section in the full documentation below for the key product 
                     ]
                 },
                 "quantity": {
-                    "_gen": "uniformDistribution",
-                    "bounds": [
-                        1,
-                        130
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        {
+                            "weight": 4,
+                            "value": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [1, 2]
+                            }
+                        },
+                        {
+                            "weight": 1,
+                            "value": {
+                                "_gen": "normalDistribution",
+                                "mean": 5,
+                                "sd": 2
+                            }
+                        }
                     ],
                     "decimals": 0
                 },
@@ -3682,7 +3808,16 @@ See the overview.md section in the full documentation below for the key product 
                     "path": [
                         "row",
                         "region_id"
-                    ]
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.45, "frequency": 60 },
+                            { "bin": 0.25, "frequency": 30 },
+                            { "bin": 0.20, "frequency": 20 },
+                            { "bin": 0.10, "frequency": 10 }
+                        ]
+                    }
                 }
             },
             "localConfigs": {
@@ -3699,7 +3834,15 @@ See the overview.md section in the full documentation below for the key product 
                     "path": [
                         "row",
                         "employee_id"
-                    ]
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.20, "frequency": 70 },
+                            { "bin": 0.50, "frequency": 20 },
+                            { "bin": 0.30, "frequency": 10 }
+                        ]
+                    }
                 },
                 "territory_id": {
                     "_gen": "lookup",
@@ -3707,7 +3850,15 @@ See the overview.md section in the full documentation below for the key product 
                     "path": [
                         "row",
                         "territory_id"
-                    ]
+                    ],
+                    "histogram": {
+                        "_gen": "histogram",
+                        "bins": [
+                            { "bin": 0.25, "frequency": 50 },
+                            { "bin": 0.65, "frequency": 30 },
+                            { "bin": 0.10, "frequency": 15 }
+                        ]
+                    }
                 }
             },
             "localConfigs": {
@@ -3749,8 +3900,13 @@ See the overview.md section in the full documentation below for the key product 
     "connections": {
         "md": {
             "kind": "motherduck",
+            "tablePolicy": "dropAndCreate",
             "connectionConfigs": {
-                "token": "<< your MotherDuck token here >>",
+                "token": {
+                    "_gen": "env",
+                    "var": "MOTHERDUCK_TOKEN",
+                    "mask": true
+                },
                 "db": "my_db"
             }
         }
@@ -3811,6 +3967,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.13.3
+
+Fri Jan  9 08:44:38 PST 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [CVE-2025-68161](https://nvd.nist.gov/vuln/detail/CVE-2025-68161).
+
+---
+
 ###  1.13.2
 
 Wed Jan  7 13:01:17 PST 2026
@@ -32210,19 +32376,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-09 08:36:51.822994797",
+    "value": "2023-05-11 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-09-16 14:04:32.730806236",
+    "value": "2023-09-18 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-07 07:28:35.21634256",
+    "value": "2023-06-09 07:28:35.21634256",
     "headers": null
   }
 ]
