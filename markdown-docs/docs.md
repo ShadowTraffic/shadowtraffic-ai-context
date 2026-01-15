@@ -3967,6 +3967,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.13.6
+
+Thu Jan 15 10:39:15 PST 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes bug in [`repeatedly`](/functions/repeatedly) that prevented stateful functions from advancing in certain cases.
+
+---
+
 ###  1.13.5
 
 Thu Jan 15 09:33:43 PST 2026
