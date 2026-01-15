@@ -3967,6 +3967,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.13.5
+
+Thu Jan 15 09:33:43 PST 2026
+
+### Changes
+
+- ✅ **Added**: MotherDuck connections can now write to [multiple tables](/connections/motherduck/#writing-to-multiple-tables) and [multiple rows](/connections/motherduck/#writing-multiple-rows) per generation iteration.
+
+---
+
 ###  1.13.4
 
 Fri Jan  9 14:34:33 PST 2026
@@ -9671,6 +9681,9 @@ You can change it by using the following two optional parameters under `writerCo
             }
           }
         },
+        "schemaRegistrySubject": {
+          "type": "object"
+        },
         "maxHistoryEvents": {
           "type": "integer",
           "minimum": 0
@@ -11077,6 +11090,9 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
             }
           }
         },
+        "schemaRegistrySubject": {
+          "type": "object"
+        },
         "maxHistoryEvents": {
           "type": "integer",
           "minimum": 0
@@ -11955,6 +11971,9 @@ If you have multiple generators writing to the same bucket and want to execute a
               ]
             }
           }
+        },
+        "schemaRegistrySubject": {
+          "type": "object"
         },
         "maxHistoryEvents": {
           "type": "integer",
@@ -13334,6 +13353,9 @@ Notice that `"value.subject.name.strategy"` is set to `"io.confluent.kafka.seria
             }
           }
         },
+        "schemaRegistrySubject": {
+          "type": "object"
+        },
         "maxHistoryEvents": {
           "type": "integer",
           "minimum": 0
@@ -13839,6 +13861,9 @@ Use the `data` and `metadata` fields to set event payload data.
               ]
             }
           }
+        },
+        "schemaRegistrySubject": {
+          "type": "object"
         },
         "maxHistoryEvents": {
           "type": "integer",
@@ -14483,6 +14508,151 @@ Note that ShadowTraffic won't register comments for pre-existing tables.
 
 Follow the DuckDB docs to query comments on the respective objects.
 
+### Writing to multiple tables
+
+If you need to generate data to multiple tables per generator iteration, use `tables` instead of `table` and `row`.
+
+`tables` is a map of table name to attributes, where the attributes generally minor what is otherwse specified at the top level (e.g. `row`, `comments`, `op`, and so on).
+
+In this example, each iteration of the generator writes one row to `t1` and one row to `t2`. What's nice about being able to express your tables this way is that both `t1` and `t2` share the same variables space, so it's easy to generate linked data without reaching for more advanced functionality like [`fork`](/fork/key).
+
+Three additional notes about writing to multiple tables:
+
+1. The rows for each table are committed independently. In other words, in this example `t1` and `t2` do not commit atomically. This is because writes are executed using DuckDB's Appender API, which don't support multi-table operations.
+
+2. The configured [batch settings](/connections/motherduck/#setting-batch-parameters) for your connection apply to _each_ table. For example, if this connection were configured to commit after 1,000 rows have been created, then `t1` and `t2` would commit their writes whenever either has achieved 1,000 rows.
+
+3. [Connection pooling](/connections/motherduck/#connection-pooling) is applied at the per table level. For instance, if this connection were opened with a pool size of 3, ShadowTraffic would open 6 total connections to MotherDuck.
+
+**Input:**
+```json
+{
+  "tables": {
+    "t1": {
+      "row": {
+        "foo": {
+          "_gen": "boolean"
+        }
+      }
+    },
+    "t2": {
+      "row": {
+        "bar": {
+          "_gen": "uuid"
+        }
+      },
+      "comments": {
+        "table": "t2 is a good table",
+        "columns": {
+          "foo": "foo is just an okay column"
+        }
+      }
+    }
+  }
+}
+```
+
+Moreover, if you want to [`lookup`](/functions/lookup) data on a table that writes to multiple table, you must give that generator a `name` to look it up by (since there is no single table target to look up by)
+
+**Input:**
+```json
+[
+  {
+    "name": "compositeTables",
+    "tables": {
+      "t1": {
+        "row": {
+          "id": {
+            "_gen": "uuid"
+          }
+        }
+      },
+      "t2": {
+        "row": {
+          "state": {
+            "_gen": "boolean"
+          }
+        }
+      }
+    }
+  },
+  {
+    "table": "dependentTable",
+    "vars": {
+      "target": {
+        "_gen": "lookup",
+        "name": "compositeTables"
+      }
+    },
+    "row": {
+      "foreignId": {
+        "_gen": "var",
+        "var": "target",
+        "path": [
+          "t1",
+          "row",
+          "id"
+        ]
+      },
+      "foreignState": {
+        "_gen": "var",
+        "var": "target",
+        "path": [
+          "t2",
+          "row",
+          "state"
+        ]
+      },
+      "id": {
+        "_gen": "uuid"
+      }
+    }
+  }
+]
+```
+
+### Writing multiple rows
+
+By default, ShadowTraffic writes one row per table per iteration. If you want to write multiple rows, use `rows` instead of `row`. Rows must be either:
+
+1. An array literal of maps
+2. A function, like [`repeatedly`](/functions/repeatedly) that resolves to an array of maps.
+
+`rows` is particular useful when used to generate [multiple tables](/connections/motherduck/#writing-to-multiple-tables) in one shot to create 1 to many relationships.
+
+**Input:**
+```json
+{
+  "table": "sandbox",
+  "rows": {
+    "_gen": "repeatedly",
+    "n": {
+      "_gen": "uniformDistribution",
+      "bounds": [
+        1,
+        5
+      ],
+      "decimals": 0
+    },
+    "target": {
+      "id": {
+        "_gen": "uuid"
+      },
+      "level": {
+        "_gen": "uniformDistribution",
+        "bounds": [
+          1,
+          10
+        ]
+      },
+      "active": {
+        "_gen": "boolean"
+      }
+    }
+  }
+}
+```
+
 ---
 
 ## Specification
@@ -14563,266 +14733,17 @@ Follow the DuckDB docs to query comments on the respective objects.
 
 ```json
 {
-  "type": "object",
-  "properties": {
-    "connection": {
-      "type": "string"
-    },
-    "name": {
-      "type": "string"
-    },
-    "table": {
-      "type": "string"
-    },
-    "row": {
-      "type": "object"
-    },
-    "op": {
-      "type": "string",
-      "enum": [
-        "insert",
-        "update",
-        "delete"
-      ]
-    },
-    "where": {
-      "type": "object"
-    },
-    "comments": {
+  "oneOf": [
+    {
       "type": "object",
       "properties": {
         "table": {
           "type": "string"
         },
-        "columns": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "localConfigs": {
-      "type": "object",
-      "properties": {
-        "throttleMs": {
-          "oneOf": [
-            {
-              "type": "number",
-              "minimum": 0
-            },
-            {
-              "type": "object",
-              "properties": {
-                "_gen": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "_gen"
-              ]
-            }
-          ]
-        },
-        "maxEvents": {
-          "oneOf": [
-            {
-              "type": "integer",
-              "minimum": 0
-            },
-            {
-              "type": "object",
-              "properties": {
-                "_gen": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "_gen"
-              ]
-            }
-          ]
-        },
-        "kafkaKeyProtobufHint": {
+        "localConfigs": {
           "type": "object",
           "properties": {
-            "schemaFile": {
-              "type": "string"
-            },
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "schemaFile",
-            "message"
-          ]
-        },
-        "jsonSchemaHint": {
-          "type": "object"
-        },
-        "maxBytes": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "discard": {
-          "type": "object",
-          "properties": {
-            "rate": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1
-            },
-            "retainHistory": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "rate"
-          ]
-        },
-        "repeat": {
-          "type": "object",
-          "properties": {
-            "rate": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1
-            },
-            "times": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "_gen": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "_gen"
-                  ]
-                }
-              ]
-            }
-          },
-          "required": [
-            "rate",
-            "times"
-          ]
-        },
-        "protobufSchemaHint": {
-          "type": "object",
-          "patternProperties": {
-            "^.*$": {
-              "type": "object",
-              "properties": {
-                "schemaFile": {
-                  "type": "string"
-                },
-                "message": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "schemaFile",
-                "message"
-              ]
-            }
-          }
-        },
-        "maxHistoryEvents": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "maxMs": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "time": {
-          "type": "integer"
-        },
-        "events": {
-          "type": "object",
-          "properties": {
-            "exactly": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "_gen": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "_gen"
-                  ]
-                }
-              ]
-            }
-          }
-        },
-        "delay": {
-          "type": "object",
-          "properties": {
-            "rate": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1
-            },
-            "ms": {
-              "oneOf": [
-                {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "_gen": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "_gen"
-                  ]
-                }
-              ]
-            }
-          },
-          "required": [
-            "rate",
-            "ms"
-          ]
-        },
-        "history": {
-          "type": "object",
-          "properties": {
-            "events": {
-              "type": "object",
-              "properties": {
-                "max": {
-                  "type": "integer",
-                  "minimum": 0
-                }
-              }
-            }
-          }
-        },
-        "avroSchemaHint": {
-          "type": "object"
-        },
-        "throttle": {
-          "type": "object",
-          "properties": {
-            "ms": {
+            "throttleMs": {
               "oneOf": [
                 {
                   "type": "number",
@@ -14840,96 +14761,795 @@ Follow the DuckDB docs to query comments on the respective objects.
                   ]
                 }
               ]
-            }
-          }
-        },
-        "throughput": {
-          "oneOf": [
-            {
+            },
+            "maxEvents": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            },
+            "kafkaKeyProtobufHint": {
+              "type": "object",
+              "properties": {
+                "schemaFile": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schemaFile",
+                "message"
+              ]
+            },
+            "jsonSchemaHint": {
+              "type": "object"
+            },
+            "maxBytes": {
               "type": "integer",
               "minimum": 1
             },
-            {
+            "discard": {
               "type": "object",
               "properties": {
-                "_gen": {
-                  "type": "string"
+                "rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "retainHistory": {
+                  "type": "boolean"
                 }
               },
               "required": [
-                "_gen"
+                "rate"
               ]
-            }
-          ]
-        },
-        "timeMultiplier": {
-          "oneOf": [
-            {
-              "type": "number"
             },
-            {
+            "repeat": {
               "type": "object",
               "properties": {
-                "_gen": {
+                "rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "times": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "rate",
+                "times"
+              ]
+            },
+            "protobufSchemaHint": {
+              "type": "object",
+              "patternProperties": {
+                "^.*$": {
+                  "type": "object",
+                  "properties": {
+                    "schemaFile": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "schemaFile",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "schemaRegistrySubject": {
+              "type": "object"
+            },
+            "maxHistoryEvents": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "maxMs": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "time": {
+              "type": "integer"
+            },
+            "events": {
+              "type": "object",
+              "properties": {
+                "exactly": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "delay": {
+              "type": "object",
+              "properties": {
+                "rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "ms": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "rate",
+                "ms"
+              ]
+            },
+            "history": {
+              "type": "object",
+              "properties": {
+                "events": {
+                  "type": "object",
+                  "properties": {
+                    "max": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            },
+            "avroSchemaHint": {
+              "type": "object"
+            },
+            "throttle": {
+              "type": "object",
+              "properties": {
+                "ms": {
+                  "oneOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "throughput": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            },
+            "timeMultiplier": {
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            },
+            "kafkaValueProtobufHint": {
+              "type": "object",
+              "properties": {
+                "schemaFile": {
+                  "type": "string"
+                },
+                "message": {
                   "type": "string"
                 }
               },
               "required": [
-                "_gen"
+                "schemaFile",
+                "message"
               ]
             }
-          ]
+          }
         },
-        "kafkaValueProtobufHint": {
+        "where": {
+          "type": "object"
+        },
+        "name": {
+          "type": "string"
+        },
+        "connection": {
+          "type": "string"
+        },
+        "row": {
+          "type": "object"
+        },
+        "comments": {
           "type": "object",
           "properties": {
-            "schemaFile": {
+            "table": {
               "type": "string"
             },
-            "message": {
-              "type": "string"
+            "columns": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
             }
-          },
-          "required": [
-            "schemaFile",
-            "message"
+          }
+        },
+        "rows": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "insert",
+            "update",
+            "delete"
           ]
         }
-      }
-    }
-  },
-  "required": [
-    "table",
-    "row"
-  ],
-  "allOf": [
-    {
-      "if": {
-        "properties": {
-          "op": {
-            "const": "update"
+      },
+      "required": [
+        "table"
+      ],
+      "oneOf": [
+        {
+          "required": [
+            "row"
+          ]
+        },
+        {
+          "required": [
+            "rows"
+          ]
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "const": "update"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "where"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "const": "delete"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "where"
+            ]
           }
         }
-      },
-      "then": {
-        "required": [
-          "where"
-        ]
-      }
+      ]
     },
     {
-      "if": {
-        "properties": {
-          "op": {
-            "const": "delete"
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "tables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "row": {
+                "type": "object"
+              },
+              "rows": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "_gen": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "_gen"
+                    ]
+                  }
+                ]
+              },
+              "op": {
+                "type": "string",
+                "enum": [
+                  "insert",
+                  "update",
+                  "delete"
+                ]
+              },
+              "where": {
+                "type": "object"
+              },
+              "comments": {
+                "type": "object",
+                "properties": {
+                  "table": {
+                    "type": "string"
+                  },
+                  "columns": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "row"
+                ]
+              },
+              {
+                "required": [
+                  "rows"
+                ]
+              }
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "const": "update"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "where"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "const": "delete"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "where"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "localConfigs": {
+          "type": "object",
+          "properties": {
+            "throttleMs": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            },
+            "maxEvents": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            },
+            "kafkaKeyProtobufHint": {
+              "type": "object",
+              "properties": {
+                "schemaFile": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schemaFile",
+                "message"
+              ]
+            },
+            "jsonSchemaHint": {
+              "type": "object"
+            },
+            "maxBytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "discard": {
+              "type": "object",
+              "properties": {
+                "rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "retainHistory": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "rate"
+              ]
+            },
+            "repeat": {
+              "type": "object",
+              "properties": {
+                "rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "times": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "rate",
+                "times"
+              ]
+            },
+            "protobufSchemaHint": {
+              "type": "object",
+              "patternProperties": {
+                "^.*$": {
+                  "type": "object",
+                  "properties": {
+                    "schemaFile": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "schemaFile",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "schemaRegistrySubject": {
+              "type": "object"
+            },
+            "maxHistoryEvents": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "maxMs": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "time": {
+              "type": "integer"
+            },
+            "events": {
+              "type": "object",
+              "properties": {
+                "exactly": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "delay": {
+              "type": "object",
+              "properties": {
+                "rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "ms": {
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "rate",
+                "ms"
+              ]
+            },
+            "history": {
+              "type": "object",
+              "properties": {
+                "events": {
+                  "type": "object",
+                  "properties": {
+                    "max": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            },
+            "avroSchemaHint": {
+              "type": "object"
+            },
+            "throttle": {
+              "type": "object",
+              "properties": {
+                "ms": {
+                  "oneOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "_gen": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "_gen"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "throughput": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            },
+            "timeMultiplier": {
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            },
+            "kafkaValueProtobufHint": {
+              "type": "object",
+              "properties": {
+                "schemaFile": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schemaFile",
+                "message"
+              ]
+            }
           }
         }
       },
-      "then": {
-        "required": [
-          "where"
-        ]
-      }
+      "required": [
+        "tables"
+      ]
     }
   ]
 }
@@ -15441,6 +16061,9 @@ postgres=# SELECT * FROM sandbox LIMIT 10;
               ]
             }
           }
+        },
+        "schemaRegistrySubject": {
+          "type": "object"
         },
         "maxHistoryEvents": {
           "type": "integer",
@@ -16147,6 +16770,9 @@ A random snapshot of the table might look like:
               ]
             }
           }
+        },
+        "schemaRegistrySubject": {
+          "type": "object"
         },
         "maxHistoryEvents": {
           "type": "integer",
@@ -16874,6 +17500,9 @@ The specific format of the timestamp will defer to the schema set in Postgres.
             }
           }
         },
+        "schemaRegistrySubject": {
+          "type": "object"
+        },
         "maxHistoryEvents": {
           "type": "integer",
           "minimum": 0
@@ -17385,6 +18014,9 @@ If you're running a [PubSub emulator](https://docs.cloud.google.com/pubsub/docs/
               ]
             }
           }
+        },
+        "schemaRegistrySubject": {
+          "type": "object"
         },
         "maxHistoryEvents": {
           "type": "integer",
@@ -18153,6 +18785,9 @@ You can change it by using the following two optional parameters under `writerCo
               ]
             }
           }
+        },
+        "schemaRegistrySubject": {
+          "type": "object"
         },
         "maxHistoryEvents": {
           "type": "integer",
@@ -19030,6 +19665,9 @@ A random snapshot of the table might look like:
             }
           }
         },
+        "schemaRegistrySubject": {
+          "type": "object"
+        },
         "maxHistoryEvents": {
           "type": "integer",
           "minimum": 0
@@ -19728,6 +20366,9 @@ response:
               ]
             }
           }
+        },
+        "schemaRegistrySubject": {
+          "type": "object"
         },
         "maxHistoryEvents": {
           "type": "integer",
@@ -32386,19 +33027,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-11 08:36:51.822994797",
+    "value": "2023-05-17 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-09-18 14:04:32.730806236",
+    "value": "2023-09-24 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-09 07:28:35.21634256",
+    "value": "2023-06-15 07:28:35.21634256",
     "headers": null
   }
 ]
