@@ -3961,6 +3961,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.14.0
+
+Tue Jan 20 10:19:14 PST 2026
+
+### Changes
+
+- ⚡ **Improved**: Switches Docker base image from Oracle Linux 9 to Debian Bookworm Slim. Debian's base image has a smaller footprint and reduced CVE surface. Unnecessary OS packages have been removed to further harden the image while retaining debugging utilities (`ping`, `curl`, `top`, `ps`, `netstat`).
+- 🐛 **Fixed**: Fixes spurious linter warning about [`geolocation`](/generator-configuration/geolocation/) configuration.
+
+---
+
 ###  1.13.7
 
 Fri Jan 16 08:43:42 PST 2026
@@ -33041,19 +33052,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-18 08:36:51.822994797",
+    "value": "2023-05-22 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-09-25 14:04:32.730806236",
+    "value": "2023-09-29 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-16 07:28:35.21634256",
+    "value": "2023-06-20 07:28:35.21634256",
     "headers": null
   }
 ]
