@@ -8288,7 +8288,7 @@ ShadowTraffic lets you perform a dry run: you can see exactly what it's going to
 docker run --env-file license.env -v $(pwd)/your-config-file.json:/home/config.json shadowtraffic/shadowtraffic:latest --config /home/config.json --stdout --sample 10
 ```
 
-You shoud see it print 10 sensor readings similiar to the below, and then exit.
+You should see it print 10 sensor readings similar to the below, and then exit.
 
 ```js
 {
@@ -8339,7 +8339,7 @@ If you want a quick way to verify how ShadowTraffic is behaving, you can peek at
 
 ### Generator configuration
 
-If checked Kafka after you ran ShadowTraffic, the first thing you'll probably notice is that it produced quite a lot of messages in a short span of time. How can you slow it down? Or better yet, how can you generally change an entire generator's behavior?
+If you checked Kafka after you ran ShadowTraffic, the first thing you'll probably notice is that it produced quite a lot of messages in a short span of time. How can you slow it down? Or better yet, how can you generally change an entire generator's behavior?
 
 There are two ways to configure a generator: either locally for a specific generator, or globally for all of them.
 
@@ -8432,7 +8432,7 @@ Let's continue our sensor example and imagine there's another stream of data for
             }
         },
         {
-            "topic": "maintainenceNotifications",
+            "topic": "maintenanceNotifications",
             "value": {
                 "sensorId": {
                     "_gen": "lookup",
@@ -8452,7 +8452,7 @@ Let's continue our sensor example and imagine there's another stream of data for
 }
 ```
 
-The generator for `maintainenceNotifications` calls the `lookup` function, asking it for events previously generated to the `sensorReadings` topic. Notice the `path` function modifier. `lookup` returns an entire event that was previously generated, but we only want the `sensorId`. Using `path` lets us drill directly to the value we want.
+The generator for `maintenanceNotifications` calls the `lookup` function, asking it for events previously generated to the `sensorReadings` topic. Notice the `path` function modifier. `lookup` returns an entire event that was previously generated, but we only want the `sensorId`. Using `path` lets us drill directly to the value we want.
 
 When you run ShadowTraffic, you'll see common identifiers link up, like the following. Notice how the id `a2c57eea-0589-70f8-b557-25e7ebb399c4` is shared in both events.
 
@@ -8468,7 +8468,7 @@ When you run ShadowTraffic, you'll see common identifiers link up, like the foll
     }
 }
 {
-    "topic" : "maintainenceNotifications",
+    "topic" : "maintenanceNotifications",
     "value" : {
       "sensorId" : "a2c57eea-0589-70f8-b557-25e7ebb399c4",
       "status" : "needs repair"
@@ -8679,7 +8679,7 @@ Notice how:
 
 2. There's also a `maxForks` field that's been set to `10`. When unset, `fork` will generate as many instances as possible. Since we want only 10 sensors, `maxForks` puts an upper bound on it.
 
-3. The hardcoded sensor ID has been removed and replaced with a reference to a variable called `forKey`. When you use `fork`, you can use this variable to identify which fork this one is.
+3. The hardcoded sensor ID has been removed and replaced with a reference to a variable called `forkKey`. When you use `fork`, you can use this variable to identify which fork this one is.
 
 If you run this, you'll now see 10 different UUIDs, each of which updates every 1 second.
 
@@ -8824,7 +8824,7 @@ We'll round the overview out by looking at how you can change the way ShadowTraf
 
 But sometimes, you'll want to execute generators in a series based on time or number of events. In other words, you'll want to schedule generators.
 
-ShadowTraffic provides a top-level construct, `schedule`, to do just that. You specify [`stages`](/schedule/stages), which an array of generates to run to completion. ShadowTraffic advances to the next stage when all the generators in the current stage terminate.
+ShadowTraffic provides a top-level construct, `schedule`, to do just that. You specify [`stages`](/schedule/stages), which is an array of generators to run to completion. ShadowTraffic advances to the next stage when all the generators in the current stage terminate.
 
 One common use case for this is seeding data, especially across multiple systems. Imagine that you want your sensor IDs stored in a Postgres table before any data is generated to Kafka. Here's how you'd do that:
 
@@ -8899,7 +8899,7 @@ One common use case for this is seeding data, especially across multiple systems
 
 Notice a few things here:
 
-1. Generators are give `name` fields. This is what is references in the `stages` array.
+1. Generators are given `name` fields. This is what is referenced in the `stages` array.
 
 2. You can specify `overrides` to change how a generator behaves. In this instance, the schedule specifies that `sensors` should only produce 5 elements and then stop.
 
@@ -17012,7 +17012,7 @@ If the table already exists but you'd like to clear out any existing data, set `
 
 ### Manual table control
 
-If you don't ShadowTraffic to control your tables, you can turn this behavior off by setting `tablePolicy` to `manual` in the connection map. It'll then be up to you to make sure your tables exist before trying to write to them. [Example 4](#manual-table-creation)
+If you don't want ShadowTraffic to control your tables, you can turn this behavior off by setting `tablePolicy` to `manual` in the connection map. It'll then be up to you to make sure your tables exist before trying to write to them. [Example 4](#manual-table-creation)
 
 ### Generating updates and deletes
 
@@ -17106,7 +17106,7 @@ In this case, `sandbox` will be created like so:
 
 ### Automatic table truncation
 
-Use `dropAndCreate` to automatically clear out any rows in an existing target table. This will executing a cascading drop, deleting any dependent objects too.
+Use `dropAndCreate` to automatically clear out any rows in an existing target table. This will execute a cascading drop, deleting any dependent objects too.
 
 **Input:**
 ```json
@@ -17151,7 +17151,7 @@ Use the optional [`pgHint`](/function-modifiers/pgHint) function modifier on any
 }
 ```
 
-Now, `sandbox` will like this:
+Now, `sandbox` will look like this:
 ```
  Column |  Type   | Collation | Nullable | Default
 --------+---------+-----------+----------+---------
@@ -20119,7 +20119,7 @@ Use `maxRequests` to increase the number of concurrent, outstanding HTTP request
 
 ### Synchronous requests
 
-Set `maxRequests` to `0` to force all requests to execute and complete in sequential order. This can be especially useful for simulating aplications that never use asynchronous communication.
+Set `maxRequests` to `0` to force all requests to execute and complete in sequential order. This can be especially useful for simulating applications that never use asynchronous communication.
 
 **Input:**
 ```json
@@ -22790,7 +22790,7 @@ Set `service` to `bedrock` and provide the minimum required parameters.
 }
 ```
 
-This example returns similiar strings to the prior example.
+This example returns similar strings to the prior example.
 
 ### Integrating variables
 
@@ -23124,7 +23124,7 @@ Use a function to generate byte arrays of varying sizes, in this case between `1
 
 Caches the value of `on` to the values in `to`. This is a useful function for creating an immutable relationship when using forks doesn't make sense.
 
-Beware that `cache `is accrete-only, so be careful not to overload memory by caching many values!
+Beware that `cache` is accrete-only, so be careful not to overload memory by caching many values!
 
 ---
 
@@ -23132,7 +23132,7 @@ Beware that `cache `is accrete-only, so be careful not to overload memory by cac
 
 ### Caching a map
 
-Set `on` to whatever value dictates the identity of your cache. Set `to` to any value that will be evaluted.
+Set `on` to whatever value dictates the identity of your cache. Set `to` to any value that will be evaluated.
 
 The effect is that the same `on` value will always produce the same `to` value.
 
@@ -23597,7 +23597,7 @@ To execute this code, mount it into the container at, say, path `/home/python/ba
 
 Then invoke `customFunction`, specifying the `language`, the `file` where the code can be found, and the `function` name.
 
-Optionally, you can pass named arguments in with `args`. ShadowTraffic will evaluate any functions within and pass their make their results available to the custom function.
+Optionally, you can pass named arguments in with `args`. ShadowTraffic will evaluate any functions within and pass their results to the custom function.
 
 **Input:**
 ```json
@@ -26215,7 +26215,7 @@ A few Cron expression examples:
 
 - `* * * * 5` matches all day Friday.
 
-- `* 0-12 * 2 5` matches the first 12 hours of the day for all Friday's in Feburary.
+- `* 0-12 * 2 5` matches the first 12 hours of the day for all Friday's in February.
 
 UNIX Cron expressions have granularity down to the minute, so specifying `0-29 1 * * *` captures all wallclock times `>= 1:00 AM` and strictly `< 1:30 AM`.
 
@@ -34216,7 +34216,7 @@ Generates a map of data about how to travel between `waypoints`, a series of coo
 
 ### Generating coordinates
 
-It's a good idea to place calls to `waypoints` in a `var` so you can pick apart it's output with function modifiers. This example uses `selectKeys` to obtain just the coordinates for output. It also uses `points` to stop the generator on completion and `duration` to throttle according to the real-world speed.
+It's a good idea to place calls to `waypoints` in a `var` so you can pick apart its output with function modifiers. This example uses `selectKeys` to obtain just the coordinates for output. It also uses `points` to stop the generator on completion and `duration` to throttle according to the real-world speed.
 
 **Input:**
 ```json
@@ -34669,7 +34669,7 @@ The right way to compute this value based on [`now`](/functions/now) is to:
 
 [Badges]
 
-Generates out of order events. Specify the rate at which to delay the release of an event for some number of milliseconds. When an event is delayed, the generator is immediately elligible to create another event, regardless of any throttle settings. Throttling will trigger at the future point when the event is eventually released.
+Generates out of order events. Specify the rate at which to delay the release of an event for some number of milliseconds. When an event is delayed, the generator is immediately eligible to create another event, regardless of any throttle settings. Throttling will trigger at the future point when the event is eventually released.
 
 ---
 
