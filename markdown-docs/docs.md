@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.14.2
+
+Tue Jan 27 13:25:07 PST 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes Kafka tombstone validation when using Schema Registry serializers. ShadowTraffic previously inappropriately applied schema checks on null value payloads.
+
+---
+
 ###  1.14.1
 
 Thu Jan 22 08:44:58 PST 2026
@@ -23728,6 +23738,9 @@ Finally, invoke the function inside ShadowTraffic.
     },
     "function": {
       "type": "string"
+    },
+    "args": {
+      "type": "object"
     }
   },
   "required": [
@@ -33063,19 +33076,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-24 08:36:51.822994797",
+    "value": "2023-05-29 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-10-01 14:04:32.730806236",
+    "value": "2023-10-06 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-22 07:28:35.21634256",
+    "value": "2023-06-27 07:28:35.21634256",
     "headers": null
   }
 ]
