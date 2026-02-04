@@ -17318,6 +17318,28 @@ The specific format of the timestamp will defer to the schema set in Postgres.
 }
 ```
 
+### Specifying a schema
+
+By default, ShadowTraffic expects any tables it works with to reside in the `public` schema. This also true for any tables it creates - they will get placed in `public` as well.
+
+You can change that, though, by prefixing your tables with a schema suffix such as `mySchema.myTable`. Any schemas you specify must exist prior to ShadowTraffic running.
+
+**Input:**
+```json
+{
+  "table": "mySchema.myTable",
+  "row": {
+    "name": {
+      "_gen": "string",
+      "expr": "#{Name.fullName}"
+    },
+    "active": {
+      "_gen": "boolean"
+    }
+  }
+}
+```
+
 ---
 
 ## Specification
@@ -33076,19 +33098,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-05-29 08:36:51.822994797",
+    "value": "2023-06-06 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-10-06 14:04:32.730806236",
+    "value": "2023-10-14 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-27 07:28:35.21634256",
+    "value": "2023-07-05 07:28:35.21634256",
     "headers": null
   }
 ]
