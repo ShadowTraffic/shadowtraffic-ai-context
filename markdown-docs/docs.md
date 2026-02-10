@@ -3961,13 +3961,23 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.14.4
+
+Tue Feb 10 11:02:15 PST 2026
+
+### Changes
+
+- ⚡ **Improved**: Upates Docker base image to Wolfi-base, bringing its OS CVE count to near zero.
+
+---
+
 ###  1.14.3
 
 Mon Feb  9 13:34:40 PST 2026
 
 ### Changes
 
-- 🐛 **Fixed**: Upgrades Docker base image to use a hardened version of Debian Bookworm, further reducing CVE surface area.
+- ⚡ **Improved**: Upgrades Docker base image to use a hardened version of Debian Bookworm, further reducing CVE surface area.
 
 ---
 
@@ -33108,19 +33118,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-11 08:36:51.822994797",
+    "value": "2023-06-12 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-10-19 14:04:32.730806236",
+    "value": "2023-10-20 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-10 07:28:35.21634256",
+    "value": "2023-07-11 07:28:35.21634256",
     "headers": null
   }
 ]
