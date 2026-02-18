@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.14.6
+
+Wed Feb 18 08:46:13 PST 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [CVE-2025-33042](https://nvd.nist.gov/vuln/detail/CVE-2025-33042).
+
+---
+
 ###  1.14.5
 
 Thu Feb 12 10:23:00 PST 2026
@@ -26133,7 +26143,66 @@ Given a pair of starting and ending coordinates, calculates the heading in degre
 
 ```json
 {
-  "type": "object"
+  "type": "object",
+  "properties": {
+    "src": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "dst": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "enum": [
+        "degrees",
+        "radians"
+      ]
+    }
+  },
+  "required": [
+    "src",
+    "dst"
+  ]
 }
 ```
 
@@ -26816,6 +26885,9 @@ Before `loadJsonFile` runs, all other preprocessors run. In this example, the en
       "items": {
         "type": "string"
       }
+    },
+    "data": {
+      "type": "object"
     }
   },
   "oneOf": [
@@ -33128,19 +33200,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-14 08:36:51.822994797",
+    "value": "2023-06-20 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-10-22 14:04:32.730806236",
+    "value": "2023-10-28 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-13 07:28:35.21634256",
+    "value": "2023-07-19 07:28:35.21634256",
     "headers": null
   }
 ]
@@ -33328,6 +33400,9 @@ Change the locale (default United States/English) by setting `locale`: first par
     "length": {
       "type": "integer",
       "minimum": 0
+    },
+    "removeSubstring": {
+      "type": "string"
     },
     "locale": {
       "type": "array",
