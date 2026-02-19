@@ -30042,6 +30042,290 @@ In this example, the fallback value (`42`) is wrapped in a map with `value` beca
 ```
 
 
+# functions/profile.md
+
+## Commentary
+
+[Badges]
+
+Generates demographically realistic profiles of people.
+
+Many times when you create synthetic data, you'll need to represent some kind of table or data stream about users or customers. And some of the time, their particular details—like names and email addresses and company names—don't matter that much. For instance, you can generate a profile, say for `Fred Smith`, who apparently works at `Acme`, with the fictitious email address `purple_tuba@gmail.com`. For these situations, you can use the [`string`](/functions/string) function, which is underpinned by canned values from the Java Faker library.
+
+But other times, it might be very important that profiles you generate look a lot more realistic. For instance, you might want:
+
+- A full name that follows demographic probabilities, like `Edgar Rivera`
+- A real, operating company, like `Payscale`
+- A matching email address, like `erivera@payscale.com`
+
+Drawn from a [2023 Scientific Data paper](https://www.nature.com/articles/s41597-023-02202-2) based on United States voter registrations, this function estimates demographically probable name distributions. Company names and domain suffixes come from the [Open Data 500](https://www.kaggle.com/datasets/govlab/open-data-500-companies).
+
+Note that the first time this function is invoked per ShadowTraffic instance, you'll experience a small delay of a few seconds while the backing data is loaded into memory. From then on, the data is cached and generating profiles will remain fast.
+
+---
+
+## Examples
+
+### Generating traits
+
+At minimum, specify an array of `traits` to generate for the profile. Choices are:
+
+- `firstName`
+- `lastName`
+- `email`
+- `company`
+- `website`
+
+**Input:**
+```json
+{
+  "_gen": "profile",
+  "traits": [
+    "firstName",
+    "lastName",
+    "email",
+    "company",
+    "website"
+  ]
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "aliawarren@overturecorp.com",
+      "website": "www.overturecorp.com",
+      "company": "Overture Technologies",
+      "lastName": "Warren",
+      "firstName": "Alia"
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "s.deleon@scaleunlimited.com",
+      "website": "www.scaleunlimited.com",
+      "company": "Scale Unlimited",
+      "lastName": "Deleon",
+      "firstName": "Sandra"
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "klansberry@childcaredesk.com",
+      "website": "childcaredesk.com",
+      "company": "Child Care Desk",
+      "lastName": "Lansberry",
+      "firstName": "Katelyn"
+    },
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
+
+### Changing email formats
+
+By default, emails will be randomly formatted with a variety of strategies for the person's first and last name. You can specify a particular strategy with the `email` and `format` keys. Choices are:
+
+- `first`
+- `last`
+- `firstLast`
+- `first.last`
+- `firstInitialLast`
+- `firstInitial.last`
+
+**Input:**
+```json
+{
+  "_gen": "profile",
+  "traits": [
+    "firstName",
+    "lastName",
+    "email"
+  ],
+  "email": {
+    "format": "firstInitialLast"
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "awarren@overturecorp.com",
+      "lastName": "Warren",
+      "firstName": "Alia"
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "mmcmillan@rezolvegroup.com",
+      "lastName": "Mcmillan",
+      "firstName": "Maisha"
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "lchetram@panjiva.com",
+      "lastName": "Chetram",
+      "firstName": "Lakeisha"
+    },
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
+
+### Email formats as a function
+
+If you want to dynamically choose between email formats, you can specify a function that returns a valid `format`.
+
+**Input:**
+```json
+{
+  "_gen": "profile",
+  "traits": [
+    "firstName",
+    "lastName",
+    "email"
+  ],
+  "email": {
+    "format": {
+      "_gen": "oneOf",
+      "choices": [
+        "first",
+        "last"
+      ]
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "perez@accuweather.com",
+      "lastName": "Perez",
+      "firstName": "Cristina"
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "linda@capitalcube.com",
+      "lastName": "Hucks",
+      "firstName": "Linda"
+    },
+    "headers": null
+  },
+  {
+    "topic": "sandbox",
+    "key": null,
+    "value": {
+      "email": "candell@energypoints.com",
+      "lastName": "Candell",
+      "firstName": "Jorge"
+    },
+    "headers": null
+  }
+]
+```
+
+*... (2 more examples)*
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "traits": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "firstName",
+          "lastName",
+          "company",
+          "email",
+          "website"
+        ]
+      }
+    },
+    "email": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "firstInitial.last",
+                "firstInitialLast",
+                "first.last",
+                "firstLast",
+                "first",
+                "last"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "format"
+      ]
+    }
+  },
+  "required": [
+    "traits"
+  ]
+}
+```
+
+
 # functions/repeatedly.md
 
 ## Commentary
