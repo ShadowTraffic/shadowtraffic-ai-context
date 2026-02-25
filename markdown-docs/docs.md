@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.15.3
+
+Wed Feb 25 11:53:22 PST 2026
+
+### Changes
+
+- ✅ **Added**: Adds new [`sqlHintDdl`](/generator-configuration/sqlDdlHint) configuration to specify SQL DDL statements directly.
+
+---
+
 ###  1.15.2
 
 Mon Feb 23 12:53:40 PST 2026
@@ -9210,7 +9220,7 @@ Each file's extension will be set to the literal value of `format`, but you can 
 
 In addition to writing data as Parquet, ShadowTraffic can also directly write data to Iceberg tables. A few important notes on how this works:
 
-1. ShadowTraffic uploading your data out-of-band from Iceberg, then commits the file location the Iceberg catalog.
+1. ShadowTraffic uploads your data out-of-band from Iceberg, then commits the file location the Iceberg catalog.
 
 2. Only REST catalogs like [Apache Polaris](https://polaris.apache.org/) are currently supported.
 
@@ -9776,6 +9786,9 @@ You can change it by using the following two optional parameters under `writerCo
             "rate",
             "times"
           ]
+        },
+        "sqlDdlHint": {
+          "type": "string"
         },
         "protobufSchemaHint": {
           "type": "object",
@@ -11186,6 +11199,9 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
             "times"
           ]
         },
+        "sqlDdlHint": {
+          "type": "string"
+        },
         "protobufSchemaHint": {
           "type": "object",
           "patternProperties": {
@@ -12067,6 +12083,9 @@ If you have multiple generators writing to the same bucket and want to execute a
             "rate",
             "times"
           ]
+        },
+        "sqlDdlHint": {
+          "type": "string"
         },
         "protobufSchemaHint": {
           "type": "object",
@@ -13416,6 +13435,9 @@ Notice that `"value.subject.name.strategy"` is set to `"io.confluent.kafka.seria
             "times"
           ]
         },
+        "sqlDdlHint": {
+          "type": "string"
+        },
         "value": {
           "type": "object",
           "properties": {
@@ -13958,6 +13980,9 @@ Use the `data` and `metadata` fields to set event payload data.
             "times"
           ]
         },
+        "sqlDdlHint": {
+          "type": "string"
+        },
         "protobufSchemaHint": {
           "type": "object",
           "patternProperties": {
@@ -14172,7 +14197,7 @@ By default for convenience, any tables ShadowTraffic writes to will be automatic
 
 ShadowTraffic does this by scanning the structure of your generators and creating a suitable DDL, then executing it on your behalf.
 
-If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`sqlHint`](/function-modifiers/sqlHint) function modifier. [Example 4](#overriding-column-types)
+If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`sqlHint`](/function-modifiers/sqlHint) function modifier [Example 4](#overriding-column-types), or the entire DDL with [`sqlDdlHint`](/generator-configuration/sqlDdlHint/).
 
 If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 5](#automatic-table-truncation)
 
@@ -14968,6 +14993,9 @@ By default, ShadowTraffic writes one row per table per iteration. If you want to
                 "times"
               ]
             },
+            "sqlDdlHint": {
+              "type": "string"
+            },
             "protobufSchemaHint": {
               "type": "object",
               "patternProperties": {
@@ -15476,6 +15504,9 @@ By default, ShadowTraffic writes one row per table per iteration. If you want to
                 "times"
               ]
             },
+            "sqlDdlHint": {
+              "type": "string"
+            },
             "protobufSchemaHint": {
               "type": "object",
               "patternProperties": {
@@ -15694,7 +15725,7 @@ By default for convenience, any tables ShadowTraffic writes to will be automatic
 
 ShadowTraffic does this by scanning the structure of your generators and creating a suitable DDL, then executing it on your behalf.
 
-If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`sqlHint`](/function-modifiers/sqlHint) function modifier. [Example 2](#overriding-column-types)
+If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`sqlHint`](/function-modifiers/sqlHint) function modifier [Example 2](#overriding-column-types), or the entire DDL with [`sqlDdlHint`](/generator-configuration/sqlDdlHint/).
 
 If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
 
@@ -16158,6 +16189,9 @@ postgres=# SELECT * FROM sandbox LIMIT 10;
             "times"
           ]
         },
+        "sqlDdlHint": {
+          "type": "string"
+        },
         "protobufSchemaHint": {
           "type": "object",
           "patternProperties": {
@@ -16399,7 +16433,7 @@ By default for convenience, any tables ShadowTraffic writes to will be automatic
 
 ShadowTraffic does this by scanning the structure of your generators and creating a suitable DDL, then executing it on your behalf.
 
-If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the `sqlHint` function modifier. [Example 2](#overriding-column-types)
+If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the `sqlHint` function modifier [Example 2](#overriding-column-types), or the entire DDL with [`sqlDdlHint`](/generator-configuration/sqlDdlHint/).
 
 If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
 
@@ -16867,6 +16901,9 @@ A random snapshot of the table might look like:
             "times"
           ]
         },
+        "sqlDdlHint": {
+          "type": "string"
+        },
         "protobufSchemaHint": {
           "type": "object",
           "patternProperties": {
@@ -17108,7 +17145,7 @@ By default for convenience, any tables ShadowTraffic writes to will be automatic
 
 ShadowTraffic does this by scanning the structure of your generators and creating a suitable DDL, then executing it on your behalf.
 
-If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`pgHint`](/function-modifiers/pgHint) function modifier. [Example 2](#overriding-column-types)
+If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`pgHint`](/function-modifiers/pgHint) function modifier [Example 2](#overriding-column-types), or the entire DDL with [`sqlDdlHint`](/generator-configuration/sqlDdlHint/).
 
 If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
 
@@ -17617,6 +17654,9 @@ You can change that, though, by prefixing your tables with a schema suffix such 
             "rate",
             "times"
           ]
+        },
+        "sqlDdlHint": {
+          "type": "string"
         },
         "protobufSchemaHint": {
           "type": "object",
@@ -18132,6 +18172,9 @@ If you're running a [PubSub emulator](https://docs.cloud.google.com/pubsub/docs/
             "rate",
             "times"
           ]
+        },
+        "sqlDdlHint": {
+          "type": "string"
         },
         "protobufSchemaHint": {
           "type": "object",
@@ -18904,6 +18947,9 @@ You can change it by using the following two optional parameters under `writerCo
             "times"
           ]
         },
+        "sqlDdlHint": {
+          "type": "string"
+        },
         "protobufSchemaHint": {
           "type": "object",
           "patternProperties": {
@@ -19316,7 +19362,7 @@ By default for convenience, any tables ShadowTraffic writes to will be automatic
 
 ShadowTraffic does this by scanning the structure of your generators and creating a suitable DDL, then executing it on your behalf.
 
-If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the `sqlHint` function modifier. [Example 2](#overriding-column-types)
+If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the `sqlHint` function modifier [Example 2](#overriding-column-types), or the entire DDL with [`sqlDdlHint`](/generator-configuration/sqlDdlHint/).
 
 If the table already exists but you'd like to clear out any existing data, set `tablePolicy` to `dropAndCreate`. [Example 3](#automatic-table-truncation)
 
@@ -19782,6 +19828,9 @@ A random snapshot of the table might look like:
             "rate",
             "times"
           ]
+        },
+        "sqlDdlHint": {
+          "type": "string"
         },
         "protobufSchemaHint": {
           "type": "object",
@@ -20484,6 +20533,9 @@ response:
             "rate",
             "times"
           ]
+        },
+        "sqlDdlHint": {
+          "type": "string"
         },
         "protobufSchemaHint": {
           "type": "object",
@@ -21218,7 +21270,7 @@ In this example, `avroHint` overrides ShadowTraffic's guess that `weightedOneOf`
 
 ```json
 {
-  "type": "string"
+  "type": "object"
 }
 ```
 
@@ -33514,19 +33566,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-25 08:36:51.822994797",
+    "value": "2023-06-27 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-11-02 14:04:32.730806236",
+    "value": "2023-11-04 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-24 07:28:35.21634256",
+    "value": "2023-07-26 07:28:35.21634256",
     "headers": null
   }
 ]
@@ -36705,6 +36757,125 @@ In this example, ShadowTraffic will use schemas for the subject named `com.acme.
 ```json
 {
   "type": "object"
+}
+```
+
+
+# generator-configuration/sqlDdlHint.md
+
+## Commentary
+
+[Badges]
+
+Supplies an explicit SQL DDL statement to create tables on behalf of a generator, rather than letting ShadowTraffic guess on its own.
+
+Notably, using `sqlDdlHint` supercedes all [`sqlHint`](/function-modifiers/sqlHint) function modifiers, since hints on individual columns are no longer needed.
+
+This configuration works on all SQL connections, including [Postgres](/connections/postgres), [MotherDuck](/connections/motherduck), [MySQL](/connections/mysql), [SQL Server](/connections/sqlServer), and [Oracle](/connections/oracle).
+
+---
+
+## Examples
+
+### Supplying a DDL
+
+Supply the statement as a `localConfig`. Accepts arbitrary SQL, and you can supply as many statements as you like, which is especially helpful if your generator writes to multiple tables.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "table": "customers",
+      "vars": {
+        "x": {
+          "_gen": "profile",
+          "traits": [
+            "firstName",
+            "lastName",
+            "email",
+            "company",
+            "website"
+          ]
+        }
+      },
+      "row": {
+        "_gen": "var",
+        "var": "x"
+      },
+      "localConfigs": {
+        "sqlDdlHint": "CREATE TABLE customers(firstName TEXT, lastName TEXT, company TEXT, website TEXT);"
+      }
+    }
+  ],
+  "connections": {
+    "postgres": {
+      "kind": "postgres",
+      "connectionConfigs": {
+        "host": "localhost",
+        "port": 5432,
+        "username": "postgres",
+        "password": "postgres",
+        "db": "mydb"
+      }
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "table": "customers",
+    "row": {
+      "email": "stefanny.ponce@spikescavell.com",
+      "website": "www.spikescavell.com",
+      "company": "Spikes Cavell Analytic Inc",
+      "lastName": "Ponce",
+      "firstName": "Stefanny"
+    },
+    "op": null,
+    "where": null
+  },
+  {
+    "table": "customers",
+    "row": {
+      "email": "kevin@otcmarkets.com",
+      "website": "www.otcmarkets.com",
+      "company": "OTC Markets",
+      "lastName": "Morelli",
+      "firstName": "Kevin"
+    },
+    "op": null,
+    "where": null
+  },
+  {
+    "table": "customers",
+    "row": {
+      "email": "carolyn@lumesis.com",
+      "website": "www.lumesis.com",
+      "company": "Lumesis, Inc.",
+      "lastName": "Collins",
+      "firstName": "Carolyn"
+    },
+    "op": null,
+    "where": null
+  }
+]
+```
+
+*... (2 more examples)*
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "string"
 }
 ```
 
