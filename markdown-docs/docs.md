@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.15.4
+
+Mon Mar  2 15:50:00 PST 2026
+
+### Changes
+
+- ⚡ **Improved**: Improves error messages from illegal Avro schema characters.
+
+---
+
 ###  1.15.3
 
 Wed Feb 25 11:53:22 PST 2026
@@ -33566,19 +33576,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-06-27 08:36:51.822994797",
+    "value": "2022-07-25 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-11-04 14:04:32.730806236",
+    "value": "2022-07-07 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-07-26 07:28:35.21634256",
+    "value": "2022-11-09 07:28:35.21634256",
     "headers": null
   }
 ]
