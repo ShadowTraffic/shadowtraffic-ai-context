@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.15.5
+
+Thu Mar  5 10:51:50 PST 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [GHSA-72hv-8253-57qq](https://www.miggo.io/vulnerability-database/cve/GHSA-72hv-8253-57qq).
+
+---
+
 ###  1.15.4
 
 Mon Mar  2 15:50:00 PST 2026
@@ -33576,19 +33586,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-07-25 08:36:51.822994797",
+    "value": "2022-07-28 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-07-07 14:04:32.730806236",
+    "value": "2022-07-10 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-09 07:28:35.21634256",
+    "value": "2022-11-12 07:28:35.21634256",
     "headers": null
   }
 ]
