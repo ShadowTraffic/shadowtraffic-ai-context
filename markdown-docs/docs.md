@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.15.7
+
+Fri Mar 20 14:51:04 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes linter false positive on `stateMachine`'s `exposeVars` parameter.
+
+---
+
 ###  1.15.6
 
 Wed Mar 11 09:18:29 PDT 2026
@@ -33596,19 +33606,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-08-03 08:36:51.822994797",
+    "value": "2022-08-12 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-07-16 14:04:32.730806236",
+    "value": "2022-07-25 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-18 07:28:35.21634256",
+    "value": "2022-11-27 07:28:35.21634256",
     "headers": null
   }
 ]
