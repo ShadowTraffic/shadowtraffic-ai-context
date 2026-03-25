@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.16.0
+
+Wed Mar 25 15:16:01 PDT 2026
+
+### Changes
+
+- ✅ **Added**: Adds new [Redis](/connections/redis) connection.
+
+---
+
 ###  1.15.7
 
 Fri Mar 20 14:51:04 PDT 2026
@@ -18413,6 +18423,840 @@ If you're running a [PubSub emulator](https://docs.cloud.google.com/pubsub/docs/
 ```
 
 
+# connections/redis.md
+
+## Commentary
+
+[Badges]
+
+Connects to a Redis instance or cluster.
+
+ShadowTraffic can connect to Redis using three different approaches: host and port [Example 1](#connecting-to-a-hostport), URL [Example 2](#connecting-to-a-url), or an array of cluster nodes [Example 3](#connecting-to-a-cluster). Regardless of the connection strategy, you can supply further authentication and connection parameters, like username/password and SSL. [Example 4](#supplying-connection-parameters)
+
+The Redis connection currently supports three types of write operations: `set` [Example 5](#writing-set-operations), `hset` [Example 6](#writing-hset-operations), and `zadd` [Example 7](#writing-zadd-operations). Each of them takes slightly different data to write with their keys.
+
+Depending on the operation ShadowTraffic writes with, you can also supply contextually-specific parameters, like setting the expiration time for `set` keys. [Example 8](#setting-operation-parameters)
+
+Lastly, ShadowTraffic assumes all values written to Redis are strings. You can override this though and instruct ShadowTraffic to serialize your data as JSON before it's placed into Redis. [Example 9](#serializing-with-json)
+
+---
+
+## Examples
+
+### Connecting to a host/port
+
+Supply a `host` and `port` for a minimal connection.
+
+**Input:**
+```json
+{
+  "connections": {
+    "redis": {
+      "kind": "redis",
+      "connectionConfigs": {
+        "host": "localhost",
+        "port": 6379
+      }
+    }
+  }
+}
+```
+
+### Connecting to a URL
+
+If desired, you can directly connect with a `url` too.
+
+**Input:**
+```json
+{
+  "connections": {
+    "redis": {
+      "kind": "redis",
+      "connectionConfigs": {
+        "url": "redis://localhost:6379"
+      }
+    }
+  }
+}
+```
+
+### Connecting to a cluster
+
+For connecting to a cluster of Redis nodes, pass in an array of `clusterNodes`.
+
+**Input:**
+```json
+{
+  "connections": {
+    "redis": {
+      "kind": "redis",
+      "connectionConfigs": {
+        "clusterNodes": [
+          {
+            "host": "redis-1",
+            "port": 6379
+          },
+          {
+            "host": "redis-2",
+            "port": 6379
+          },
+          {
+            "host": "redis-3",
+            "port": 6379
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### Supplying connection parameters
+
+Irrespective of how you connect to Redis, you can also supply a `username`, `password`, `database`, and `ssl` optionality.
+
+**Input:**
+```json
+{
+  "connections": {
+    "redis": {
+      "kind": "redis",
+      "connectionConfigs": {
+        "host": "localhost",
+        "port": 6380,
+        "username": "admin",
+        "password": "admin",
+        "database": 0,
+        "ssl": true
+      }
+    }
+  }
+}
+```
+
+### Writing set operations
+
+To execute a Redis `set` command, set `op` to the same name. `set` requires a `value` as part of its `attributes` map.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "op": "set",
+      "key": {
+        "_gen": "sequentialString",
+        "expr": "key-~d",
+        "cardinality": 3
+      },
+      "attributes": {
+        "value": {
+          "_gen": "oneOf",
+          "choices": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "redis": {
+      "kind": "redis",
+      "connectionConfigs": {
+        "host": "localhost",
+        "port": 6379
+      }
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "op": "set",
+    "opParams": null,
+    "key": "key-0",
+    "attributes": {
+      "value": "b"
+    }
+  },
+  {
+    "op": "set",
+    "opParams": null,
+    "key": "key-1",
+    "attributes": {
+      "value": "c"
+    }
+  },
+  {
+    "op": "set",
+    "opParams": null,
+    "key": "key-2",
+    "attributes": {
+      "value": "c"
+    }
+  }
+]
+```
+
+*... (2 more examples)*
+
+### Writing hset operations
+
+Likewise, `hset` works similarly. `hset` requires both a `field` and `value`.
+
+**Input:**
+```json
+{
+  "op": "hset",
+  "key": {
+    "_gen": "sequentialString",
+    "expr": "user-~d",
+    "cardinality": 5
+  },
+  "attributes": {
+    "field": "tier",
+    "value": {
+      "_gen": "oneOf",
+      "choices": [
+        "gold",
+        "silver",
+        "bronze"
+      ]
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "op": "hset",
+    "opParams": null,
+    "key": "user-0",
+    "attributes": {
+      "field": "tier",
+      "value": "silver"
+    }
+  },
+  {
+    "op": "hset",
+    "opParams": null,
+    "key": "user-1",
+    "attributes": {
+      "field": "tier",
+      "value": "bronze"
+    }
+  },
+  {
+    "op": "hset",
+    "opParams": null,
+    "key": "user-2",
+    "attributes": {
+      "field": "tier",
+      "value": "bronze"
+    }
+  }
+]
+```
+
+*... (2 more examples)*
+
+### Writing zadd operations
+
+Finally, `zadd` follows the same pattern, requiring a `score` and `member`. Note that `score` must be a number, matching Redis's programming model.
+
+**Input:**
+```json
+{
+  "op": "zadd",
+  "key": {
+    "_gen": "sequentialString",
+    "expr": "user-~d",
+    "cardinality": 5
+  },
+  "attributes": {
+    "score": {
+      "_gen": "normalDistribution",
+      "mean": 10,
+      "sd": 2
+    },
+    "member": {
+      "_gen": "oneOf",
+      "choices": [
+        "blue",
+        "green",
+        "red"
+      ]
+    }
+  }
+}
+```
+
+**Output:**
+```json
+[
+  {
+    "op": "zadd",
+    "opParams": null,
+    "key": "user-0",
+    "attributes": {
+      "score": 8.057562019117077,
+      "member": "blue"
+    }
+  },
+  {
+    "op": "zadd",
+    "opParams": null,
+    "key": "user-1",
+    "attributes": {
+      "score": 8.871880179475948,
+      "member": "red"
+    }
+  },
+  {
+    "op": "zadd",
+    "opParams": null,
+    "key": "user-2",
+    "attributes": {
+      "score": 13.703997152237063,
+      "member": "green"
+    }
+  }
+]
+```
+
+*... (2 more examples)*
+
+### Setting operation parameters
+
+Set `opParams` to a map of operation-specific parameters. In particular:
+
+`set` accepts:
+- `ex`: expiry time in seconds (integer)
+- `px`: expiry time in milliseconds (integer)
+- `pxAt`: expiry as a Unix timestamp in milliseconds (integer)
+- `nx`: only set the key if it does not already exist (boolean)
+- `xx`: only set the key if it already exists (boolean)
+
+`hset` accepts:
+- `nx`: only set the field if it does not already exist (boolean)
+- `ex`: expiry time on the hash key in seconds (integer)
+- `px`: expiry time on the hash key in milliseconds (integer)
+
+`zadd` accepts:
+- `nx`: only add new members, never update existing ones (boolean)
+- `xx`: only update existing members, never add new ones (boolean)
+- `gt`: only update if the new score is greater than the current score (boolean)
+- `lt`: only update if the new score is less than the current score (boolean)
+- `ch`: return the number of elements changed rather than only added (boolean)
+- `incr`: treat the score as an increment and return the new score (boolean)
+
+**Input:**
+```json
+{
+  "op": "set",
+  "opParams": {
+    "ex": 60
+  },
+  "key": {
+    "_gen": "sequentialString",
+    "expr": "key-~d",
+    "cardinality": 3
+  },
+  "attributes": {
+    "value": {
+      "_gen": "oneOf",
+      "choices": [
+        "a",
+        "b",
+        "c"
+      ]
+    }
+  }
+}
+```
+
+### Serializing with JSON
+
+By default, ShadowTraffic assumes all data you're writing to Redis will already be a string. But if you'd like ShadowTraffic to handle stringifying your data, set `serialization` to `json`. If your values are already a string, they won't be double serialized.
+
+ShadowTraffic will serialize the `key` and all writeable `attributes` values.
+
+**Input:**
+```json
+{
+  "op": "hset",
+  "serialization": "json",
+  "key": {
+    "_gen": "sequentialString",
+    "expr": "user-~d",
+    "cardinality": 5
+  },
+  "attributes": {
+    "field": "tier",
+    "value": {
+      "_gen": "oneOf",
+      "choices": [
+        "gold",
+        "silver",
+        "bronze"
+      ]
+    }
+  }
+}
+```
+
+---
+
+## Specification
+
+### Connection JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "redis"
+    },
+    "connectionConfigs": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "clusterNodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "port": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "host",
+              "port"
+            ]
+          }
+        },
+        "url": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "ssl": {
+          "type": "boolean"
+        },
+        "database": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "clusterNodes"
+          ]
+        },
+        {
+          "required": [
+            "host",
+            "port"
+          ]
+        },
+        {
+          "required": [
+            "url"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "connectionConfigs"
+  ]
+}
+```
+
+### Generator JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "connection": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "op": {
+      "type": "string",
+      "enum": [
+        "set",
+        "hset",
+        "zadd"
+      ]
+    },
+    "serialization": {
+      "type": "string",
+      "enum": [
+        "none",
+        "json"
+      ]
+    },
+    "key": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      ]
+    },
+    "opParams": {
+      "type": "object"
+    },
+    "attributes": {
+      "type": "object"
+    },
+    "localConfigs": {
+      "type": "object",
+      "properties": {
+        "throttleMs": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "maxEvents": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "kafkaKeyProtobufHint": {
+          "type": "object",
+          "properties": {
+            "schemaFile": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schemaFile",
+            "message"
+          ]
+        },
+        "jsonSchemaHint": {
+          "type": "object"
+        },
+        "maxBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "discard": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "retainHistory": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "rate"
+          ]
+        },
+        "repeat": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "times": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "rate",
+            "times"
+          ]
+        },
+        "sqlDdlHint": {
+          "type": "string"
+        },
+        "protobufSchemaHint": {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "object",
+              "properties": {
+                "schemaFile": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "schemaFile",
+                "message"
+              ]
+            }
+          }
+        },
+        "schemaRegistrySubject": {
+          "type": "object"
+        },
+        "maxHistoryEvents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "time": {
+          "type": "integer"
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "exactly": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "delay": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "ms": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "rate",
+            "ms"
+          ]
+        },
+        "history": {
+          "type": "object",
+          "properties": {
+            "events": {
+              "type": "object",
+              "properties": {
+                "max": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "avroSchemaHint": {
+          "type": "object"
+        },
+        "throttle": {
+          "type": "object",
+          "properties": {
+            "ms": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_gen": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "_gen"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "throughput": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "timeMultiplier": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "_gen": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "_gen"
+              ]
+            }
+          ]
+        },
+        "kafkaValueProtobufHint": {
+          "type": "object",
+          "properties": {
+            "schemaFile": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schemaFile",
+            "message"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "op",
+    "key"
+  ]
+}
+```
+
+
 # connections/s3.md
 
 ## Commentary
@@ -23925,6 +24769,12 @@ Finally, invoke the function inside ShadowTraffic.
     },
     "args": {
       "type": "object"
+    },
+    "exposeVars": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "required": [
@@ -28546,6 +29396,68 @@ Lookups against different connection types have different schemas. Each schema i
         {
           "required": [
             "stream"
+          ]
+        },
+        {
+          "required": [
+            "name"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "redis",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "string"
+        },
+        "database": {
+          "type": "integer"
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "first",
+            "last",
+            "random"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "histogram": {
+          "type": "object",
+          "properties": {
+            "_gen": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "_gen"
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "database"
           ]
         },
         {
@@ -33606,19 +34518,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-08-12 08:36:51.822994797",
+    "value": "2022-08-17 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-07-25 14:04:32.730806236",
+    "value": "2022-07-30 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-27 07:28:35.21634256",
+    "value": "2022-12-02 07:28:35.21634256",
     "headers": null
   }
 ]
