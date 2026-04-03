@@ -3961,6 +3961,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.16.2
+
+Thu Apr  2 15:54:19 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [CVE-2026-33870](https://nvd.nist.gov/vuln/detail/CVE-2026-33870).
+- 🐛 **Fixed**: Mitigates [CVE-2026-33871](https://nvd.nist.gov/vuln/detail/CVE-2026-33871).
+
+---
+
 ###  1.16.1
 
 Fri Mar 27 08:03:10 PDT 2026
@@ -34528,19 +34539,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-08-19 08:36:51.822994797",
+    "value": "2022-08-25 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-08-01 14:04:32.730806236",
+    "value": "2022-08-07 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-04 07:28:35.21634256",
+    "value": "2022-12-10 07:28:35.21634256",
     "headers": null
   }
 ]
