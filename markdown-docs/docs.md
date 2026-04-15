@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.17.2
+
+Wed Apr 15 10:02:23 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Adds new `startupPolicy` parameter for the [Redis connection](/connections/redis) to clear the key space before running.
+
+---
+
 ###  1.17.1
 
 Tue Apr 14 08:48:01 PDT 2026
@@ -19234,7 +19244,9 @@ The Redis connection currently supports three types of write operations: `set` [
 
 Depending on the operation ShadowTraffic writes with, you can also supply contextually-specific parameters, like setting the expiration time for `set` keys. [Example 8](#setting-operation-parameters)
 
-Lastly, ShadowTraffic assumes all values written to Redis are strings. You can override this though and instruct ShadowTraffic to serialize your data as JSON before it's placed into Redis. [Example 9](#serializing-with-json)
+Regarding serialization, ShadowTraffic assumes all values written to Redis are strings. You can override this though and instruct ShadowTraffic to serialize your data as JSON before it's placed into Redis. [Example 9](#serializing-with-json)
+
+Finally, you can optionally purge the key space before ShadowTraffic begins writing data using `startupPolicy`. [Example 10](#purging-keys-on-startup)
 
 ---
 
@@ -19609,6 +19621,33 @@ ShadowTraffic will serialize the `key` and all writeable `attributes` values.
 }
 ```
 
+### Purging keys on startup
+
+To delete keys in Redis before ShadowTraffic begins writing data, set `startupPolicy` to one of:
+
+- `flushDB`: delete all keys in this database
+- `flushAll`: delete all keys across all databases
+- `unlink`: delete keys in this database, requires sibling parameter `unlinkPattern`
+
+In the case of `unlink`, `unlinkPattern` must conform to [Redis's query syntax](https://redis.io/docs/latest/develop/ai/search-and-query/advanced-concepts/query_syntax/).
+
+**Input:**
+```json
+{
+  "connections": {
+    "redis": {
+      "kind": "redis",
+      "startupPolicy": "unlink",
+      "unlinkPattern": "user:*:action",
+      "connectionConfigs": {
+        "host": "localhost",
+        "port": 6379
+      }
+    }
+  }
+}
+```
+
 ---
 
 ## Specification
@@ -19685,6 +19724,17 @@ ShadowTraffic will serialize the `key` and all writeable `attributes` values.
           ]
         }
       ]
+    },
+    "startupPolicy": {
+      "type": "string",
+      "enum": [
+        "flushDB",
+        "flushAll",
+        "unlink"
+      ]
+    },
+    "unlinkPattern": {
+      "type": "string"
     }
   },
   "required": [
@@ -35377,19 +35427,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-06 08:36:51.822994797",
+    "value": "2022-09-07 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-08-19 14:04:32.730806236",
+    "value": "2022-08-20 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-22 07:28:35.21634256",
+    "value": "2022-12-23 07:28:35.21634256",
     "headers": null
   }
 ]
