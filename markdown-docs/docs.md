@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.17.5
+
+Fri Apr 17 13:38:17 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Enables Iceberg formatted tables to work with AWS Glue.
+
+---
+
 ###  1.17.4
 
 Fri Apr 17 08:46:38 PDT 2026
@@ -9345,7 +9355,7 @@ In addition to writing data as Parquet, ShadowTraffic can also directly write da
 
 1. ShadowTraffic uploads your data out-of-band from Iceberg, then commits the file location the Iceberg catalog.
 
-2. Only REST catalogs like [Apache Polaris](https://polaris.apache.org/) are currently supported.
+2. Only REST catalogs like [Apache Polaris](https://polaris.apache.org/) and [AWS Glue](https://aws.amazon.com/glue/) are currently supported.
 
 3. Parquet is currently the only format ShadowTraffic can serialize Iceberg data with.
 
