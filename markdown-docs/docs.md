@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.17.3
+
+Fri Apr 17 08:17:25 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes Redis's `unlink` startup policy for multi node clusters.
+
+---
+
 ###  1.17.2
 
 Wed Apr 15 10:02:23 PDT 2026
@@ -35427,19 +35437,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-07 08:36:51.822994797",
+    "value": "2022-09-09 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-08-20 14:04:32.730806236",
+    "value": "2022-08-22 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-23 07:28:35.21634256",
+    "value": "2022-12-25 07:28:35.21634256",
     "headers": null
   }
 ]
