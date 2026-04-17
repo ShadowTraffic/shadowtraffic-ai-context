@@ -3961,6 +3961,18 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.17.4
+
+Fri Apr 17 08:46:38 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [CVE-2026-34477](https://nvd.nist.gov/vuln/detail/CVE-2026-34477).
+- 🐛 **Fixed**: Mitigates [CVE-2026-34478](https://nvd.nist.gov/vuln/detail/CVE-2026-34478).
+- 🐛 **Fixed**: Mitigates [CVE-2026-34480](https://nvd.nist.gov/vuln/detail/CVE-2026-34480).
+
+---
+
 ###  1.17.3
 
 Fri Apr 17 08:17:25 PDT 2026
