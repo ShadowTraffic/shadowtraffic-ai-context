@@ -3961,6 +3961,27 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.17.8
+
+Mon Apr 27 06:57:44 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Enhances the Iceberg writer to break apart batched rows that cross partition boundaries.
+
+---
+
+###  1.17.7
+
+Tue Apr 21 15:58:24 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes file size chunking when writing files to Iceberg.
+- 🐛 **Fixed**: Fixes pathalogical case that may deplete cache of the `string` function.
+
+---
+
 ###  1.17.6
 
 Mon Apr 20 13:11:55 PDT 2026
@@ -30521,10 +30542,10 @@ Generates a map of `n` key/value pairs. Duplicate keys will collapse and defer t
     "key": null,
     "value": {
       "5e688e99-61b3-5c88-4697-6cf7b0bfbe20": true,
-      "c3185753-c86c-400f-ff88-a1e2eb5910f1": true,
-      "6fbddf55-7096-b883-bff9-d9d5ee3dd852": true,
-      "cc5c8305-2d68-ad16-268a-478b982750f4": true,
-      "35b353dd-402b-571a-d372-7ff25d7b347f": true
+      "76b20010-c318-5754-c86c-400eff88a1e3": true,
+      "eb5910f1-26e6-bc6f-6fbd-df557096b883": false,
+      "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305": true,
+      "2d68ad16-268a-478c-9827-50f4569b5949": true
     },
     "headers": null
   },
@@ -30532,11 +30553,11 @@ Generates a map of `n` key/value pairs. Duplicate keys will collapse and defer t
     "topic": "sandbox",
     "key": null,
     "value": {
-      "289d95f9-9661-a432-4630-2cd8c053e997": false,
-      "922fb35e-148d-9e82-947c-82ee1735c9ed": false,
-      "cc7229ce-080b-069b-5108-46b65ba0a3f3": true,
-      "d15b23ed-02d5-3e28-6aed-9210c5004375": false,
-      "14a5c4b5-b6a1-caca-8873-36a77b06ee53": false
+      "289d95f9-9661-a432-4630-2cd8c053e997": true,
+      "a4c46c01-922f-b35e-148d-9e81947c82ee": false,
+      "1735c9ec-c0a4-7def-cc72-29ce080b069b": false,
+      "510846b6-5ba0-a3f3-32f7-02b0d15b23ed": true,
+      "02d53e28-6aed-9211-c500-4374f95a6723": false
     },
     "headers": null
   },
@@ -30545,10 +30566,10 @@ Generates a map of `n` key/value pairs. Duplicate keys will collapse and defer t
     "key": null,
     "value": {
       "4aaa0001-3832-cc52-f32a-088b988bd7d5": false,
-      "3051ae6e-a2fb-233f-60e0-b4775e7ebf2c": true,
-      "5c39a9da-6fb0-3cbb-6f45-f2e9a617570a": true,
-      "b22b0979-7902-1b83-f370-50bb7811dc31": false,
-      "d3cb6736-0991-40ed-26aa-011e0d75d1a3": false
+      "d20bc0bc-3051-ae6f-a2fb-233f60e0b477": true,
+      "5e7ebf2c-22ec-a89b-5c39-a9da6fb03cbb": true,
+      "6f45f2e9-a617-570a-7512-bbb4b22b0979": true,
+      "79021b82-f370-50bb-7811-dc308c868164": false
     },
     "headers": null
   }
@@ -35469,19 +35490,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-12 08:36:51.822994797",
+    "value": "2022-09-19 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-08-25 14:04:32.730806236",
+    "value": "2022-09-01 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-28 07:28:35.21634256",
+    "value": "2023-01-04 07:28:35.21634256",
     "headers": null
   }
 ]
