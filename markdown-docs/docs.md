@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.17.9
+
+Mon Apr 27 09:10:21 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Makes ShadowTraffic's Iceberg writer resilient to AWS Glue throttling.
+
+---
+
 ###  1.17.8
 
 Mon Apr 27 06:57:44 PDT 2026
