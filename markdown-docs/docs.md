@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.17.10
+
+Mon Apr 27 21:16:53 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes bug that causes Iceberg files to split too quickly when using forks.
+
+---
+
 ###  1.17.9
 
 Mon Apr 27 09:10:21 PDT 2026
