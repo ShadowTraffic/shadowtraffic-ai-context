@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.17.11
+
+Wed Apr 29 12:40:54 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Improves Iceberg writing performance.
+
+---
+
 ###  1.17.10
 
 Mon Apr 27 21:16:53 PDT 2026
@@ -35510,19 +35520,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-19 08:36:51.822994797",
+    "value": "2022-09-21 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-01 14:04:32.730806236",
+    "value": "2022-09-03 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-04 07:28:35.21634256",
+    "value": "2023-01-06 07:28:35.21634256",
     "headers": null
   }
 ]
