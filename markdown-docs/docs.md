@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.18.0
+
+Wed May  6 09:48:36 PDT 2026
+
+### Changes
+
+- ✅ **Added**: Adds Google Vertex as a model provider for the [`ai`](/functions/ai) function.
+
+---
+
 ###  1.17.11
 
 Wed Apr 29 12:40:54 PDT 2026
@@ -24745,11 +24755,11 @@ Generates the sum of `args`. You can also use this function through an infix [`m
 
 [Badges]
 
-Generates free text by making calls to LLM providers. [Ollama](https://ollama.com/) [Example 1](#calling-ollama) and [AWS Bedrock](https://aws.amazon.com/bedrock/) [Example 2](#calling-bedrock) and are currently supported.
+Generates free text by making calls to LLM providers. [Ollama](https://ollama.com/) [Example 1](#calling-ollama), [AWS Bedrock](https://aws.amazon.com/bedrock/) [Example 2](#calling-bedrock), and [Google Vertex](https://cloud.google.com/products/gemini-enterprise-agent-platform) [Example 3](#calling-vertex) and are currently supported.
 
-Each LLM call contains at least two things: a prompt of your choosing and a preprompt assembled by ShadowTraffic that contains all [variables](/overview/#variables) generated before this function call. [Example 3](#integrating-variables) This preprompt helps give the LLM more context for whatever you're generating.
+Each LLM call contains at least two things: a prompt of your choosing and a preprompt assembled by ShadowTraffic that contains all [variables](/overview/#variables) generated before this function call. [Example 4](#integrating-variables) This preprompt helps give the LLM more context for whatever you're generating.
 
-You can pass arbitrary custom options to the underlying model, like setting the temperature. [Example 4](#modifying-bedrock-calls)
+You can pass arbitrary custom options to the underlying model, like setting the temperature. [Example 5](#modifying-bedrock-calls)
 
 ---
 
@@ -24791,6 +24801,26 @@ Set `service` to `bedrock` and provide the minimum required parameters.
 ```
 
 This example returns similar strings to the prior example.
+
+### Calling Vertex
+
+Set `service` to `vertex` and provide the minimum required parameters.
+
+**Input:**
+```json
+{
+  "_gen": "ai",
+  "service": "vertex",
+  "vertex": {
+    "projectId": "my-project",
+    "location": "us-central1",
+    "modelId": "gemini-2.5-flash",
+    "prompt": "Write a poem about a robot."
+  }
+}
+```
+
+This example returns similar strings to Ollama and Bedrock.
 
 ### Integrating variables
 
@@ -24877,7 +24907,8 @@ You can supply arbitrary options to the underlying Bedrock model by specifying a
       "type": "string",
       "enum": [
         "ollama",
-        "bedrock"
+        "bedrock",
+        "vertex"
       ]
     },
     "ollama": {
@@ -24915,6 +24946,35 @@ You can supply arbitrary options to the underlying Bedrock model by specifying a
           "type": "object"
         }
       }
+    },
+    "vertex": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "modelId": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "generationConfig": {
+          "type": "object"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "projectId",
+        "location",
+        "modelId",
+        "prompt"
+      ]
     }
   },
   "required": [
@@ -35520,19 +35580,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-21 08:36:51.822994797",
+    "value": "2022-09-28 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-03 14:04:32.730806236",
+    "value": "2022-09-10 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-06 07:28:35.21634256",
+    "value": "2023-01-13 07:28:35.21634256",
     "headers": null
   }
 ]
