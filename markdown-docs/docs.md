@@ -3961,6 +3961,28 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.18.1
+
+Thu May  7 08:05:28 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [CVE-2026-42583](https://nvd.nist.gov/vuln/detail/CVE-2026-42583).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42579](https://nvd.nist.gov/vuln/detail/CVE-2026-42579).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42584](https://nvd.nist.gov/vuln/detail/CVE-2026-42584).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42587](https://nvd.nist.gov/vuln/detail/CVE-2026-42587).
+- 🐛 **Fixed**: Mitigates [CVE-2026-41417](https://nvd.nist.gov/vuln/detail/CVE-2026-41417).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42580](https://nvd.nist.gov/vuln/detail/CVE-2026-42580).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42581](https://nvd.nist.gov/vuln/detail/CVE-2026-42581).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42585](https://nvd.nist.gov/vuln/detail/CVE-2026-42585).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42582](https://nvd.nist.gov/vuln/detail/CVE-2026-42582).
+- 🐛 **Fixed**: Mitigates [CVE-2026-44248](https://nvd.nist.gov/vuln/detail/CVE-2026-44248).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42586](https://nvd.nist.gov/vuln/detail/CVE-2026-42586).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42578](https://nvd.nist.gov/vuln/detail/CVE-2026-42578).
+- 🐛 **Fixed**: Mitigates [CVE-2026-42577](https://nvd.nist.gov/vuln/detail/CVE-2026-42577).
+
+---
+
 ###  1.18.0
 
 Wed May  6 09:48:36 PDT 2026
@@ -35580,19 +35602,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-28 08:36:51.822994797",
+    "value": "2022-09-29 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-10 14:04:32.730806236",
+    "value": "2022-09-11 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-13 07:28:35.21634256",
+    "value": "2023-01-14 07:28:35.21634256",
     "headers": null
   }
 ]
