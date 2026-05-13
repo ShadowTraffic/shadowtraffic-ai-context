@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.18.2
+
+Wed May 13 09:10:40 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Lint mode now prints out validation errors if the configuration can't be recognized.
+
+---
+
 ###  1.18.1
 
 Thu May  7 08:05:28 PDT 2026
@@ -35602,19 +35612,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-29 08:36:51.822994797",
+    "value": "2022-10-05 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-09-11 14:04:32.730806236",
+    "value": "2022-09-17 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-01-14 07:28:35.21634256",
+    "value": "2023-01-20 07:28:35.21634256",
     "headers": null
   }
 ]
