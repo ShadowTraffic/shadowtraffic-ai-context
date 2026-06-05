@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.18.8
+
+Fri Jun  5 09:15:21 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes date/int type conversion for Iceberg partitioned tables.
+
+---
+
 ###  1.18.7
 
 Fri Jun  5 07:52:33 PDT 2026
