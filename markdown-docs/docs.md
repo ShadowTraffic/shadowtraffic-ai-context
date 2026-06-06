@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.18.9
+
+Fri Jun  5 17:28:43 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Avoids failure to write to object storage when ShadowTraffic is run in a read-only container.
+
+---
+
 ###  1.18.8
 
 Fri Jun  5 09:15:21 PDT 2026
