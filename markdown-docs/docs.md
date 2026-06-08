@@ -3961,6 +3961,18 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.18.10
+
+Mon Jun  8 08:55:37 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Improves Avro schema errors that arise when writing incorrectly typed Parquet or Iceberg data.
+- ⚡ **Improved**: Adds logging when Iceberg files dynamically split because of rotating partition values.
+- ⚡ **Improved**: Echoes Iceberg table schema and properties on startup.
+
+---
+
 ###  1.18.9
 
 Fri Jun  5 17:28:43 PDT 2026
@@ -35683,19 +35695,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-10-28 08:36:51.822994797",
+    "value": "2022-10-31 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-10-10 14:04:32.730806236",
+    "value": "2022-10-13 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-12 07:28:35.21634256",
+    "value": "2023-02-15 07:28:35.21634256",
     "headers": null
   }
 ]
