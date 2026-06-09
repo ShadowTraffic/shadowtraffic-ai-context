@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.19.0
+
+Tue Jun  9 10:37:32 PDT 2026
+
+### Changes
+
+- ✅ **Added**: Adds support for [MySQL transactions](/connections/mysql/#writing-transactions).
+
+---
+
 ###  1.18.10
 
 Mon Jun  8 08:55:37 PDT 2026
@@ -16816,11 +16826,13 @@ You can control the statement type by setting the `op` key on your generator. `o
 
 For the latter two, you must also include a `where` key on your generator, which contains a map of column name to value. You need this because when you issue an update or a delete, you need to tell MySQL what rows you want to change. The `where` map is used to check equality and select rows that match. [Example 5](#upserts-and-deletes)
 
+### Generating transactions
+
+You can wrap operations in explicit transactions by setting `op` to `start`, `commit`, or `abort`. Use [`stateMachine`](/functions/stateMachine) to sequence these alongside your inserts, updates, and deletes. [Example 6](#writing-transactions)
+
 ---
 
 ## Examples
-
-### Configuring the connection
 
 Basic configuration for the MySQL connection. Optionally, set `batchConfigs` to control how frequently transactions are written. In this example, a transaction is executed whenever `500` milliseconds pass or `5000` rows are accumulated—whichever comes first.
 
@@ -17056,6 +17068,62 @@ postgres=# SELECT * FROM sandbox LIMIT 10;
 +--------------------------------------+-------+
 ```
 
+### Writing transactions
+
+Set `op` to `start`, `commit`, and `abort` to generate transactional workloads. This example opens a transaction, inserts one or more rows, then randomly either commits or aborts.
+
+If none of these are set, operations are automatically, sequentially committed.
+
+**Input:**
+```json
+{
+  "table": "sandbox",
+  "row": {
+    "id": {
+      "_gen": "uuid"
+    },
+    "amount": {
+      "_gen": "uniformDistribution",
+      "bounds": [
+        10,
+        500
+      ]
+    }
+  },
+  "stateMachine": {
+    "_gen": "stateMachine",
+    "initial": "start",
+    "transitions": {
+      "start": "insert",
+      "insert": {
+        "_gen": "oneOf",
+        "choices": [
+          "insert",
+          "commit",
+          "abort"
+        ]
+      },
+      "commit": "start",
+      "abort": "start"
+    },
+    "states": {
+      "start": {
+        "op": "start"
+      },
+      "insert": {
+        "op": "insert"
+      },
+      "commit": {
+        "op": "commit"
+      },
+      "abort": {
+        "op": "abort"
+      }
+    }
+  }
+}
+```
+
 ---
 
 ## Specification
@@ -17146,7 +17214,10 @@ postgres=# SELECT * FROM sandbox LIMIT 10;
       "enum": [
         "insert",
         "update",
-        "delete"
+        "delete",
+        "start",
+        "commit",
+        "abort"
       ]
     },
     "where": {
@@ -35695,19 +35766,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-10-31 08:36:51.822994797",
+    "value": "2022-11-01 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-10-13 14:04:32.730806236",
+    "value": "2022-10-14 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-15 07:28:35.21634256",
+    "value": "2023-02-16 07:28:35.21634256",
     "headers": null
   }
 ]
