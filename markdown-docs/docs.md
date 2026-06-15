@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.19.2
+
+Mon Jun 15 09:09:06 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Enhances [Databricks connection](/connections/databricks) to automatically create schemas in addition to tables.
+
+---
+
 ###  1.19.1
 
 Wed Jun 10 14:24:04 PDT 2026
@@ -10563,17 +10573,17 @@ You can authenticate using either OAuth M2M [Example 1](#connecting-with-m2m) or
 
 A new transaction will be written to Databricks every `20` ms or `500` rows, whichever happens first. You can override row size/write timing with `batchConfigs`. [Example 3](#setting-the-batch-rate)
 
-### Automatic table creation
+### Automatic schema and table creation
 
-By default for convenience, any tables ShadowTraffic writes to will be automatically created. This makes it easier to iterate on your generators without flipping back and forth between ShadowTraffic and Databricks. [Example 4](#automatic-table-creation)
+By default for convenience, any catalog schema and tables ShadowTraffic writes to will be automatically created. This makes it easier to iterate on your generators without flipping back and forth between ShadowTraffic and Databricks. [Example 4](#automatic-table-creation)
 
-ShadowTraffic does this by scanning the structure of your generators and creating a suitable DDL, then executing it on your behalf.
+ShadowTraffic does this by issuing a `CREATE SCHEMA IF NOT EXISTS` for the `schema` in your connection config, then scanning the structure of your generators and creating a suitable table DDL, then executing it on your behalf. The `catalog` itself must already exist.
 
 If ShadowTraffic doesn't create the table exactly as you'd want it, you can override each column using the [`sqlHint`](/function-modifiers/sqlHint) function modifier [Example 5](#overriding-column-types), or the entire DDL with [`sqlDdlHint`](/generator-configuration/sqlDdlHint/).
 
 ### Manual table control
 
-If you don't want ShadowTraffic to control your tables, you can turn this behavior off by setting `tablePolicy` to `manual` in the connection map. It'll then be up to you to make sure your tables exist before trying to write to them.
+If you don't want ShadowTraffic to control your schemas and tables, you can turn this behavior off by setting `tablePolicy` to `manual` in the connection map. It'll then be up to you to make sure your schema and tables exist before trying to write to them.
 
 ---
 
@@ -35787,19 +35797,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-02 08:36:51.822994797",
+    "value": "2022-11-07 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-10-15 14:04:32.730806236",
+    "value": "2022-10-20 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-17 07:28:35.21634256",
+    "value": "2023-02-22 07:28:35.21634256",
     "headers": null
   }
 ]
