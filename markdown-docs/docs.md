@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.19.5
+
+Thu Jun 18 11:06:10 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes spurious linting errors when using `env` functions.
+
+---
+
 ###  1.19.4
 
 Thu Jun 18 09:06:35 PDT 2026
