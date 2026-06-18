@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.19.4
+
+Thu Jun 18 09:06:35 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Adds proper exit codes for all terminal states. Exit code `0` indicates success, and `1` any kind of failure.
+
+---
+
 ###  1.19.3
 
 Thu Jun 18 07:52:54 PDT 2026
