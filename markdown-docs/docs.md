@@ -3961,6 +3961,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  1.19.3
+
+Thu Jun 18 07:52:54 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [GHSA-2r2c-cx56-8933](https://github.com/advisories/GHSA-2r2c-cx56-8933).
+- 🐛 **Fixed**: Mitigates [GHSA-47qp-hqvx-6r3f](https://github.com/advisories/GHSA-47qp-hqvx-6r3f).
+
+---
+
 ###  1.19.2
 
 Mon Jun 15 09:09:06 PDT 2026
@@ -35797,19 +35808,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-07 08:36:51.822994797",
+    "value": "2022-11-10 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-10-20 14:04:32.730806236",
+    "value": "2022-10-23 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-02-22 07:28:35.21634256",
+    "value": "2023-02-25 07:28:35.21634256",
     "headers": null
   }
 ]
