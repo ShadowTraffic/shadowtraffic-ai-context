@@ -29900,6 +29900,103 @@ In the example below, `a` generates the sum of two numbers. `b` looks up the num
 
 *... (3 more examples)*
 
+### Predicated lookups
+
+One situation you might find yourself in is needing predicated lookups. For example, you might have a stream of customers, each of which are either `base` or `platinum` status. In a separate stream, you might want to model support tickets raised by those customers, where `platinum` customers represent 80% of all tickets. To model that, you need your `lookup` to be predicated on the type of customer.
+
+A good pattern for doing this is to split your customers stream into multiple generators (one for each predicate) and give them names. You then use [named lookups](#lookup-by-name) to retrieve only events that match the criteria you're looking for. In this example, you could use [`weightedOneOf`](/functions/weightedOneOf) with two paths: 80% of the time, look up a `platinum` customer, and the remaining 20% look up a `base` customer.
+
+One downside of this pattern is that you duplicate your generator content, but that can easily be cleaned up with [loadJsonFile](/functions/loadJsonFile/).
+
+**Input:**
+```json
+[
+  {
+    "name": "base",
+    "topic": "customers",
+    "value": {
+      "id": {
+        "_gen": "uuid"
+      },
+      "status": "base"
+    }
+  },
+  {
+    "name": "platinum",
+    "topic": "customers",
+    "value": {
+      "id": {
+        "_gen": "uuid"
+      },
+      "status": "platinum"
+    }
+  },
+  {
+    "topic": "supportTickets",
+    "value": {
+      "_gen": "weightedOneOf",
+      "choices": [
+        {
+          "weight": 8,
+          "value": {
+            "_gen": "lookup",
+            "name": "platinum",
+            "path": [
+              "value"
+            ]
+          }
+        },
+        {
+          "weight": 2,
+          "value": {
+            "_gen": "lookup",
+            "name": "base",
+            "path": [
+              "value"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
+```
+
+**Output:**
+```json
+[
+  {
+    "topic": "customers",
+    "key": null,
+    "value": {
+      "id": "eb5910f1-26e6-bc6f-6fbd-df557096b883",
+      "status": "base"
+    },
+    "headers": null
+  },
+  {
+    "topic": "customers",
+    "key": null,
+    "value": {
+      "id": "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305",
+      "status": "platinum"
+    },
+    "headers": null
+  },
+  {
+    "topic": "supportTickets",
+    "key": null,
+    "value": {
+      "id": "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305",
+      "status": "platinum"
+    },
+    "headers": null
+  }
+]
+```
+
+*... (7 more examples)*
+
 ---
 
 ## Specification
@@ -35841,19 +35938,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-17 08:36:51.822994797",
+    "value": "2022-11-28 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-10-30 14:04:32.730806236",
+    "value": "2022-11-10 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-04 07:28:35.21634256",
+    "value": "2023-03-15 07:28:35.21634256",
     "headers": null
   }
 ]
