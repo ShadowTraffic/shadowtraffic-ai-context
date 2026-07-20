@@ -3961,6 +3961,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.0.0
+
+Mon Jul 20 13:47:04 PDT 2026
+
+### Changes
+
+- ⚡ **Improved**: Improves performance of nearly all workloads by a factor of 3, and for some adversarial cases > 10.
+- ⚠️ **Important**: Breaking change: the [filesystem connection](/connections/filesystem/) now exclusively uses a temporary staging directory to improve performance. If you run ShadowTraffic in `--read-only` mode, provide a writable location using [one of the fallback approaches](/cheatsheet/#read-only-filesystems).
+
+---
+
 ###  1.19.8
 
 Mon Jul 20 07:57:09 PDT 2026
@@ -8540,6 +8551,21 @@ LEASE_SIGNATURE=zzz
 
 When this set of keys is used to authenticate, ShadowTraffic will work indistinguishably from your main Enterprise license.
 
+### Read-only filesystems
+
+When ShadowTraffic writes to a file-based connector (local files, S3, GCS, Azure Blob Storage, and similiar), it streams each file to a temporary staging location on disk before placing it at its final destination. By default this staging directory is in `/tmp`.
+
+If you run the container with a read-only filesystem (most commonly through `docker run --read-only`), that default won't work: `--read-only` makes the entire container filesystem unwritable, so staging fails.
+
+To handle this, set the `SHADOWTRAFFIC_STAGING_DIR` environment variable to a writable path: either a [`--tmpfs`](https://docs.docker.com/engine/storage/tmpfs/) mount or a [volume mounted read-write](https://docs.docker.com/engine/storage/volumes/), and ShadowTraffic will stage files there instead.
+
+For example:
+
+```
+docker run --read-only -v $(pwd)/staging:/my/staging -e SHADOWTRAFFIC_STAGING_DIR=/my/staging --env-file license.env shadowtraffic/shadowtraffic:latest --config /path/to/config.json
+```
+
+
 # overview.md
 
 So you need some synthetic data? Maybe ShadowTraffic can help. This page explains in detail what ShadowTraffic is and how it works. We'll progressively build up a simple example to introduce each of the major features.
@@ -10021,6 +10047,10 @@ You can change it by using the following two optional parameters under `writerCo
   }
 }
 ```
+
+### Read-only containers
+
+ShadowTraffic streams each blob to a writable staging directory (`/tmp` by default) before uploading it to Azure Blob Storage. If you run the container with `docker run --read-only`, staging fails because the filesystem is unwritable. See [read-only filesystems](/cheatsheet/#read-only-filesystems) for how to point ShadowTraffic at a writable staging path.
 
 ---
 
@@ -11895,7 +11925,7 @@ Do not write multiple generators that output to the same file name in the same d
 
 ### Writing to files
 
-Use `fileName` to set the base file name to be written. In this example, files named `transactions-0.json`, `transactions-n.json`, ... will be created. Use `data` to set the data to be written to the file.
+Use `filePrefix` to set the base file name to be written. In this example, files named `transactions-0.json`, `transactions-n.json`, ... will be created. Use `data` to set the data to be written to the file.
 
 **Input:**
 ```json
@@ -12218,6 +12248,10 @@ Set `format` to `log` to write plain lines of text, one per line. `data` must ev
   }
 }
 ```
+
+### Read-only containers
+
+ShadowTraffic streams each file to a writable staging directory (`/tmp` by default) before placing it at its final destination. If you run the container with `docker run --read-only`, staging fails because the filesystem is unwritable. See [read-only filesystems](/cheatsheet/#read-only-filesystems) for how to point ShadowTraffic at a writable staging path.
 
 ---
 
@@ -13087,6 +13121,10 @@ If you have multiple generators writing to the same bucket and want to execute a
   }
 }
 ```
+
+### Read-only containers
+
+ShadowTraffic streams each object to a writable staging directory (`/tmp` by default) before uploading it to Google Cloud Storage. If you run the container with `docker run --read-only`, staging fails because the filesystem is unwritable. See [read-only filesystems](/cheatsheet/#read-only-filesystems) for how to point ShadowTraffic at a writable staging path.
 
 ---
 
@@ -20864,6 +20902,10 @@ You can change it by using the following two optional parameters under `writerCo
   }
 }
 ```
+
+### Read-only containers
+
+ShadowTraffic streams each object to a writable staging directory (`/tmp` by default) before uploading it to S3. If you run the container with `docker run --read-only`, staging fails because the filesystem is unwritable. See [read-only filesystems](/cheatsheet/#read-only-filesystems) for how to point ShadowTraffic at a writable staging path.
 
 ---
 
