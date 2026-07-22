@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.0.1
+
+Wed Jul 22 09:01:42 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes `STRUCT` and `ARRAY` insertions for the [Databricks](/connections/databricks) connection.
+
+---
+
 ###  2.0.0
 
 Mon Jul 20 13:47:04 PDT 2026
@@ -30035,7 +30045,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "key": null,
     "value": {
       "id": "eb5910f1-26e6-bc6f-6fbd-df557096b883",
-      "status": "platinum"
+      "status": "base"
     },
     "headers": null
   },
@@ -30044,7 +30054,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "key": null,
     "value": {
       "id": "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305",
-      "status": "base"
+      "status": "platinum"
     },
     "headers": null
   },
@@ -30052,7 +30062,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "topic": "supportTickets",
     "key": null,
     "value": {
-      "id": "eb5910f1-26e6-bc6f-6fbd-df557096b883",
+      "id": "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305",
       "status": "platinum"
     },
     "headers": null
@@ -36003,19 +36013,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-12-12 08:36:51.822994797",
+    "value": "2022-12-14 08:36:51.822994797",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2022-11-24 14:04:32.730806236",
+    "value": "2022-11-26 14:04:32.730806236",
     "headers": null
   },
   {
     "topic": "sandbox",
     "key": null,
-    "value": "2023-03-29 07:28:35.21634256",
+    "value": "2023-03-31 07:28:35.21634256",
     "headers": null
   }
 ]
