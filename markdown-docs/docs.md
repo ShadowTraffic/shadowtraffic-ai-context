@@ -3961,6 +3961,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.0.2
+
+Thu Jul 23 10:03:49 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Fixes `MAP` and certain timestamps insertions for the [Databricks](/connections/databricks) connection.
+- 🐛 **Fixed**: Fixes regression in [`heading`](/functions/heading) function.
+
+---
+
 ###  2.0.1
 
 Wed Jul 22 09:01:42 PDT 2026
@@ -10103,6 +10114,10 @@ ShadowTraffic streams each blob to a writable staging directory (`/tmp` by defau
         "concurrency": {
           "type": "integer",
           "minimum": 1
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0
         }
       }
     },
@@ -19822,27 +19837,27 @@ To execute a Redis `set` command, set `op` to the same name. `set` requires a `v
 [
   {
     "op": "set",
-    "opParams": null,
-    "key": "key-0",
     "attributes": {
-      "value": "b"
-    }
+      "value": "c"
+    },
+    "opParams": null,
+    "key": "key-0"
   },
   {
     "op": "set",
-    "opParams": null,
-    "key": "key-1",
     "attributes": {
-      "value": "c"
-    }
+      "value": "a"
+    },
+    "opParams": null,
+    "key": "key-1"
   },
   {
     "op": "set",
-    "opParams": null,
-    "key": "key-2",
     "attributes": {
-      "value": "c"
-    }
+      "value": "a"
+    },
+    "opParams": null,
+    "key": "key-2"
   }
 ]
 ```
@@ -19881,30 +19896,30 @@ Likewise, `hset` works similarly. `hset` requires both a `field` and `value`.
 [
   {
     "op": "hset",
-    "opParams": null,
-    "key": "user-0",
     "attributes": {
-      "field": "tier",
-      "value": "silver"
-    }
+      "value": "bronze",
+      "field": "tier"
+    },
+    "opParams": null,
+    "key": "user-0"
   },
   {
     "op": "hset",
-    "opParams": null,
-    "key": "user-1",
     "attributes": {
-      "field": "tier",
-      "value": "bronze"
-    }
+      "value": "gold",
+      "field": "tier"
+    },
+    "opParams": null,
+    "key": "user-1"
   },
   {
     "op": "hset",
-    "opParams": null,
-    "key": "user-2",
     "attributes": {
-      "field": "tier",
-      "value": "bronze"
-    }
+      "value": "gold",
+      "field": "tier"
+    },
+    "opParams": null,
+    "key": "user-2"
   }
 ]
 ```
@@ -19947,30 +19962,30 @@ Finally, `zadd` follows the same pattern, requiring a `score` and `member`. Note
 [
   {
     "op": "zadd",
-    "opParams": null,
-    "key": "user-0",
     "attributes": {
-      "score": 8.057562019117077,
-      "member": "blue"
-    }
+      "member": "blue",
+      "score": 8.942668130503591
+    },
+    "opParams": null,
+    "key": "user-0"
   },
   {
     "op": "zadd",
-    "opParams": null,
-    "key": "user-1",
     "attributes": {
-      "score": 8.871880179475948,
-      "member": "red"
-    }
+      "member": "green",
+      "score": 11.811731108357588
+    },
+    "opParams": null,
+    "key": "user-1"
   },
   {
     "op": "zadd",
-    "opParams": null,
-    "key": "user-2",
     "attributes": {
-      "score": 13.703997152237063,
-      "member": "green"
-    }
+      "member": "green",
+      "score": 8.022128917950285
+    },
+    "opParams": null,
+    "key": "user-2"
   }
 ]
 ```
@@ -20958,6 +20973,10 @@ ShadowTraffic streams each object to a writable staging directory (`/tmp` by def
         "concurrency": {
           "type": "integer",
           "minimum": 1
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0
         }
       }
     },
@@ -23041,28 +23060,28 @@ If the fork key is an array, it will create a generator instance for each elemen
 ```json
 [
   {
+    "headers": null,
     "topic": "sensors",
-    "key": null,
     "value": {
       "id": "sensor #1"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sensors",
-    "key": null,
     "value": {
       "id": "sensor #2"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sensors",
-    "key": null,
     "value": {
       "id": "sensor #3"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23097,28 +23116,28 @@ If the fork key is a function, it will create a generator instance for each retu
 ```json
 [
   {
+    "headers": null,
     "topic": "sensors",
-    "key": null,
     "value": {
       "id": "sensor-0"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sensors",
-    "key": null,
     "value": {
       "id": "sensor-1"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sensors",
-    "key": null,
     "value": {
       "id": "sensor-2"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23153,29 +23172,29 @@ You can override this behavior by setting an alternative [`strategy`](/functions
 ```json
 [
   {
+    "headers": null,
     "topic": "agents",
-    "key": null,
     "value": {
       "id": "agent-0"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "calls",
-    "key": null,
     "value": {
-      "callId": "call-0",
-      "agentId": "agent-0"
+      "agentId": "agent-0",
+      "callId": "call-0"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "agents",
-    "key": null,
     "value": {
       "id": "agent-1"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23497,34 +23516,34 @@ Set `cardinality` to a positive integer. In this example:
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "a": 8.8719,
-      "b": 8.0521,
-      "c": 7.8284
+      "a": 8.9427,
+      "b": 11.6935,
+      "c": 7.1462
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "a": 8.8719,
-      "b": 11.6722,
-      "c": 9.6293
+      "a": 8.9427,
+      "b": 10.2091,
+      "c": 10.8965
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "a": 8.8719,
-      "b": 8.3685,
-      "c": 4.7994
+      "a": 8.9427,
+      "b": 7.8284,
+      "c": 8.0521
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23577,22 +23596,22 @@ Use `string` to cast any value to a string.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": "48.94266813050359",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "51.69347796390609",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": "47.14618903225951",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "48.02212891795028",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "52.18778620357622",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23616,22 +23635,22 @@ Use `integer` to parse a string to an integer.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 18638,
-    "headers": null
+    "value": 94191,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 33971,
-    "headers": null
+    "value": 86383,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 96772,
-    "headers": null
+    "value": 39719,
+    "key": null
   }
 ]
 ```
@@ -23655,10 +23674,10 @@ Use `double` to parse a string to a double.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 10.25,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23692,14 +23711,14 @@ Use `boolean` to parse a string to a boolean. Invalid values become `false`.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "t": true,
       "f": false,
+      "t": true,
       "i": false
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23756,22 +23775,22 @@ Use `clamp` with a minimum and maxiumum value. In this example, the value will n
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 2,
-    "headers": null
+    "value": 6.299338456762571,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 3.077451212825995,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
     "value": 15,
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 2,
+    "key": null
   }
 ]
 ```
@@ -23842,10 +23861,10 @@ Use `2` decimals to drop the remaining decimal places.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 10.12,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23867,10 +23886,10 @@ Use `0` to retrieve whole integers.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 42,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -23928,29 +23947,29 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "b": "Krystin Labadie I"
+      "a": "Les Dooley",
+      "b": "Ambrose Reynolds"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "a": "Cecilia Watsica DDS",
-      "b": "Merideth Hintz"
+      "b": "Jeanette Schuppe"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "b": "Frederick Schoen"
+      "b": "Reginald Yost"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24009,29 +24028,29 @@ Specify `whenPresent` to elide when a reference value is non-null.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": {
-      "b": true
-    },
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
     "value": {
       "b": false
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "a": false,
       "b": true
     },
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": {
+      "a": true,
+      "b": false
+    },
+    "key": null
   }
 ]
 ```
@@ -24084,28 +24103,28 @@ Specify `whenAbsent` to elide when a reference value is `false` or `null`.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": {
+      "a": false
+    },
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": {
       "a": true
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "a": false
     },
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": {
-      "a": false
-    },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24224,13 +24243,13 @@ Overrides key names for any generator that returns a map, letting you customize 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "lat": 42,
       "lon": 64
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24355,10 +24374,10 @@ Use a sequence of keys to progressively drill into an object.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "c",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24395,12 +24414,12 @@ Use indexes, offset from `0`, to drill into an array.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "e": "f"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24506,34 +24525,35 @@ Set `sample` / `rate` to a decimal between `0` and `1`, representing the percent
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
-      "B",
+      "A",
+      "C",
       "A"
     ],
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
-      "D",
-      "D",
-      "E"
-    ],
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": [
-      "B",
       "A",
       "B",
       "F"
     ],
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": [
+      "E",
+      "A",
+      "C",
+      "F"
+    ],
+    "key": null
   }
 ]
 ```
@@ -24576,30 +24596,34 @@ Set `sample` / `rate` to a decimal between `0` and `1`, representing the percent
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
+      "A",
       "A"
     ],
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": [
+      "D",
+      "E",
+      "E",
+      "B",
+      "A"
+    ],
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": [
       "B",
-      "B"
-    ],
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": [
-      "C",
       "C"
     ],
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24683,31 +24707,31 @@ Selects a subset of keys from generators that return objects.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "a": "b",
       "e": "f"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "a": "b",
       "e": "f"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "a": "b",
       "e": "f"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24777,22 +24801,22 @@ You can serialize the value in ShadowTraffic like so:
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": "\u0000¸ý",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "\u0000ÓÚ",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": "\u0000§q",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "\u0000¯ÿ",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "\u0000Ø­",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24830,22 +24854,22 @@ You can serialize the value in ShadowTraffic like so:
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": "5Aº÷þ\rá»ç®(ÀE\f",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": "ä<\bOK»+ñîFm,µ",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "¾jaª\fa\u0017½gCçÜs",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "h^\\³aølF ¾¿°",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -24872,28 +24896,28 @@ Use `type` set to `postgresTimestamp` to coerce the value into a Postgres `TIMES
 ```json
 [
   {
-    "table": "sandbox",
-    "row": {
-      "timestamp": "2024-04-25T20:28:47.262Z"
-    },
     "op": null,
-    "where": null
-  },
-  {
-    "table": "sandbox",
+    "where": null,
     "row": {
       "timestamp": "2024-04-25T20:28:47.263Z"
     },
-    "op": null,
-    "where": null
+    "table": "sandbox"
   },
   {
-    "table": "sandbox",
+    "op": null,
+    "where": null,
     "row": {
       "timestamp": "2024-04-25T20:28:47.264Z"
     },
+    "table": "sandbox"
+  },
+  {
     "op": null,
-    "where": null
+    "where": null,
+    "row": {
+      "timestamp": "2024-04-25T20:28:47.265Z"
+    },
+    "table": "sandbox"
   }
 ]
 ```
@@ -24920,33 +24944,49 @@ Use `type` set to `sqlServerTimestamp` to coerce the value into a SQL Server `da
 ```json
 [
   {
-    "table": "sandbox",
-    "row": {
-      "timestamp": "2024-04-25T20:28:47.262Z"
-    },
     "op": null,
-    "where": null
-  },
-  {
-    "table": "sandbox",
+    "where": null,
     "row": {
       "timestamp": "2024-04-25T20:28:47.263Z"
     },
-    "op": null,
-    "where": null
+    "table": "sandbox"
   },
   {
-    "table": "sandbox",
+    "op": null,
+    "where": null,
     "row": {
       "timestamp": "2024-04-25T20:28:47.264Z"
     },
+    "table": "sandbox"
+  },
+  {
     "op": null,
-    "where": null
+    "where": null,
+    "row": {
+      "timestamp": "2024-04-25T20:28:47.265Z"
+    },
+    "table": "sandbox"
   }
 ]
 ```
 
 *... (2 more examples)*
+
+### Serialize to Databricks timestamp
+
+Use `type` set to `databricksTimestamp` to coerce the value into a Databricks `TIMESTAMP` or `TIMESTAMP_NTZ` type.
+
+**Input:**
+```json
+{
+  "timestamp": {
+    "_gen": "now",
+    "serialize": {
+      "type": "databricksTimestamp"
+    }
+  }
+}
+```
 
 ---
 
@@ -24964,7 +25004,8 @@ Use `type` set to `sqlServerTimestamp` to coerce the value into a SQL Server `da
         "avroFixed",
         "avroDecimal",
         "postgresTimestamp",
-        "sqlServerTimestamp"
+        "sqlServerTimestamp",
+        "databricksTimestamp"
       ]
     }
   },
@@ -25040,10 +25081,10 @@ Generates the sum of `args`. You can also use this function through an infix [`m
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 6,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -25345,22 +25386,22 @@ Generates `true` and `false`.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": true,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
     "value": false,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": true,
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": false,
+    "key": null
   }
 ]
 ```
@@ -25409,22 +25450,22 @@ Use a constant to generate byte arrays of the same size.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "5DwIT0u7K/GDne5GbYUstb5qYaqaDGEX",
-    "headers": null
+    "value": "NZ1BuveK/g3hu+euKMBFDOQ8CE9Luyvx",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "vWdD59yXhXOZjmheiFyzYfhsl0Ygvr+w",
-    "headers": null
+    "value": "g53uRm2FLLW+amGqmgxhF71nQ+fcl4Vz",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "EQCydlRXGMMPQGzI46GI//EQWetvvOYm",
-    "headers": null
+    "value": "mY5oXohcs2H4bJdGIL6/sBEAsnZUVxjD",
+    "key": null
   }
 ]
 ```
@@ -25453,22 +25494,22 @@ Use a function to generate byte arrays of varying sizes, in this case between `1
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "vWdD59yXhXOZjmheiFyzYQ==",
-    "headers": null
+    "value": "4bvnrijARQzkPAhPSw==",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "EQCydlRXGMMPQGzI46GI",
-    "headers": null
+    "value": "vmphqpoMYRe9Z0Pn3JeFc5mOaF6IXLNh+GyXRiC+v7ARALJ2VFc=",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Vd+9b4O4lnDW2fm/Utg97twL9mIFg1zMFq1oLYxHiib0UCeYSQ==",
-    "headers": null
+    "value": "8RBZ62+85iZV371vg7iWcNbZ+b9S2D3u3Av2YgWDXMwWrWgtjEeKJg==",
+    "key": null
   }
 ]
 ```
@@ -25579,31 +25620,31 @@ The effect is that the same `on` value will always produce the same `to` value.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": {
+      "from": 1,
+      "to": 42.865472580648756
+    },
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": {
+      "from": 1,
+      "to": 42.865472580648756
+    },
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": {
       "from": 2,
-      "to": 45.92117476009821
+      "to": 48.64452347927178
     },
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": {
-      "from": 1,
-      "to": 48.47137376354857
-    },
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": {
-      "from": 1,
-      "to": 48.47137376354857
-    },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -25658,22 +25699,22 @@ Generates character strings composed of only alpha characters. Specify the lengt
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "ArnQdPAA",
-    "headers": null
+    "value": "AhWmArnQ",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "iGueWIlz",
-    "headers": null
+    "value": "dPAAiGue",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "ORArZvMg",
-    "headers": null
+    "value": "WIlzORAr",
+    "key": null
   }
 ]
 ```
@@ -25698,22 +25739,22 @@ To make every character in the generated string unique, set `unique` to `true`.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "WKLMB",
-    "headers": null
+    "value": "TUWBD",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "VXCAS",
-    "headers": null
+    "value": "EJBGX",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "HNYIL",
-    "headers": null
+    "value": "LARQB",
+    "key": null
   }
 ]
 ```
@@ -25740,22 +25781,22 @@ In this example with `unique` set to `true` and `case` set to `lower`, there are
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "wklmbfqdpnjhiytesgocxvurza",
-    "headers": null
+    "value": "tuwbdqplsmyigxcvrhjfeokzna",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "vxcaslugjpkqizoebwdhrntmfy",
-    "headers": null
+    "value": "ejbgxudlinoacpwrhzyqtsmkfv",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "hnyilxqsvaeutwzpjcmrdfgbko",
-    "headers": null
+    "value": "larqbmyfkitszexuwdvnhcgopj",
+    "key": null
   }
 ]
 ```
@@ -25837,22 +25878,22 @@ Generates the value of `x` always. This is useful if you want to generate a know
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "foo",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "foo",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "foo",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -25904,10 +25945,10 @@ Generates the trigonometric cosine of `degrees`. You can also use this function 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 0.7071067811865476,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26154,22 +26195,22 @@ The most simple example is setting `sequence` to a constant array. `cycle` will 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "a",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "b",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "c",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26195,22 +26236,22 @@ The most simple example is setting `sequence` to a constant array. `cycle` will 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "red",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "green",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "blue",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26280,22 +26321,22 @@ Generates character strings composed of only digits. Specify the length with `n`
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "18638",
-    "headers": null
+    "value": "94191",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "33971",
-    "headers": null
+    "value": "86383",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "96772",
-    "headers": null
+    "value": "39719",
+    "key": null
   }
 ]
 ```
@@ -26369,10 +26410,10 @@ Generates the division of `args`. You can also use this function through an infi
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 10,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26450,10 +26491,10 @@ Supply any time units, with `days` being the largest and `milliseconds` being th
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 358365000,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26486,10 +26527,10 @@ Supply any time units, with `days` being the largest and `milliseconds` being th
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2024-04-18T13:28:47.262-07:00",
-    "headers": null
+    "value": "2024-04-18T13:28:47.263-07:00",
+    "key": null
   }
 ]
 ```
@@ -26684,22 +26725,22 @@ In this example, ShadowTraffic will emit events for `8000` milliseconds that tra
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5.015001875234404,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5.030003750468809,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26741,22 +26782,22 @@ In addition to specifying easing lengths as a `duration`, you can also specify t
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 3,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5.25,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 7.5,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26783,22 +26824,22 @@ When the `duration` is reached, `easing` will peg the result to the value of `fr
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 10,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 10.5,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 11,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26840,22 +26881,22 @@ Use a different `direction` to change the slope of the tails of the curve. In th
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50.00599999996,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50.01199879979998,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26897,22 +26938,22 @@ Likewise, use a different `degree` to change the steepness of the curve. Higher 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 100,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 99.99999999999308,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 99.99999999988924,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -26956,22 +26997,22 @@ If you want to define your own easing, set `ease` to any numeric function and `d
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 105.46946550894056,
-    "headers": null
+    "value": 97.35667032625898,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 100.23162027249977,
-    "headers": null
+    "value": 104.23369490976522,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 94.57096414497,
-    "headers": null
+    "value": 92.86547258064876,
+    "key": null
   }
 ]
 ```
@@ -27011,22 +27052,22 @@ If the mathematically perfect curves that `easing` creates aren't realistic, you
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 99.14409961507134,
-    "headers": null
+    "value": 99.15891604977976,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 99.28048518603984,
-    "headers": null
+    "value": 100.78940806803134,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 99.12853934250555,
-    "headers": null
+    "value": 99.00273534469417,
+    "key": null
   }
 ]
 ```
@@ -27300,22 +27341,22 @@ Set `stages` to a series of easing functions that will be run in a row. Each `du
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5.002314814814815,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5.037037037037037,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -27371,22 +27412,22 @@ Set `loop` to `true` to cause the chain to repeat indefinitely.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 1,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 7.75,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 10,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -27450,22 +27491,22 @@ Supply any numeric function inside of `stage` to control how values are generate
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5.002314814814815,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5.037037037037037,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -27521,22 +27562,22 @@ Easings in the chain can freely use `duration` or `events` to specify their leng
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 1,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 3.25,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 5.5,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -27762,10 +27803,10 @@ Omit `format` for the default formatting.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2024-04-25T13:28:47.262-07:00",
-    "headers": null
+    "value": "2024-04-25T13:28:47.263-07:00",
+    "key": null
   }
 ]
 ```
@@ -27789,10 +27830,10 @@ Set `format` to control the output string.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "2024-04-25",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -27832,22 +27873,22 @@ In this example, timestamps are generated anywhere between 1 and 6 months in the
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2024-03-16 08:16:09.324",
-    "headers": null
+    "value": "2024-03-14 00:46:49.148",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2023-12-01 13:02:18.413",
-    "headers": null
+    "value": "2023-11-10 22:09:32.645",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2023-12-12 23:15:34.205",
-    "headers": null
+    "value": "2024-03-25 22:00:50.727",
+    "key": null
   }
 ]
 ```
@@ -27873,10 +27914,10 @@ By default, all timestamps are printed in UTC, but you can change this by supply
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2024-04-25T13:28:47.262-07:00",
-    "headers": null
+    "value": "2024-04-25T13:28:47.263-07:00",
+    "key": null
   }
 ]
 ```
@@ -28197,37 +28238,37 @@ Outputs:
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "latitude": 45.006818353733046,
-      "longitude": -86.06778679965743,
-      "duration": 179.99859320475167,
-      "heading": 334.01741824743186
+      "latitude": 45.39729012444939,
+      "longitude": -75.79133315114478,
+      "duration": 179.99953613126078,
+      "heading": 39.70884698981962
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "latitude": 45.00682990012698,
-      "longitude": -86.06817403421933,
-      "duration": 179.99859320475167,
-      "heading": 334.01741824743186
+      "latitude": 45.39728779701243,
+      "longitude": -75.79139440473543,
+      "duration": 179.99953613126078,
+      "heading": 39.70884698981962
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "latitude": 45.00684144652091,
-      "longitude": -86.06856126878124,
-      "duration": 179.99859320475167,
-      "heading": 334.01741824743186
+      "latitude": 45.39728546957548,
+      "longitude": -75.79145565832607,
+      "duration": 179.99953613126078,
+      "heading": 39.70884698981962
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -28366,22 +28407,22 @@ Generates Git SHA-256 strings.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": "2a73767e33018785c642a77a3cb6222142e76d80d4bb5ef8e61dfa182c3e881b",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "c806735a390fedf31093fc0208b2443acf41148fc99c04f55a5182a7f1057402",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": "79110c22dc58be2b66579f591d7573612fdf8c38f59a65618b62c88cc3969611",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "109b6989227cc8fee62a17114d461a5c25b24de76190edf49de989583479047a",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "4bdce8f9396a2ebadea15693626ef327cc8aa6c766395e29b2bbe54471ee03c0",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -28435,10 +28476,10 @@ Given a pair of starting and ending coordinates, calculates the heading in degre
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 272.658788219642,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -28616,22 +28657,22 @@ Supply a `template` string containing tokens with leading colons and a `params` 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": "SELECT * FROM table1 WHERE column1='ba419d35-0dfe-8af7-aee7-bbe10c45c028';",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "SELECT * FROM table1 WHERE column1='4f083ce3-f12b-bb4b-46ee-9d82b52c856d';",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": "SELECT * FROM table1 WHERE column1='aa616abe-1761-0c9a-e743-67bd738597dc';",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "SELECT * FROM table1 WHERE column1='5e688e99-61b3-5c88-4697-6cf7b0bfbe20';",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "SELECT * FROM table1 WHERE column1='76b20010-c318-5754-c86c-400eff88a1e3';",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -28722,22 +28763,22 @@ This Cron expression matches every wallclock time, so the corresponding function
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "event-0",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "event-1",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "event-2",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -28769,22 +28810,22 @@ This Cron expression (all day Wednesday) doesn't match the wallclock time, so th
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "fallback value",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "fallback value",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "fallback value",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -28821,22 +28862,22 @@ None of these Cron expressions (all day Sunday, Monday, and Tuesday respectively
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 60,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 60,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 60,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -28872,22 +28913,22 @@ For convenience, you can specify multiple Cron expressions in a single line.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -28920,22 +28961,22 @@ When multiple Cron expressions match, the earlier one is used. Both of these Cro
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -29280,26 +29321,26 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
 ```json
 [
   {
+    "headers": null,
     "topic": "a",
-    "key": {
-      "id": "Joshua"
-    },
     "value": null,
-    "headers": null
+    "key": {
+      "id": "Rhett"
+    }
   },
   {
+    "headers": null,
     "topic": "b",
-    "key": null,
-    "value": "Joshua",
-    "headers": null
+    "value": "Rhett",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "a",
-    "key": {
-      "id": "Elvina"
-    },
     "value": null,
-    "headers": null
+    "key": {
+      "id": "Dante"
+    }
   }
 ]
 ```
@@ -29356,28 +29397,28 @@ Look up data in a Postgres table.
 ```json
 [
   {
-    "table": "a",
-    "row": {
-      "id": "Joshua"
-    },
     "op": null,
-    "where": null
+    "where": null,
+    "row": {
+      "id": "Sally"
+    },
+    "table": "a"
   },
   {
-    "table": "b",
-    "row": {
-      "id": "Joshua"
-    },
     "op": null,
-    "where": null
+    "where": null,
+    "row": {
+      "id": "Sally"
+    },
+    "table": "b"
   },
   {
-    "table": "a",
-    "row": {
-      "id": "Elvina"
-    },
     "op": null,
-    "where": null
+    "where": null,
+    "row": {
+      "id": "Stephan"
+    },
+    "table": "a"
   }
 ]
 ```
@@ -29435,27 +29476,27 @@ Sometimes make a new key, sometimes use a previously generated one.
 ```json
 [
   {
+    "headers": null,
     "topic": "users",
-    "key": "Benito Turner",
     "value": null,
-    "headers": null
+    "key": "Lasandra Denesik I"
   },
   {
+    "headers": null,
     "topic": "users",
-    "key": "Benito Turner",
     "value": null,
-    "headers": null
+    "key": "Cheryl Zulauf"
   },
   {
+    "headers": null,
     "topic": "users",
-    "key": "Daisy D'Amore",
     "value": null,
-    "headers": null
+    "key": "Lasandra Denesik I"
   }
 ]
 ```
 
-*... (7 more examples)*
+*... (5 more examples)*
 
 ### Explicit connections
 
@@ -29516,26 +29557,26 @@ Explicitly supply the connection name when there are multiple connections.
 ```json
 [
   {
-    "table": "a",
-    "row": {
-      "email": "joshua.padberg@hotmail.com"
-    },
     "op": null,
-    "where": null
+    "where": null,
+    "row": {
+      "email": "lincoln.trantow@yahoo.com"
+    },
+    "table": "a"
   },
   {
+    "headers": null,
     "topic": "b",
-    "key": null,
-    "value": "joshua.padberg@hotmail.com",
-    "headers": null
+    "value": "lincoln.trantow@yahoo.com",
+    "key": null
   },
   {
-    "table": "a",
-    "row": {
-      "email": "benito.turner@yahoo.com"
-    },
     "op": null,
-    "where": null
+    "where": null,
+    "row": {
+      "email": "richard.mcclure@gmail.com"
+    },
+    "table": "a"
   }
 ]
 ```
@@ -29577,22 +29618,22 @@ In this example, notice how all the values for `b` lock onto the first value gen
 ```json
 [
   {
+    "headers": null,
     "topic": "a",
-    "key": null,
-    "value": 110.93893101788113,
-    "headers": null
+    "value": 94.71334065251796,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "b",
-    "key": null,
-    "value": 110.93893101788113,
-    "headers": null
+    "value": 94.71334065251796,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "a",
-    "key": null,
-    "value": 89.14192828994,
-    "headers": null
+    "value": 85.73094516129751,
+    "key": null
   }
 ]
 ```
@@ -29634,22 +29675,22 @@ In this example, notice how each value for `b` lock onto the most event value ge
 ```json
 [
   {
+    "headers": null,
     "topic": "a",
-    "key": null,
-    "value": 110.93893101788113,
-    "headers": null
+    "value": 94.71334065251796,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "b",
-    "key": null,
-    "value": 110.93893101788113,
-    "headers": null
+    "value": 94.71334065251796,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "a",
-    "key": null,
-    "value": 89.14192828994,
-    "headers": null
+    "value": 85.73094516129751,
+    "key": null
   }
 ]
 ```
@@ -29715,26 +29756,26 @@ Use a histogram to control how the element is selected from the population. This
 ```json
 [
   {
+    "headers": null,
     "topic": "a",
-    "key": {
-      "id": "Ms. Shakira McLaughlin"
-    },
     "value": null,
-    "headers": null
+    "key": {
+      "id": "Miss Dylan Hamill"
+    }
   },
   {
+    "headers": null,
     "topic": "b",
-    "key": null,
-    "value": "Ms. Shakira McLaughlin",
-    "headers": null
+    "value": "Miss Dylan Hamill",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "a",
-    "key": {
-      "id": "Santiago Rolfson"
-    },
     "value": null,
-    "headers": null
+    "key": {
+      "id": "Dr. Selene Ruecker"
+    }
   }
 ]
 ```
@@ -29801,31 +29842,31 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
 ```json
 [
   {
+    "headers": null,
     "topic": "a",
-    "key": {
-      "name": "Tiffani Schaden",
-      "magicNumber": 68
-    },
     "value": null,
-    "headers": null
+    "key": {
+      "name": "Ms. Josie Larson",
+      "magicNumber": 7
+    }
   },
   {
+    "headers": null,
     "topic": "b",
-    "key": null,
     "value": {
-      "lookedUpName": "Tiffani Schaden",
-      "lookedUpNumber": 68
+      "lookedUpName": "Ms. Josie Larson",
+      "lookedUpNumber": 7
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "a",
-    "key": {
-      "name": "Mr. Devora Bartell",
-      "magicNumber": 10
-    },
     "value": null,
-    "headers": null
+    "key": {
+      "name": "Dr. Claretta Daniel",
+      "magicNumber": 52
+    }
   }
 ]
 ```
@@ -29870,24 +29911,24 @@ Use `name` in the lookup function to target another generator by its `name` attr
 ```json
 [
   {
+    "headers": null,
     "topic": "a",
-    "key": 17,
     "value": null,
-    "headers": null
+    "key": 7
   },
   {
+    "headers": null,
     "topic": "b",
-    "key": null,
     "value": {
-      "result": 17
+      "result": 7
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "a",
-    "key": 89,
     "value": null,
-    "headers": null
+    "key": 52
   }
 ]
 ```
@@ -29948,27 +29989,27 @@ In the example below, `a` generates the sum of two numbers. `b` looks up the num
 ```json
 [
   {
+    "headers": null,
     "topic": "a",
-    "key": null,
-    "value": 104.29258605868415,
-    "headers": null
+    "value": 47.49303740091992,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "b",
-    "key": null,
     "value": {
       "result": {
-        "x": 54.18051750224169,
-        "y": 50.11206855644246
+        "x": 47.35667032625898,
+        "y": 0.1363670746609369
       }
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "a",
-    "key": null,
-    "value": 67.37253098813049,
-    "headers": null
+    "value": 64.608026199175,
+    "key": null
   }
 ]
 ```
@@ -30041,31 +30082,31 @@ One downside of this pattern is that you duplicate your generator content, but t
 ```json
 [
   {
+    "headers": null,
     "topic": "customers",
-    "key": null,
     "value": {
-      "id": "eb5910f1-26e6-bc6f-6fbd-df557096b883",
+      "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
+      "status": "platinum"
+    },
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "customers",
+    "value": {
+      "id": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
       "status": "base"
     },
-    "headers": null
+    "key": null
   },
   {
-    "topic": "customers",
-    "key": null,
-    "value": {
-      "id": "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305",
-      "status": "platinum"
-    },
-    "headers": null
-  },
-  {
+    "headers": null,
     "topic": "supportTickets",
-    "key": null,
     "value": {
-      "id": "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305",
+      "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
       "status": "platinum"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -31061,40 +31102,40 @@ Generates a map of `n` key/value pairs. Duplicate keys will collapse and defer t
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "5e688e99-61b3-5c88-4697-6cf7b0bfbe20": true,
-      "76b20010-c318-5754-c86c-400eff88a1e3": true,
-      "eb5910f1-26e6-bc6f-6fbd-df557096b883": false,
-      "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305": true,
-      "2d68ad16-268a-478c-9827-50f4569b5949": true
+      "ba419d35-0dfe-8af7-aee7-bbe10c45c028": true,
+      "f12bbb4b-46ee-9d83-b52c-856caa616abe": true,
+      "e74367bd-7385-97dc-5e68-8e9961b35c88": true,
+      "b0bfbe20-76b2-0011-c318-5753c86c400f": false,
+      "eb5910f1-26e6-bc6f-6fbd-df557096b883": false
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "289d95f9-9661-a432-4630-2cd8c053e997": true,
-      "a4c46c01-922f-b35e-148d-9e81947c82ee": false,
-      "1735c9ec-c0a4-7def-cc72-29ce080b069b": false,
-      "510846b6-5ba0-a3f3-32f7-02b0d15b23ed": true,
-      "02d53e28-6aed-9211-c500-4374f95a6723": false
+      "ee3dd852-62f6-0bdc-cc5c-83052d68ad16": true,
+      "982750f4-569b-5949-35b3-53dd402b571a": false,
+      "5d7b347f-2c16-7999-289d-95f99661a432": true,
+      "c053e996-a4c4-6c02-922f-b35e148d9e82": false,
+      "1735c9ec-c0a4-7def-cc72-29ce080b069b": true
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "4aaa0001-3832-cc52-f32a-088b988bd7d5": false,
-      "d20bc0bc-3051-ae6f-a2fb-233f60e0b477": true,
-      "5e7ebf2c-22ec-a89b-5c39-a9da6fb03cbb": true,
-      "6f45f2e9-a617-570a-7512-bbb4b22b0979": true,
-      "79021b82-f370-50bb-7811-dc308c868164": false
+      "5ba0a3f3-32f7-02b1-d15b-23ed02d53e28": true,
+      "c5004374-f95a-6723-14a5-c4b5b6a1caca": false,
+      "7b06ee52-df9a-8487-4aaa-00013832cc52": false,
+      "988bd7d4-d20b-c0bc-3051-ae6ea2fb233f": true,
+      "5e7ebf2c-22ec-a89b-5c39-a9da6fb03cbb": true
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -31183,8 +31224,8 @@ Use `function` to apply a function to each element in the array. To access the e
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
       0,
       0.004363309284746571,
@@ -31192,7 +31233,7 @@ Use `function` to apply a function to each element in the array. To access the e
       0.013089595571344441,
       0.01745240643728351
     ],
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -31256,22 +31297,22 @@ This example sums the total value of a shopping cart, where the cart contains it
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 49.74,
-    "headers": null
+    "value": 34.68,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 75.4,
-    "headers": null
+    "value": 65.61,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 57.720000000000006,
-    "headers": null
+    "value": 61.13,
+    "key": null
   }
 ]
 ```
@@ -31434,10 +31475,10 @@ Use `expr` to supply a math expression. Use any of the available functions liste
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 0.8367998706650697,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -31477,22 +31518,22 @@ Reference variables by their name. In this example the values `a` and `b` from t
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 3.883723974100149,
-    "headers": null
+    "value": 4.266736842453259,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 2.32912780040815,
-    "headers": null
+    "value": 2.7296706249513782,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 4.211602003257851,
-    "headers": null
+    "value": 2.7514821035501904,
+    "key": null
   }
 ]
 ```
@@ -31531,22 +31572,22 @@ By default, `math` will return floating point numbers. You can trim them down, e
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 111,
-    "headers": null
+    "value": 85,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 132,
-    "headers": null
+    "value": 104,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 114,
-    "headers": null
+    "value": 86,
+    "key": null
   }
 ]
 ```
@@ -31588,22 +31629,22 @@ Use `names` to make a map of identifiers to expressions. These identifiers can b
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 4.104220511994283,
-    "headers": null
+    "value": 11.386955927812174,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 5.743760358951896,
-    "headers": null
+    "value": 2.292378064519008,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 7.258661042783287,
-    "headers": null
+    "value": 4.044257835900568,
+    "key": null
   }
 ]
 ```
@@ -31662,10 +31703,10 @@ Generates the maximum value of `args`. You can also use this function through an
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 50,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -31754,34 +31795,34 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "firstName": "Marshall",
-      "lastName": "Hintz",
+      "firstName": "Lulu",
+      "lastName": "Blanda",
       "score": 0
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "firstName": "Devon",
-      "lastName": "Hegmann",
-      "score": 4
+      "firstName": "Shawana",
+      "lastName": "McCullough",
+      "score": 8
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "firstName": "Marlena",
-      "lastName": "D'Amore",
-      "score": 7
+      "firstName": "Vince",
+      "lastName": "Witting",
+      "score": 0
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -31843,10 +31884,10 @@ Generates the minimum value of `args`. You can also use this function through an
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 0,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -31917,10 +31958,10 @@ Generates the multiplication of `args`. You can also use this function through a
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 464389,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -31991,22 +32032,22 @@ By default, this function generates floating point numbers.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": 89.42668130503591,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 116.93477963906088,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": 71.46189032259504,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": 80.22128917950285,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": 121.87786203576226,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -32031,22 +32072,22 @@ Use the `decimals` function modifier to generate integers.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": 492,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 512,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": 478,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": 485,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": 516,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -32137,10 +32178,10 @@ Generates the current wallclock time in milliseconds.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 1714076927262,
-    "headers": null
+    "value": 1714076927263,
+    "key": null
   }
 ]
 ```
@@ -32189,22 +32230,22 @@ Randomly selects a choice with equal probability.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "a",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "b",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
     "value": "c",
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "a",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "a",
+    "key": null
   }
 ]
 ```
@@ -32242,22 +32283,22 @@ Each choice can be another generator.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Miss Marshall Von",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
     "value": true,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": false,
-    "headers": null
+    "value": "Ms. Nicky Strosin",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": true,
+    "key": null
   }
 ]
 ```
@@ -32330,10 +32371,10 @@ Use literal numbers to perform a static calculation.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 25,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -32365,22 +32406,22 @@ Optionally, use function calls that return numbers to perform dynamic calculatio
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 30.287600717225985,
-    "headers": null
+    "value": 713.6434857892314,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 453.3960308931327,
-    "headers": null
+    "value": 29.144180414284904,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": 10171.11625068985,
-    "headers": null
+    "value": 773.612163321922,
+    "key": null
   }
 ]
 ```
@@ -32486,22 +32527,22 @@ You may also want to set a default value if your data is heterogeneously structu
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": null,
-    "headers": null
+    "value": 1.9199461252484138,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": null,
-    "headers": null
+    "value": 1.9199461252484138,
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": null,
-    "headers": null
+    "value": 1.9199461252484138,
+    "key": null
   }
 ]
 ```
@@ -32533,10 +32574,10 @@ In this example, the fallback value (`42`) is wrapped in a map with `value` beca
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 42,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -32623,40 +32664,40 @@ At minimum, specify an array of `traits` to generate for the profile. Choices ar
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "email": "aliawarren@overturecorp.com",
-      "website": "www.overturecorp.com",
-      "company": "Overture Technologies",
-      "lastName": "Warren",
-      "firstName": "Alia"
+      "email": "rebeccatulloch@geoscape.com",
+      "website": "www.geoscape.com",
+      "company": "Geoscape",
+      "lastName": "Tulloch",
+      "firstName": "Rebecca"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "email": "s.deleon@scaleunlimited.com",
-      "website": "www.scaleunlimited.com",
-      "company": "Scale Unlimited",
-      "lastName": "Deleon",
-      "firstName": "Sandra"
+      "email": "larrykenny@marketsense.com",
+      "website": "www.marketsense.com",
+      "company": "MarketSense",
+      "lastName": "Kenny",
+      "firstName": "Larry"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "email": "klansberry@childcaredesk.com",
-      "website": "childcaredesk.com",
-      "company": "Child Care Desk",
-      "lastName": "Lansberry",
-      "firstName": "Katelyn"
+      "email": "stefanny.ponce@spikescavell.com",
+      "website": "www.spikescavell.com",
+      "company": "Spikes Cavell Analytic Inc",
+      "lastName": "Ponce",
+      "firstName": "Stefanny"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -32693,34 +32734,34 @@ By default, emails will be randomly formatted with a variety of strategies for t
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "email": "awarren@overturecorp.com",
-      "lastName": "Warren",
-      "firstName": "Alia"
+      "email": "rtulloch@geoscape.com",
+      "lastName": "Tulloch",
+      "firstName": "Rebecca"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "email": "mmcmillan@rezolvegroup.com",
-      "lastName": "Mcmillan",
-      "firstName": "Maisha"
+      "email": "rquinto@Zonerapp.com",
+      "lastName": "Quinto",
+      "firstName": "Rodolfo"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "email": "lchetram@panjiva.com",
-      "lastName": "Chetram",
-      "firstName": "Lakeisha"
+      "email": "egordon@foodtechconnect.com",
+      "lastName": "Gordon",
+      "firstName": "Ethel"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -32756,34 +32797,34 @@ If you want to dynamically choose between email formats, you can specify a funct
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": {
+      "email": "jones@analytica.net",
+      "lastName": "Jones",
+      "firstName": "Ravis"
+    },
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": {
       "email": "perez@accuweather.com",
       "lastName": "Perez",
       "firstName": "Cristina"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "email": "linda@capitalcube.com",
       "lastName": "Hucks",
       "firstName": "Linda"
     },
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": {
-      "email": "candell@energypoints.com",
-      "lastName": "Candell",
-      "firstName": "Jorge"
-    },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -32895,31 +32936,32 @@ Additionally, you can set local variables who scope is only visible inside of `t
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
-      "reiciendis_perspiciatis/quidem.pptx"
+      "quasi_natus/cum.webm"
     ],
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
-      "dolor_adipisci/eum.txt",
-      "vel_voluptatibus/recusandae.odt",
-      "dolorum_asperiores/ab.csv",
-      "velit_minima/minima.html"
+      "voluptate_eligendi/beatae.doc",
+      "asperiores_neque/officiis.key",
+      "officia_repellat/minima.xls",
+      "laboriosam_ipsa/cum.ods",
+      "quae_fugiat/commodi.txt"
     ],
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
-      "animi_nostrum/esse.docx"
+      "molestiae_fuga/placeat.js"
     ],
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -32965,61 +33007,61 @@ Set `iterateVars` to an array of variable names to re-evaluate them on each iter
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
       {
-        "a": 58.361035004483384,
-        "b": 58.361035004483384
+        "a": 58.46738981953044,
+        "b": 58.46738981953044
       },
       {
-        "a": 38.34382327865736,
-        "b": 38.34382327865736
+        "a": 35.73094516129752,
+        "b": 35.73094516129752
       },
       {
-        "a": 56.61900083698767,
-        "b": 56.61900083698767
+        "a": 40.11064458975142,
+        "b": 40.11064458975142
       }
     ],
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
       {
-        "a": 59.49059400479776,
-        "b": 59.49059400479776
+        "a": 60.93893101788113,
+        "b": 60.93893101788113
       },
       {
-        "a": 63.53302785902568,
-        "b": 63.53302785902568
+        "a": 50.46324054499952,
+        "b": 50.46324054499952
       },
       {
-        "a": 59.5113071386274,
-        "b": 59.5113071386274
+        "a": 39.14192828994,
+        "b": 39.14192828994
       }
     ],
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
       {
-        "a": 50.828847762597604,
-        "b": 50.828847762597604
+        "a": 40.260551279985705,
+        "b": 40.260551279985705
       },
       {
-        "a": 58.69357084228321,
-        "b": 58.69357084228321
+        "a": 44.35940089737974,
+        "b": 44.35940089737974
       },
       {
-        "a": 43.42102016855419,
-        "b": 43.42102016855419
+        "a": 48.14665260695822,
+        "b": 48.14665260695822
       }
     ],
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33054,34 +33096,34 @@ Set `localVars` to a map of names and values, just like top-level generator `var
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
-      14.57096414497,
-      15.130275639992854,
-      17.17970044868987
+      17.35667032625898,
+      17.35667032625898,
+      17.35667032625898
     ],
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
-      19.07332630347911,
-      24.180517502241692,
-      14.17191163932868
+      24.23369490976522,
+      24.23369490976522,
+      24.23369490976522
     ],
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": [
-      23.309500418493833,
-      21.896002875754885,
-      24.74529700239888
+      12.86547258064876,
+      12.86547258064876,
+      12.86547258064876
     ],
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33164,22 +33206,22 @@ By default, the first value starts from `0` and advances by `1`.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 0,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 1,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 2,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33202,22 +33244,22 @@ Use `startingFrom` to set the initial value.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 42,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 43,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 44,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33241,22 +33283,22 @@ Use `advanceBy` to set the step value.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 100,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 110,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 120,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33281,22 +33323,22 @@ Use `loopAfter` to reset the sequence to its initial value after exceeding the s
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 42,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 45,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 48,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33388,22 +33430,22 @@ May optionally supply `startingFrom`, which defaults to `0`.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "sensor-1",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "sensor-2",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "sensor-3",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33475,10 +33517,10 @@ Generates the trigonometric sine of `degrees`. You can also use this function th
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 1,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33554,30 +33596,30 @@ Selects one or more keys from an object at random. Most useful combined with `pr
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "lastName": "Hermann"
+      "lastName": "Jerde",
+      "firstName": "Dexter"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "lastName": "Turner",
-      "firstName": "Graig"
+      "lastName": "O'Connell",
+      "firstName": "Cyndy"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "lastName": "Rolfson",
-      "firstName": "Tiffani"
+      "firstName": "Elke"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33650,22 +33692,22 @@ Use a state machine like any other function. ShadowTraffic keeps track of the cu
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 1,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 2,
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 3,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33741,28 +33783,28 @@ An optional top-level state machine may be defined for the generator. When prese
 ```json
 [
   {
+    "headers": null,
     "topic": "customers",
-    "key": 7.832886951900856,
     "value": {
       "action": "start"
     },
-    "headers": null
+    "key": 2.6744435984288244
   },
   {
+    "headers": null,
     "topic": "customers",
-    "key": 7.157174383892159,
     "value": {
       "action": "running"
     },
-    "headers": null
+    "key": 1.6484482678210184
   },
   {
+    "headers": null,
     "topic": "customers",
-    "key": 9.377745723858329,
     "value": {
       "action": "stopped"
     },
-    "headers": null
+    "key": 2.2621743335782165
   }
 ]
 ```
@@ -33815,34 +33857,34 @@ Top-level state machines can force their previously generated events into their 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "a": 1,
       "b": 2
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "a": 1,
       "b": 2,
       "c": 3
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
+      "d": 4,
       "a": 1,
       "b": 2,
-      "c": 3,
-      "d": 4
+      "c": 3
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33887,28 +33929,28 @@ When specified in this form, you don't need to specify an `initial` state since 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "a": 2
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "b": 3
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "b": 3
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -33955,28 +33997,28 @@ Optionally use `state` and `times` in an array of transitions to repeat states.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "a": 2
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "b": 3
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "b": 3
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -34046,33 +34088,23 @@ In this example, state `s1` runs once, and then either `s2` or `s3` are visited 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "x": 1
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "x": 2
+      "x": 3
     },
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": {
-      "x": 2
-    },
-    "headers": null
+    "key": null
   }
 ]
 ```
-
-*... (1 more examples)*
 
 ### Terminating state machines
 
@@ -34121,20 +34153,20 @@ Transition to the value `null` to terminate a state machine, and thus the genera
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "x": 1
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "x": 2
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -34456,28 +34488,28 @@ When all of this is put together, you'll see output that makes sense across all 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "x": 1
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "x": 2
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "x": 3
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -35860,22 +35892,22 @@ Use any of the valid Datafaker expressions in `#{}`.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Mr. Nanci Stokes",
-    "headers": null
+    "value": "Dwain Will",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Lucius Bechtelar",
-    "headers": null
+    "value": "Wanda Cremin",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Mrs. Benito Turner",
-    "headers": null
+    "value": "Clarence Bode",
+    "key": null
   }
 ]
 ```
@@ -35922,22 +35954,22 @@ Local names are given preference over Datafaker expressions.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": "I am 48 years old",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "I am 25 years old",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": "I am 30 years old",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "I am 34 years old",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "I am 38 years old",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -35973,22 +36005,22 @@ Refer to variables defined in `vars` or `varsOnce`. These are given preference o
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "The magic number is 2",
-    "headers": null
+    "value": "The magic number is 9",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "The magic number is 1",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "The magic number is 2",
-    "headers": null
+    "value": "The magic number is 7",
+    "key": null
   }
 ]
 ```
@@ -36011,22 +36043,22 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2022-12-14 08:36:51.822994797",
-    "headers": null
+    "value": "2024-02-27 13:43:01.296719616",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2022-11-26 14:04:32.730806236",
-    "headers": null
+    "value": "2024-04-28 03:16:29.128390541",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "2023-03-31 07:28:35.21634256",
-    "headers": null
+    "value": "2023-07-23 21:44:56.9783915",
+    "key": null
   }
 ]
 ```
@@ -36055,22 +36087,22 @@ Datafaker has a handful of useful functions that require parameters. If you want
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "BMW, X5",
-    "headers": null
+    "value": "Kia, Sportage",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Volkswagen, T-Roc",
-    "headers": null
+    "value": "Volvo, XC60",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Nissan, Pathfiner",
-    "headers": null
+    "value": "Renault, Clio",
+    "key": null
   }
 ]
 ```
@@ -36118,28 +36150,28 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "lower": "miss jim cartwright",
-      "upper": "MR. DEVORA BARTELL",
-      "capitalized": "Jill moen",
-      "shortened": "Dev",
-      "scrubbed": "SantiagoRolfson"
+      "scrubbed": "AlbinaHand",
+      "upper": "MISS JAYMIE BOSCO",
+      "capitalized": "Felix prohaska",
+      "shortened": "Lin",
+      "lower": "freddie mueller"
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "lower": "amos watsica ii",
-      "upper": "DINORAH BOTSFORD",
-      "capitalized": "Billy cummings dds",
-      "shortened": "Sac",
-      "scrubbed": "RenatoWilliamson"
+      "scrubbed": "IsidraHeathcote",
+      "upper": "JAMAAL BOSCO",
+      "capitalized": "Mr. daphine kuvalis",
+      "shortened": "Wil",
+      "lower": "ms. samual blick"
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -36164,22 +36196,22 @@ Change the locale (default United States/English) by setting `locale`: first par
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Leicestershire",
-    "headers": null
+    "value": "Cleveland",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "Essex",
-    "headers": null
+    "value": "Lincolnshire",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "County Londonderry",
-    "headers": null
+    "value": "County Tyrone",
+    "key": null
   }
 ]
 ```
@@ -36262,10 +36294,10 @@ Generates the substraction of `args`. You can also use this function through an 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 2,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -36333,10 +36365,10 @@ Generates the trigonometric tangent of `degrees`. You can also use this function
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": 0.9999999999999999,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -36492,10 +36524,10 @@ Use `bound`s and `result`s to create the bucket allocations.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "M",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -36633,22 +36665,22 @@ This function takes no parameters.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "01HWBF4H8YWGY0GKTBQCNZ30WX",
-    "headers": null
+    "value": "01HWBF4H8Z6PEM3EQQHBZ0VRDV",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "01HWBF4H8ZDP2JSDDYD9GTN6GC",
-    "headers": null
+    "value": "01HWBF4H905304A3747G44YJXV",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "01HWBF4H90QNKM7SYWJY2Q76CE",
-    "headers": null
+    "value": "01HWBF4H91GEEYWHKDGMPBBFKA",
+    "key": null
   }
 ]
 ```
@@ -36697,22 +36729,22 @@ By default, this function generates floating point numbers.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": 1.7151222240089097,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 9.052327302539943,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": 1.0122730367194843,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": 7.370725796419692,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": 2.5526220285624417,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -36739,22 +36771,22 @@ Use the `decimals` function modifier to generate integers.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": 53,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 94,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": 50,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": 85,
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": 58,
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -36833,22 +36865,22 @@ By default, this function will generate version 4 UUIDs.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
+    "value": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": "aa616abe-1761-0c9a-e743-67bd738597dc",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "5e688e99-61b3-5c88-4697-6cf7b0bfbe20",
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -36871,22 +36903,22 @@ It can also generate time-based (v7) UUIDs.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "018f16f2-451e-743c-884f-4bbb2bf1839d",
-    "headers": null
+    "value": "018f16f2-451f-759d-81ba-f78afe0de1bb",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "018f16f2-451f-7d85-acb5-be6a61aa9a0c",
-    "headers": null
+    "value": "018f16f2-4520-78c0-850c-e43c084f4bbb",
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "018f16f2-4520-7d67-83e7-dc978573998e",
-    "headers": null
+    "value": "018f16f2-4521-739d-ae46-6d852cb5be6a",
+    "key": null
   }
 ]
 ```
@@ -36976,31 +37008,31 @@ Use `vars` to generate a fresh value for each iteration. Use `varsOnce` to gener
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "val1": 3.7365219483965153,
-      "val2": 1.2570626786091843
+      "val2": 1.3178320995595154,
+      "val1": 1.0054546829864375
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "val1": 4.723442543937035,
-      "val2": 1.2570626786091843
+      "val2": 1.3178320995595154,
+      "val1": 3.831433687297641
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
-      "val1": 2.108000570366219,
-      "val2": 1.2570626786091843
+      "val2": 1.3178320995595154,
+      "val1": 1.6900542349166408
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -37071,43 +37103,43 @@ Use a compound structure, like a map, to generate multiple values assigned to on
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "userProfile": {
-        "theNumber": 14,
         "tags": {
           "isActive": false
-        }
+        },
+        "theNumber": 1
       }
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "userProfile": {
-        "theNumber": 46,
         "tags": {
           "isActive": false
-        }
+        },
+        "theNumber": 41
       }
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "userProfile": {
-        "theNumber": 9,
         "tags": {
           "isActive": false
-        }
+        },
+        "theNumber": 10
       }
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -37256,31 +37288,31 @@ It's a good idea to place calls to `waypoints` in a `var` so you can pick apart 
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "latitude": 19.784437,
       "longitude": -94.723348
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "latitude": 19.785193361403508,
       "longitude": -94.71379239298246
     },
-    "headers": null
+    "key": null
   },
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
     "value": {
       "latitude": 19.78594972280702,
       "longitude": -94.70423678596491
     },
-    "headers": null
+    "key": null
   }
 ]
 ```
@@ -37454,22 +37486,22 @@ Randomly selects a choice using the supplied probabilities.
 ```json
 [
   {
+    "headers": null,
     "topic": "sandbox",
-    "key": null,
-    "value": "hello",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
-    "value": "hello",
-    "headers": null
-  },
-  {
-    "topic": "sandbox",
-    "key": null,
     "value": "world",
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "world",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "hello",
+    "key": null
   }
 ]
 ```
@@ -39274,7 +39306,20 @@ Supply the statement as a `localConfig`. Accepts arbitrary SQL, and you can supp
 ```json
 [
   {
-    "table": "customers",
+    "op": null,
+    "where": null,
+    "row": {
+      "email": "larrykenny@marketsense.com",
+      "website": "www.marketsense.com",
+      "company": "MarketSense",
+      "lastName": "Kenny",
+      "firstName": "Larry"
+    },
+    "table": "customers"
+  },
+  {
+    "op": null,
+    "where": null,
     "row": {
       "email": "stefanny.ponce@spikescavell.com",
       "website": "www.spikescavell.com",
@@ -39282,11 +39327,11 @@ Supply the statement as a `localConfig`. Accepts arbitrary SQL, and you can supp
       "lastName": "Ponce",
       "firstName": "Stefanny"
     },
-    "op": null,
-    "where": null
+    "table": "customers"
   },
   {
-    "table": "customers",
+    "op": null,
+    "where": null,
     "row": {
       "email": "kevin@otcmarkets.com",
       "website": "www.otcmarkets.com",
@@ -39294,20 +39339,7 @@ Supply the statement as a `localConfig`. Accepts arbitrary SQL, and you can supp
       "lastName": "Morelli",
       "firstName": "Kevin"
     },
-    "op": null,
-    "where": null
-  },
-  {
-    "table": "customers",
-    "row": {
-      "email": "carolyn@lumesis.com",
-      "website": "www.lumesis.com",
-      "company": "Lumesis, Inc.",
-      "lastName": "Collins",
-      "firstName": "Carolyn"
-    },
-    "op": null,
-    "where": null
+    "table": "customers"
   }
 ]
 ```
@@ -39965,22 +39997,22 @@ When the last stage of a schedule finishes, `loop` resets the schedule and begin
 ```json
 [
   {
+    "headers": null,
     "topic": "generatorA",
-    "key": null,
-    "value": 1,
-    "headers": null
-  },
-  {
-    "topic": "generatorA",
-    "key": null,
-    "value": 2,
-    "headers": null
-  },
-  {
-    "topic": "generatorA",
-    "key": null,
     "value": 3,
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 1,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 1,
+    "key": null
   }
 ]
 ```
@@ -40085,22 +40117,22 @@ Then, under the `stages` key of `schedule`, name the generators to run. Notice i
 ```json
 [
   {
+    "headers": null,
     "topic": "generatorA",
-    "key": null,
-    "value": 1,
-    "headers": null
-  },
-  {
-    "topic": "generatorA",
-    "key": null,
-    "value": 2,
-    "headers": null
-  },
-  {
-    "topic": "generatorA",
-    "key": null,
     "value": 3,
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 1,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 1,
+    "key": null
   }
 ]
 ```
@@ -40184,22 +40216,22 @@ In this example, generator `a` is overriden to produce only `5` events, and `b` 
 ```json
 [
   {
+    "headers": null,
     "topic": "generatorA",
-    "key": null,
-    "value": 1,
-    "headers": null
-  },
-  {
-    "topic": "generatorA",
-    "key": null,
-    "value": 2,
-    "headers": null
-  },
-  {
-    "topic": "generatorA",
-    "key": null,
     "value": 3,
-    "headers": null
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 1,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 1,
+    "key": null
   }
 ]
 ```
