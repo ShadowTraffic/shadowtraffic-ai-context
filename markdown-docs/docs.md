@@ -29119,7 +29119,7 @@ When you load JSON files, you should see messages like the following on the cons
 
 ```
 ✝ ***
-✝ Replacing JSON file /path/to/file.json at path [ "generators", 0, "value", "choices" ]
+✝ Replacing JSON file /path/to/file.json at path [ "generators", 0, "value" ]
 ✝ ***
 ```
 
