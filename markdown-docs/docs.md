@@ -3961,6 +3961,17 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.1.0
+
+Mon Aug 10 13:50:49 PDT 2026
+
+### Changes
+
+- ✅ **Added**: Adds new [`loadPropertiesFile`](/functions/loadPropertiesFile) preprocessing function.
+- ⚡ **Improved**: Adds new CLI arg `--dry-run` as an alias for `--stdout`.
+
+---
+
 ###  2.0.3
 
 Thu Jul 23 14:52:29 PDT 2026
@@ -8356,6 +8367,7 @@ shadowtraffic:
   -c, --config <file>                            Path to configuration file.
       --config-base64 <text>                     Instead of a file, use this Base64 encoded configuration data.
       --config-format <format>             json  Format of the config file: must be one of (json, yaml). Default is json.
+      --dry-run                                  Alias for --stdout.
   -h, --help                                     Display this information.
       --lease-expiration <expiration>            The date this lease will expire.
       --lease-name <team-name>                   The team name to issue the lease to.
@@ -9401,7 +9413,7 @@ You could include the connection block in your main configuration like so:
 }
 ```
 
-ShadowTraffic will expand the contents on `connections.json` and inline them into the spot where you called [`loadJsonFile`](/functions/loadJsonFile), and then proceed with normal validation.
+ShadowTraffic will expand the contents on `connections.json` and inline them into the spot where you called [`loadJsonFile`](/functions/loadJsonFile), and then proceed with normal validation. (You could also use its sibling, [`loadPropertiesFile`](/functions/loadPropertiesFile), where appropriate.)
 
 Another thing you might want to do is inject variables from your environment. You can use the [`env`](/functions/env/) function to do that, perhaps to parameterize your bootstrap server URL:
 
@@ -13924,7 +13936,7 @@ In addition, when you permit ShadowTraffic to automatically create topics, you m
 
 ### Connecting to Aiven
 
-To connect to Aiven, you need to download the CA certicate for your cluster and generate keystore/truststore files. Aiven has [a good article](https://aiven.io/docs/products/kafka/howto/keystore-truststore) explaining how to do this with their access key, access certificate, and CA certificates. When you're done, be sure to mount your keystore/truststore files into your container to ShadowTraffic can access them, like so:
+To connect to Aiven, you need to download the CA certificate for your cluster and generate keystore/truststore files. Aiven has [a good article](https://aiven.io/docs/products/kafka/howto/keystore-truststore) explaining how to do this with their access key, access certificate, and CA certificates. When you're done, be sure to mount your keystore/truststore files into your container to ShadowTraffic can access them, like so:
 
 ```
 docker run ... -v $(pwd)/ssl:/home/ssl
@@ -13932,7 +13944,7 @@ docker run ... -v $(pwd)/ssl:/home/ssl
 
 Where `ssl` is a local directory containing your authentication files.
 
-To authenticate with a client certicate, use these connection settings:
+To authenticate with a client certificate, use these connection settings:
 
 **Input:**
 ```json
@@ -14348,6 +14360,31 @@ Notice that `"value.subject.name.strategy"` is set to `"io.confluent.kafka.seria
         "key.serializer": "io.confluent.kafka.serializers.KafkaAvroSerializer",
         "value.serializer": "io.confluent.kafka.serializers.KafkaAvroSerializer",
         "value.subject.name.strategy": "io.confluent.kafka.serializers.subject.RecordNameStrategy"
+      }
+    }
+  }
+}
+```
+
+### Directly loading properties
+
+Many Kafka vendors supply connection information through Properties files. For example, Confluent's CLI conveniently emits one with `confluent kafka client-config create java`. MSK, Aiven, Redpanda, and others tend to work with a similar premise that you have a Properties file.
+
+Instead of rewriting your connection details into your ShadowTraffic configuration, you can use [`loadPropertiesFile`](/functions/loadPropertiesFile) to pass them in directly:
+
+**Input:**
+```json
+{
+  "connections": {
+    "confluent": {
+      "kind": "kafka",
+      "producerConfigs": {
+        "_gen": "loadPropertiesFile",
+        "file": "/path/to/props.properties",
+        "overrides": {
+          "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+          "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+        }
       }
     }
   }
@@ -23960,8 +23997,8 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": "Lashaunda Klein",
-      "b": "Cortez Buckridge"
+      "a": "Rhett Yundt",
+      "b": "Vaughn Mertz"
     },
     "key": null
   },
@@ -23969,7 +24006,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Miss Jo Hand"
+      "b": "Hyon Ledner"
     },
     "key": null
   },
@@ -23977,7 +24014,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Colin Kozey IV"
+      "b": "Perry Jerde"
     },
     "key": null
   }
@@ -29265,6 +29302,230 @@ Before `loadJsonFile` runs, all other preprocessors run. In this example, the en
 ```
 
 
+# functions/loadPropertiesFile.md
+
+## Commentary
+
+[Badges]
+
+Special pre-processor function that loads [Java properties files](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html). This is most useful for connecting to Java-based backends. Kafka is a good example of this, where your broker credentials probably already live in a `client.properties` file that the rest of your tooling reads.
+
+This function can be used in one of two ways. First, you can use the `file` parameter to load a single file in place. [Example 1](#loading-a-file) Second, you can use the `files` parameter to load a group of files and merge them together, with later files taking priority. [Example 2](#merging-files)
+
+In either case, the paths listed must be fully-qualified to files *inside* the ShadowTraffic Docker container. Be sure to volume mount these files in addition to your base configuration.
+
+In some cases, you may need to add extra fields that aren't present in your properties file. Here again, Kafka is a good example. A typical `client.properties` doesn't contain required `key.serializer` and `value.serializer` fields. To add more fields, use the optional `overrides` key. Its contents are merged into whatever the file contained, so it both adds missing keys and takes precedence on any key the file already set.
+
+You can also supply a `data` parameter to do simple primitive substitutions according to [the Mustache spec](https://mustache.github.io/mustache.5.html). This is provided as a convenience. If you need something more sophisticated, use something like Jinja directly.
+
+Note that pre-processing functions, like this one, don't evaluate function modifiers because they execute only once before runtime. So keys like [`elide`](/function-modifiers/elide) and [`null`](/function-modifiers/null) are ignored.
+
+---
+
+## Caveats
+
+### Untyped values
+
+Remember that in Properties files, every value is loaded as a string—exactly as Java would read it, including values that look like numbers or booleans. So a file containing:
+
+```
+linger.ms=100
+enable.idempotence=true
+```
+
+loads as:
+
+```js
+{
+    "linger.ms": "100",
+    "enable.idempotence": "true"
+}
+```
+
+This is mostly what Java-based backends expect. So while it is worth knowing, it's rarely a problem.
+
+### Container paths
+
+If your properties file points at other files on disk (Java keystore and truststore, for example) those paths are passed through untouched. They must resolve *inside* the container, which means volume mounting the keystores as well and writing container paths in the properties file itself.
+
+```
+ssl.keystore.location=/etc/shadowtraffic/client.keystore.p12
+ssl.truststore.location=/etc/shadowtraffic/client.truststore.jks
+```
+
+### Static data
+
+Note that the contents of `data` must either be static data or further preprocessor functions. Runtime functions won't be applied before `data` is passed into the loaded file, for the same reason described in [`loadJsonFile`](/functions/loadJsonFile#static-data).
+
+---
+
+## Examples
+
+### Loading a file
+
+If `client.properties` contained:
+
+```
+bootstrap.servers=pkc-abc.us-west4.gcp.confluent.cloud:9092
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='KEY' password='SECRET';
+```
+
+Specify the `file` with a fully qualified path, and use `overrides` to add the serializers, which this properties file doesn't contain:
+
+**Input:**
+```json
+{
+  "kind": "kafka",
+  "producerConfigs": {
+    "_gen": "loadPropertiesFile",
+    "file": "/path/to/client.properties",
+    "overrides": {
+      "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+      "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+    }
+  }
+}
+```
+
+The resulting connection would be equivalent to writing all of those keys inline, plus the two serializers from `overrides`.
+
+When you load properties files, you should see messages like the following on the console:
+
+```
+✝ ***
+✝ Replacing properties file /path/to/client.properties at path [ "connections", "kafka", "producerConfigs" ]
+✝ ***
+```
+
+### Merging files
+
+Use `files` to merge multiple files together, with later files taking priority over earlier ones. This is useful for keeping shared connection settings in one file and per-environment settings in another.
+
+For example, if `base.properties` contained:
+
+```
+bootstrap.servers=localhost:9092
+acks=1
+```
+
+And `prod.properties` contained:
+
+```
+acks=all
+linger.ms=100
+```
+
+And you used the following load call:
+
+**Input:**
+```json
+{
+  "kind": "kafka",
+  "producerConfigs": {
+    "_gen": "loadPropertiesFile",
+    "files": [
+      "/path/to/base.properties",
+      "/path/to/prod.properties"
+    ],
+    "overrides": {
+      "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+      "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+    }
+  }
+}
+```
+
+The result would be:
+
+```js
+{
+    "bootstrap.servers": "localhost:9092",
+    "acks": "all",
+    "linger.ms": "100",
+    "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+    "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+}
+```
+
+When you merge properties files, you should see messages like the following on the console:
+
+```
+✝ ***
+✝ Merging properties files [/path/to/base.properties, /path/to/prod.properties] at path [ "connections", "kafka", "producerConfigs" ]
+✝ ***
+```
+
+### Substitute fields
+
+Use `data` to substitute primitives into the target file where names are denoted with `{{ name }}` expressions. Because all other preprocessors run first, you can feed an environment variable in as data.
+
+Here, `client.properties` contains `{{ env }}`, which is replaced by the value of the `DEPLOY_ENV` environment variable before the file is parsed.
+
+**Input:**
+```json
+{
+  "kind": "kafka",
+  "producerConfigs": {
+    "_gen": "loadPropertiesFile",
+    "file": "/path/to/client.properties",
+    "data": {
+      "env": {
+        "_gen": "env",
+        "var": "DEPLOY_ENV"
+      }
+    },
+    "overrides": {
+      "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+      "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+    }
+  }
+}
+```
+
+---
+
+## Specification
+
+### JSON schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "file": {
+      "type": "string"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "data": {
+      "type": "object"
+    },
+    "overrides": {
+      "type": "object"
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "files"
+      ]
+    }
+  ]
+}
+```
+
+
 # functions/lookup.md
 
 ## Commentary
@@ -29335,13 +29596,13 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Willard"
+      "id": "Barton"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Willard",
+    "value": "Barton",
     "key": null
   },
   {
@@ -29349,7 +29610,7 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Jarrett"
+      "id": "Ngan"
     }
   }
 ]
@@ -29410,7 +29671,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Leigh"
+      "id": "Armandina"
     },
     "table": "a"
   },
@@ -29418,7 +29679,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Leigh"
+      "id": "Armandina"
     },
     "table": "b"
   },
@@ -29426,7 +29687,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Catalina"
+      "id": "Rafael"
     },
     "table": "a"
   }
@@ -29489,19 +29750,19 @@ Sometimes make a new key, sometimes use a previously generated one.
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Claudio Schuppe"
+    "key": "Donovan Bruen"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Rosie Langosh"
+    "key": "Darline Smitham"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Claudio Schuppe"
+    "key": "Donovan Bruen"
   }
 ]
 ```
@@ -29570,21 +29831,21 @@ Explicitly supply the connection name when there are multiple connections.
     "op": null,
     "where": null,
     "row": {
-      "email": "angel.hand@gmail.com"
+      "email": "hubert.kling@hotmail.com"
     },
     "table": "a"
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "angel.hand@gmail.com",
+    "value": "hubert.kling@hotmail.com",
     "key": null
   },
   {
     "op": null,
     "where": null,
     "row": {
-      "email": "jessenia.nienow@hotmail.com"
+      "email": "dacia.kovacek@gmail.com"
     },
     "table": "a"
   }
@@ -29770,13 +30031,13 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Claretta Hauck"
+      "id": "Pattie Olson"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Claretta Hauck",
+    "value": "Pattie Olson",
     "key": null
   },
   {
@@ -29784,7 +30045,7 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Nicholas Mills"
+      "id": "Argelia Homenick"
     }
   }
 ]
@@ -29856,7 +30117,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Zulma Haag",
+      "name": "Lina Boyle",
       "magicNumber": 7
     }
   },
@@ -29864,7 +30125,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "headers": null,
     "topic": "b",
     "value": {
-      "lookedUpName": "Zulma Haag",
+      "lookedUpName": "Lina Boyle",
       "lookedUpNumber": 7
     },
     "key": null
@@ -29874,7 +30135,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Miss Scott Bogan",
+      "name": "Nicole Keeling",
       "magicNumber": 52
     }
   }
@@ -30096,7 +30357,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "topic": "customers",
     "value": {
       "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
-      "status": "platinum"
+      "status": "base"
     },
     "key": null
   },
@@ -30105,7 +30366,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "topic": "customers",
     "value": {
       "id": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
-      "status": "base"
+      "status": "platinum"
     },
     "key": null
   },
@@ -30113,7 +30374,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "headers": null,
     "topic": "supportTickets",
     "value": {
-      "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
+      "id": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
       "status": "platinum"
     },
     "key": null
@@ -31808,8 +32069,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Arlinda",
-      "lastName": "Wilkinson",
+      "firstName": "Myles",
+      "lastName": "Maggio",
       "score": 0
     },
     "key": null
@@ -31818,8 +32079,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Stanton",
-      "lastName": "Runolfsdottir",
+      "firstName": "Kelle",
+      "lastName": "Murphy",
       "score": 8
     },
     "key": null
@@ -31828,8 +32089,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Remona",
-      "lastName": "Graham",
+      "firstName": "Houston",
+      "lastName": "Streich",
       "score": 0
     },
     "key": null
@@ -32301,7 +32562,7 @@ Each choice can be another generator.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Florencio McKenzie",
+    "value": "Leonard Turner",
     "key": null
   },
   {
@@ -32949,7 +33210,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "unde_expedita/nulla.doc"
+      "consequuntur_aliquid/perferendis.pdf"
     ],
     "key": null
   },
@@ -32957,11 +33218,11 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "voluptatum_tempora/alias.pptx",
-      "exercitationem_voluptatem/sunt.odp",
-      "ratione_unde/harum.odt",
-      "officiis_minus/reiciendis.txt",
-      "expedita_odit/qui.webm"
+      "accusantium_rem/alias.pptx",
+      "quibusdam_quibusdam/dolorum.wav",
+      "eligendi_accusamus/excepturi.pages",
+      "dignissimos_officiis/odit.avi",
+      "quasi_aliquam/ut.bmp"
     ],
     "key": null
   },
@@ -32969,7 +33230,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "dignissimos_adipisci/dolore.xls"
+      "ullam_tempora/quae.docx"
     ],
     "key": null
   }
@@ -33609,8 +33870,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Cartwright",
-      "firstName": "Francesca"
+      "lastName": "Swift",
+      "firstName": "Joya"
     },
     "key": null
   },
@@ -33618,8 +33879,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Satterfield",
-      "firstName": "Shameka"
+      "lastName": "Jacobi",
+      "firstName": "Renato"
     },
     "key": null
   },
@@ -33627,7 +33888,7 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Treva"
+      "firstName": "Esther"
     },
     "key": null
   }
@@ -35904,19 +36165,19 @@ Use any of the valid Datafaker expressions in `#{}`.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Stacey Boyle",
+    "value": "Tanna Erdman",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Lezlie Buckridge",
+    "value": "Lisha Langworth",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Judie Koepp DDS",
+    "value": "Amada Zulauf",
     "key": null
   }
 ]
@@ -36055,19 +36316,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-01-10 17:41:06.094906996",
+    "value": "2022-08-30 10:49:45.327100487",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-01-18 06:45:23.686584017",
+    "value": "2023-11-19 20:10:13.637971047",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-06-17 05:35:29.186767242",
+    "value": "2023-12-23 11:28:59.933958365",
     "key": null
   }
 ]
@@ -36099,19 +36360,19 @@ Datafaker has a handful of useful functions that require parameters. If you want
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Peugeot, 308",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": "Lincoln, MKZ",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": "Lancia, Thesis",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "Hyundai, i30",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "Mazda, MX-5",
     "key": null
   }
 ]
@@ -36163,11 +36424,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "AbigailFrami",
-      "upper": "CARROL GOODWIN",
-      "capitalized": "Mr. forest bayer",
-      "shortened": "Ms.",
-      "lower": "dr. bruno baumbach"
+      "scrubbed": "JungDare",
+      "upper": "VALENTIN FADEL",
+      "capitalized": "Sanda brekke iv",
+      "shortened": "Bor",
+      "lower": "dudley bergnaum md"
     },
     "key": null
   },
@@ -36175,11 +36436,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "EdwardoHessel",
-      "upper": "MS. SAMELLA GREENFELDER",
-      "capitalized": "Contessa mayert",
-      "shortened": "Noa",
-      "lower": "siobhan wisozk"
+      "scrubbed": "WeiRaynor",
+      "upper": "MR. SHAUN BOGISICH",
+      "capitalized": "Lesley bogisich",
+      "shortened": "Mr.",
+      "lower": "eladia pagac"
     },
     "key": null
   }
@@ -36208,19 +36469,19 @@ Change the locale (default United States/English) by setting `locale`: first par
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Oxfordshire",
+    "value": "Buckinghamshire",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Lancashire",
+    "value": "Gloucestershire",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Tyne and Wear",
+    "value": "Mid Glamorgan",
     "key": null
   }
 ]
