@@ -3961,6 +3961,19 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.1.1
+
+Fri Aug 14 08:10:00 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [CVE-2026-64607](https://nvd.nist.gov/vuln/detail/CVE-2026-64607).
+- 🐛 **Fixed**: Mitigates [CVE-2026-54399](https://nvd.nist.gov/vuln/detail/CVE-2026-54399).
+- 🐛 **Fixed**: Mitigates [CVE-2026-54428](https://nvd.nist.gov/vuln/detail/CVE-2026-54428).
+- 🐛 **Fixed**: Mitigates [CVE-2026-49844](https://nvd.nist.gov/vuln/detail/CVE-2026-49844).
+
+---
+
 ###  2.1.0
 
 Mon Aug 10 13:50:49 PDT 2026
@@ -23997,8 +24010,8 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": "Rhett Yundt",
-      "b": "Vaughn Mertz"
+      "a": "Buck MacGyver I",
+      "b": "Terrell Stracke"
     },
     "key": null
   },
@@ -24006,7 +24019,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Hyon Ledner"
+      "b": "Dr. Wilmer Kemmer"
     },
     "key": null
   },
@@ -24014,7 +24027,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Perry Jerde"
+      "b": "Isaiah Cormier III"
     },
     "key": null
   }
@@ -29596,13 +29609,13 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Barton"
+      "id": "Marya"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Barton",
+    "value": "Marya",
     "key": null
   },
   {
@@ -29610,7 +29623,7 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Ngan"
+      "id": "Yong"
     }
   }
 ]
@@ -29671,7 +29684,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Armandina"
+      "id": "Sherrell"
     },
     "table": "a"
   },
@@ -29679,7 +29692,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Armandina"
+      "id": "Sherrell"
     },
     "table": "b"
   },
@@ -29687,7 +29700,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Rafael"
+      "id": "Chasidy"
     },
     "table": "a"
   }
@@ -29750,19 +29763,19 @@ Sometimes make a new key, sometimes use a previously generated one.
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Donovan Bruen"
+    "key": "Courtney Hudson"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Darline Smitham"
+    "key": "Adelina Ryan"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Donovan Bruen"
+    "key": "Courtney Hudson"
   }
 ]
 ```
@@ -29831,21 +29844,21 @@ Explicitly supply the connection name when there are multiple connections.
     "op": null,
     "where": null,
     "row": {
-      "email": "hubert.kling@hotmail.com"
+      "email": "stacy.feest@yahoo.com"
     },
     "table": "a"
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "hubert.kling@hotmail.com",
+    "value": "stacy.feest@yahoo.com",
     "key": null
   },
   {
     "op": null,
     "where": null,
     "row": {
-      "email": "dacia.kovacek@gmail.com"
+      "email": "loreta.hettinger@hotmail.com"
     },
     "table": "a"
   }
@@ -30031,13 +30044,13 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Pattie Olson"
+      "id": "Jean Blick"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Pattie Olson",
+    "value": "Jean Blick",
     "key": null
   },
   {
@@ -30045,7 +30058,7 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Argelia Homenick"
+      "id": "Jennell Pagac"
     }
   }
 ]
@@ -30117,7 +30130,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Lina Boyle",
+      "name": "Gemma Daugherty",
       "magicNumber": 7
     }
   },
@@ -30125,7 +30138,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "headers": null,
     "topic": "b",
     "value": {
-      "lookedUpName": "Lina Boyle",
+      "lookedUpName": "Gemma Daugherty",
       "lookedUpNumber": 7
     },
     "key": null
@@ -30135,7 +30148,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Nicole Keeling",
+      "name": "Clyde Fahey MD",
       "magicNumber": 52
     }
   }
@@ -30357,7 +30370,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "topic": "customers",
     "value": {
       "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
-      "status": "base"
+      "status": "platinum"
     },
     "key": null
   },
@@ -30366,7 +30379,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "topic": "customers",
     "value": {
       "id": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
-      "status": "platinum"
+      "status": "base"
     },
     "key": null
   },
@@ -30374,7 +30387,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "headers": null,
     "topic": "supportTickets",
     "value": {
-      "id": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
       "status": "platinum"
     },
     "key": null
@@ -32069,8 +32082,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Myles",
-      "lastName": "Maggio",
+      "firstName": "Alberto",
+      "lastName": "Cronin",
       "score": 0
     },
     "key": null
@@ -32079,8 +32092,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Kelle",
-      "lastName": "Murphy",
+      "firstName": "Theo",
+      "lastName": "Kautzer",
       "score": 8
     },
     "key": null
@@ -32089,8 +32102,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Houston",
-      "lastName": "Streich",
+      "firstName": "Richie",
+      "lastName": "Turcotte",
       "score": 0
     },
     "key": null
@@ -32562,7 +32575,7 @@ Each choice can be another generator.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Leonard Turner",
+    "value": "Tifany Emmerich",
     "key": null
   },
   {
@@ -33210,7 +33223,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "consequuntur_aliquid/perferendis.pdf"
+      "quos_fuga/perspiciatis.webm"
     ],
     "key": null
   },
@@ -33218,11 +33231,11 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "accusantium_rem/alias.pptx",
-      "quibusdam_quibusdam/dolorum.wav",
-      "eligendi_accusamus/excepturi.pages",
-      "dignissimos_officiis/odit.avi",
-      "quasi_aliquam/ut.bmp"
+      "harum_libero/hic.docx",
+      "dignissimos_dignissimos/nihil.doc",
+      "deleniti_officiis/corrupti.doc",
+      "debitis_ab/quibusdam.ppt",
+      "occaecati_quidem/beatae.webm"
     ],
     "key": null
   },
@@ -33230,7 +33243,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "ullam_tempora/quae.docx"
+      "molestiae_blanditiis/ea.pages"
     ],
     "key": null
   }
@@ -33870,8 +33883,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Swift",
-      "firstName": "Joya"
+      "lastName": "Barrows",
+      "firstName": "Jonnie"
     },
     "key": null
   },
@@ -33879,8 +33892,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Jacobi",
-      "firstName": "Renato"
+      "lastName": "Gaylord",
+      "firstName": "Tristan"
     },
     "key": null
   },
@@ -33888,7 +33901,7 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Esther"
+      "firstName": "Darcel"
     },
     "key": null
   }
@@ -36165,19 +36178,19 @@ Use any of the valid Datafaker expressions in `#{}`.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Tanna Erdman",
+    "value": "Sung Mayer",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Lisha Langworth",
+    "value": "Dr. Stuart Wintheiser",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Amada Zulauf",
+    "value": "Zachariah Barrows",
     "key": null
   }
 ]
@@ -36316,19 +36329,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2022-08-30 10:49:45.327100487",
+    "value": "2023-06-14 07:39:47.997888951",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-11-19 20:10:13.637971047",
+    "value": "2022-10-22 06:35:43.181652263",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-12-23 11:28:59.933958365",
+    "value": "2023-08-13 01:44:53.347995136",
     "key": null
   }
 ]
@@ -36360,19 +36373,19 @@ Datafaker has a handful of useful functions that require parameters. If you want
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Lancia, Thesis",
+    "value": "Buick, LaCrosse",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Hyundai, i30",
+    "value": "Audi, S5",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Mazda, MX-5",
+    "value": "Toyota, Corolla",
     "key": null
   }
 ]
@@ -36424,11 +36437,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "JungDare",
-      "upper": "VALENTIN FADEL",
-      "capitalized": "Sanda brekke iv",
-      "shortened": "Bor",
-      "lower": "dudley bergnaum md"
+      "scrubbed": "MerleCummerata",
+      "upper": "LORENZA SMITH",
+      "capitalized": "Miss raphael johnson",
+      "shortened": "Mis",
+      "lower": "dahlia crist"
     },
     "key": null
   },
@@ -36436,11 +36449,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "WeiRaynor",
-      "upper": "MR. SHAUN BOGISICH",
-      "capitalized": "Lesley bogisich",
-      "shortened": "Mr.",
-      "lower": "eladia pagac"
+      "scrubbed": "GuyZemlak",
+      "upper": "ELEANORE SCHMELER V",
+      "capitalized": "Dr. jolyn koss",
+      "shortened": "Kes",
+      "lower": "brendan yundt"
     },
     "key": null
   }
@@ -36469,19 +36482,19 @@ Change the locale (default United States/English) by setting `locale`: first par
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Buckinghamshire",
+    "value": "Dumfries and Galloway",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Gloucestershire",
+    "value": "Avon",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Mid Glamorgan",
+    "value": "Derbyshire",
     "key": null
   }
 ]
