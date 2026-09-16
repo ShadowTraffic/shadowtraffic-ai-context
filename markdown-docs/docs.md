@@ -3961,6 +3961,24 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.1.4
+
+Wed Sep 16 09:15:39 PDT 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [CVE-2026-13608](https://nvd.nist.gov/vuln/detail/CVE-2026-13608).
+- 🐛 **Fixed**: Mitigates [CVE-2026-18924](https://nvd.nist.gov/vuln/detail/CVE-2026-18924).
+- 🐛 **Fixed**: Mitigates [CVE-2026-19931](https://nvd.nist.gov/vuln/detail/CVE-2026-19931).
+- 🐛 **Fixed**: Mitigates [CVE-2026-80229](https://nvd.nist.gov/vuln/detail/CVE-2026-80229).
+- 🐛 **Fixed**: Mitigates [CVE-2026-80230](https://nvd.nist.gov/vuln/detail/CVE-2026-80230).
+- 🐛 **Fixed**: Mitigates [CVE-2026-82209](https://nvd.nist.gov/vuln/detail/CVE-2026-82209).
+- 🐛 **Fixed**: Mitigates [CVE-2026-80231](https://nvd.nist.gov/vuln/detail/CVE-2026-80231).
+- 🐛 **Fixed**: Mitigates [CVE-2026-82208](https://nvd.nist.gov/vuln/detail/CVE-2026-82208).
+- 🐛 **Fixed**: Mitigates [CVE-2026-54411](https://nvd.nist.gov/vuln/detail/CVE-2026-54411).
+
+---
+
 ###  2.1.3
 
 Mon Aug 24 09:44:18 PDT 2026
@@ -5962,7 +5980,7 @@ Wed Feb  5 15:00:43 PST 2025
 
 ### Changes
 
-- ⚡ **Improved**: Adds explicit support for S3 [path-style access](/connections/s3/#connecting-to-minio), which is useful for S3-compatible services like MinIO.
+- ⚡ **Improved**: Adds explicit support for S3 [path-style access](/connections/s3/#connecting-to-seaweedfs), which is useful for S3-compatible services like SeaweedFS and RustFS.
 - 🐛 **Fixed**: Fixes Kafka SSL connectivity, which regressed in 0.15.0 after upgrading the backing Docker image to Java 23.
 
 ---
@@ -20656,7 +20674,7 @@ You can also control the object format [Example 2](#setting-the-key-and-format) 
 
 Objects are created with the key name `<key-prefix>-<ulid>.<file-suffix>`, where `ulid` is a monotically increasing [ULID](https://wiki.tcl-lang.org/page/ULID). This means all objects in the bucket are sortable by key name.
 
-You can also connect to S3-compatible services like Tigris [Example 4](#connecting-to-tigris) or MinIO. [Example 5](#connecting-to-minio)
+You can also connect to S3-compatible services like Tigris, [Example 4](#connecting-to-tigris) SeaweedFS, [Example 5](#connecting-to-seaweedfs) and RustFS. [Example 6](#connecting-to-rustfs)
 
 ---
 
@@ -20778,9 +20796,9 @@ Set `endpoint` to the Tigris global endpoint. By contrast to the Tigris docs, yo
 }
 ```
 
-### Connecting to MinIO
+### Connecting to SeaweedFS
 
-Set `endpoint` to the MinIO server and set the respective `AWS_*` variables to connect to the instance. You also need to enable [path style access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access), which can be done with the respective parameter below.
+Set `endpoint` to the SeaweedFS S3 gateway and set the respective `AWS_*` variables to connect to the instance. You also need to enable [path style access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access), which can be done with the respective parameter below.
 
 **Input:**
 ```json
@@ -20789,7 +20807,26 @@ Set `endpoint` to the MinIO server and set the respective `AWS_*` variables to c
     "s3-staging-org": {
       "kind": "s3",
       "connectionConfigs": {
-        "endpoint": "http://minio.example.com:5938",
+        "endpoint": "http://seaweedfs.example.com:8333",
+        "pathStyleAccess": true
+      }
+    }
+  }
+}
+```
+
+### Connecting to RustFS
+
+Set `endpoint` to the RustFS server and set the respective `AWS_*` variables to connect to the instance. As with SeaweedFS, you also need to enable [path style access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access).
+
+**Input:**
+```json
+{
+  "connections": {
+    "s3-staging-org": {
+      "kind": "s3",
+      "connectionConfigs": {
+        "endpoint": "http://rustfs.example.com:9000",
         "pathStyleAccess": true
       }
     }
@@ -24030,8 +24067,8 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": "Samantha Keebler",
-      "b": "Basil Welch"
+      "a": "Coy Hackett IV",
+      "b": "Aron Lebsack"
     },
     "key": null
   },
@@ -24039,7 +24076,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Miss Shirely Bayer"
+      "b": "Miss Trenton Swaniawski"
     },
     "key": null
   },
@@ -24047,7 +24084,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Mrs. Elouise Schaden"
+      "b": "Miss Adriana Skiles"
     },
     "key": null
   }
@@ -29629,13 +29666,13 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Letitia"
+      "id": "Luella"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Letitia",
+    "value": "Luella",
     "key": null
   },
   {
@@ -29643,7 +29680,7 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Cherie"
+      "id": "Brooke"
     }
   }
 ]
@@ -29704,7 +29741,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Teofila"
+      "id": "Hue"
     },
     "table": "a"
   },
@@ -29712,7 +29749,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Teofila"
+      "id": "Hue"
     },
     "table": "b"
   },
@@ -29720,7 +29757,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Gregg"
+      "id": "Ellie"
     },
     "table": "a"
   }
@@ -29783,19 +29820,19 @@ Sometimes make a new key, sometimes use a previously generated one.
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Elvin Senger"
+    "key": "Latashia Kassulke"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Mrs. Rosaria Doyle"
+    "key": "George Bahringer"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Elvin Senger"
+    "key": "Latashia Kassulke"
   }
 ]
 ```
@@ -29864,21 +29901,21 @@ Explicitly supply the connection name when there are multiple connections.
     "op": null,
     "where": null,
     "row": {
-      "email": "charmaine.hammes@gmail.com"
+      "email": "cletus.ankunding@hotmail.com"
     },
     "table": "a"
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "charmaine.hammes@gmail.com",
+    "value": "cletus.ankunding@hotmail.com",
     "key": null
   },
   {
     "op": null,
     "where": null,
     "row": {
-      "email": "norris.heaney@yahoo.com"
+      "email": "candis.kunze@hotmail.com"
     },
     "table": "a"
   }
@@ -30064,13 +30101,13 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Jesus Bode"
+      "id": "Beau Frami"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Jesus Bode",
+    "value": "Beau Frami",
     "key": null
   },
   {
@@ -30078,7 +30115,7 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Ms. Bobette Macejkovic"
+      "id": "Felicitas Kertzmann"
     }
   }
 ]
@@ -30150,7 +30187,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Ron Borer MD",
+      "name": "Cayla Steuber I",
       "magicNumber": 7
     }
   },
@@ -30158,7 +30195,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "headers": null,
     "topic": "b",
     "value": {
-      "lookedUpName": "Ron Borer MD",
+      "lookedUpName": "Cayla Steuber I",
       "lookedUpNumber": 7
     },
     "key": null
@@ -30168,7 +30205,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Dong O'Keefe",
+      "name": "Corene Oberbrunner",
       "magicNumber": 52
     }
   }
@@ -32102,8 +32139,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Trinidad",
-      "lastName": "Corwin",
+      "firstName": "Curtis",
+      "lastName": "Parisian",
       "score": 0
     },
     "key": null
@@ -32112,8 +32149,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Tabetha",
-      "lastName": "Dach",
+      "firstName": "Isiah",
+      "lastName": "Koch",
       "score": 8
     },
     "key": null
@@ -32122,8 +32159,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Jimmie",
-      "lastName": "Crona",
+      "firstName": "Lucius",
+      "lastName": "Erdman",
       "score": 0
     },
     "key": null
@@ -32595,7 +32632,7 @@ Each choice can be another generator.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Mellissa Purdy",
+    "value": "Collin Wehner",
     "key": null
   },
   {
@@ -33243,7 +33280,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "voluptatum_quos/placeat.xls"
+      "debitis_eligendi/totam.pages"
     ],
     "key": null
   },
@@ -33251,11 +33288,11 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "tenetur_autem/ipsum.css",
-      "eius_ipsa/distinctio.csv",
-      "natus_animi/adipisci.bmp",
-      "et_placeat/esse.pdf",
-      "laudantium_beatae/aut.css"
+      "et_consequuntur/quisquam.pages",
+      "occaecati_mollitia/blanditiis.ods",
+      "id_molestias/quos.key",
+      "et_quaerat/quae.xls",
+      "unde_dolorem/enim.bmp"
     ],
     "key": null
   },
@@ -33263,7 +33300,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "nobis_enim/cumque.doc"
+      "beatae_accusantium/ab.json"
     ],
     "key": null
   }
@@ -33903,8 +33940,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Gorczany",
-      "firstName": "Ron"
+      "lastName": "Robel",
+      "firstName": "Tyrell"
     },
     "key": null
   },
@@ -33912,8 +33949,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Schultz",
-      "firstName": "Heriberto"
+      "lastName": "Kautzer",
+      "firstName": "Mohammed"
     },
     "key": null
   },
@@ -33921,7 +33958,7 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Shery"
+      "firstName": "Leo"
     },
     "key": null
   }
@@ -36198,19 +36235,19 @@ Use any of the valid Datafaker expressions in `#{}`.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Ashley Trantow",
+    "value": "Mrs. Lolita Walker",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Romana Bosco",
+    "value": "Liliana Schowalter",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Jennefer Schaefer",
+    "value": "Al Bins",
     "key": null
   }
 ]
@@ -36349,19 +36386,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2022-10-28 15:22:06.515177729",
+    "value": "2024-09-09 03:30:07.750814914",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2022-10-20 23:37:18.376776505",
+    "value": "2023-08-14 11:31:58.972856812",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-03-28 19:31:05.116566205",
+    "value": "2022-12-24 23:40:22.276861421",
     "key": null
   }
 ]
@@ -36393,19 +36430,19 @@ Datafaker has a handful of useful functions that require parameters. If you want
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Opel, Mokka",
+    "value": "Mazda, CX-5",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Fiat, Scudo",
+    "value": "Ford, Focus",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Mercedes-Benz, B-Class",
+    "value": "Xpeng, P5",
     "key": null
   }
 ]
@@ -36457,11 +36494,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "JoselynKoss",
-      "upper": "MR. ARON WALTER",
-      "capitalized": "Leon franecki",
-      "shortened": "Fra",
-      "lower": "denese larson sr."
+      "scrubbed": "ArletteGrady",
+      "upper": "MS. REX SENGER",
+      "capitalized": "Randa adams",
+      "shortened": "Mis",
+      "lower": "jules boyer"
     },
     "key": null
   },
@@ -36469,11 +36506,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "RonSchowalter",
-      "upper": "LEIF LEMKE",
-      "capitalized": "Eden kunde",
-      "shortened": "Yee",
-      "lower": "dr. dan johnston"
+      "scrubbed": "ConniePfannerstill",
+      "upper": "CHARLETTE FUNK IV",
+      "capitalized": "Steven skiles",
+      "shortened": "Arl",
+      "lower": "miss jami robel"
     },
     "key": null
   }
@@ -36502,19 +36539,19 @@ Change the locale (default United States/English) by setting `locale`: first par
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Hampshire",
+    "value": "Northumberland",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Nottinghamshire",
+    "value": "Fife",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Devon",
+    "value": "Leicestershire",
     "key": null
   }
 ]
