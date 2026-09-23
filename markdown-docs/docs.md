@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.2.0
+
+Wed Sep 23 14:24:20 PDT 2026
+
+### Changes
+
+- ✅ **Added**: Adds support for [loader generators](/overview/#loaders) to [Kafka](/connections/kafka/#loading-external-data), [S3](/connections/s3/#loading-external-data), and [Databricks](/connections/databricks/#loading-external-data) connections.
+
+---
+
 ###  2.1.4
 
 Wed Sep 16 09:15:39 PDT 2026
@@ -9135,7 +9145,68 @@ When you run ShadowTraffic, you'll see common identifiers link up, like the foll
 }
 ```
 
-By default, the last `1000000` generated events are available for lookups before being purged from memory, but you can raise or lower this value with the [`history`](/generator-configuration/history.mdx) generator configuration.
+By default, the last `1000000` generated events are available for lookups before being purged from memory, but you can raise or lower this value with [`maxHistoryEvents`](/generator-configuration/maxHistoryEvents.mdx) generator configuration.
+
+### Loaders
+
+As a minor detour, you might notice that `lookup` can only target data residing in memory that ShadowTraffic previously generated. But what if you want to target data that ShadowTraffic generated in a previously exited process? Or even data not created by ShadowTraffic?
+
+Until now, all the generators we've authored are implicitly `writer` generators. Their job is to write data to a target system. But there is another type of generator for just this purpose—a `loader` generator. Loaders extract data from outside systems and make their contents available to `lookup` and other functions:
+
+```js
+{
+    "generators": [
+        {
+            "kind": "loader",
+            "topic": "sourceTopic",
+            "localConfigs": {
+                "maxEvents": 1
+            }
+        },
+        {
+            // kind is always implicitly set to "writer" by default
+            "kind": "writer",
+            "topic": "destinationTopic",
+            "value": {
+                "_gen": "lookup",
+                "topic": "sourceTopic"
+            }
+        }
+    ],
+    "connections": {
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            },
+            "consumerConfigs": {
+                "bootstrap.servers": "localhost:9092",
+                "schema.registry.url": "http://localhost:8081",
+                "key.deserializer": "io.confluent.kafka.serializers.KafkaAvroDeserializer",
+                "value.deserializer": "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+            }
+        }
+    }
+}
+```
+
+As you can see, loader generators are functionally identical to writer generators. With a few semantic exceptions, they accept many of the same parameters. The only thing that is different is how they interact with outside systems.
+
+A few notes about loader generators worth knowing about:
+
+1. For most use cases, you'll only want to load outside data once. To achieve that (just like writer generators,) you should set [`maxEvents`](/generator-configuration/maxEvents) to `1` so the generator exits after its had one turn to run.
+
+2. Loader generators attempt to load all the data present in the target table/topic/bucket each turn they run. Ensure its contents can fit into memory where ShadowTraffic is running.
+
+3. If the external data you're loading changes over time and you want those changes to mirror into ShadowTraffic, avoid setting `maxEvents` and instead set [`throttleMs`](/generator-configuration/throttleMs). As we saw previously in this guide, this will cause the generator to run at a particular tempo. On each load, the entire contents of this generator will be swapped out. In other words, this is a replacing operation, not a merging one.
+
+4. Loader generators are the only operation that have no dry run equivalent when running with `--stdout`. Instead, loader generators connect to your systems to harvest data regardless of the flag being set. This is because any dependencies on loader generators require real data to function, and inserting placeholder values would just break your configuration's semantics.
+
+5. Beware that the default [`history`](/generator-configuration/maxHistoryEvents.mdx) size is `1,000,000` events. If you load in more than the configured history capacity, ShadowTraffic will log a warning.
+
+Currently, only [Kafka](/connections/kafka/#loading-external-data), [S3](/connections/s3/#loading-external-data), and [Databricks](/connections/databricks/#loading-external-data) connections support loader generators.
 
 ### Variables
 
@@ -10780,6 +10851,10 @@ If ShadowTraffic doesn't create the table exactly as you'd want it, you can over
 
 If you don't want ShadowTraffic to control your schemas and tables, you can turn this behavior off by setting `tablePolicy` to `manual` in the connection map. It'll then be up to you to make sure your schema and tables exist before trying to write to them.
 
+### Loading external tables
+
+In addition to writer generators, the Databricks connection also supports [loader generators](/overview/#loaders) to acquire data from outside tables. [Example 6](#loading-external-data) This is useful if you want to [`lookup`](/functions/lookup) data from a previous ShadowTraffic run, or data that another system created.
+
 ---
 
 ## Examples
@@ -11099,6 +11174,62 @@ Set `tags` to supply a key/value map of tag metadata on the table.
   }
 }
 ```
+
+### Loading external data
+
+To load data from an outside Databricks table for the purposes of a `lookup`, mark the generator with `kind` set to `loader`. The generator can then be used for lookups like any other. Three notes to be aware of:
+
+- The `query` parameter should be the SQL string to fetch the data. `query` can also be a function.
+
+- Databricks loader generators require a `name` because they can conceivably fetch data from multiple tables.
+
+- In most cases, you'll want to set `maxEvents` to `1` to load the data a single time.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "kind": "loader",
+      "name": "customers",
+      "query": "SELECT id, region FROM main.default.customers",
+      "localConfigs": {
+        "maxEvents": 1
+      }
+    },
+    {
+      "kind": "writer",
+      "table": "orders",
+      "row": {
+        "orderId": {
+          "_gen": "uuid"
+        },
+        "customerId": {
+          "_gen": "lookup",
+          "name": "customers",
+          "path": [
+            "id"
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "dbx": {
+      "kind": "databricks",
+      "connectionConfigs": {
+        "host": "https://xxx.cloud.databricks.com",
+        "token": "yyy",
+        "warehouseId": "abc",
+        "catalog": "def",
+        "schema": "ghi"
+      }
+    }
+  }
+}
+```
+
+See [the Overview](/overview/#loaders) section for more general details about loader generators.
 
 ---
 
@@ -13775,6 +13906,10 @@ docker run --net=host --env-file license.env -v ./your-serializer.jar:/home/serd
 
 Note that until Kafka removes its dependency on Security Manager (coming soon), [you may need to be explicitly enable security permissions](https://github.com/ShadowTraffic/requests/issues/10).
 
+### Loading external topics
+
+In addition to writer generators, the Kafka connection also supports [loader generators](/overview/#loaders) to acquire data from outside topics. [Example 9](#loading-external-data) This is useful if you want to [`lookup`](/functions/lookup) data from a previous ShadowTraffic run, or data that another system created.
+
 ---
 
 ## Examples
@@ -14100,7 +14235,7 @@ It will create this schema in Schema Registry for you:
 }
 ```
 
-If you already have your desired schema, or want to override the schema ShadowTraffic picked automatically, you can supply it explicitly. [Example 9](#using-avro-schema-files) [Example 10](#using-json-schema-files)
+If you already have your desired schema, or want to override the schema ShadowTraffic picked automatically, you can supply it explicitly. [Example 10](#using-avro-schema-files) [Example 11](#using-json-schema-files)
 
 ### Using Avro schema files
 
@@ -14442,6 +14577,56 @@ Instead of rewriting your connection details into your ShadowTraffic configurati
 }
 ```
 
+### Loading external data
+
+To load data from an outside Kafka topic for the purposes of a `lookup`, mark the generator with `kind` set to `loader`. The generator can then be used for lookups like any other. Three notes to be aware of:
+
+- The `topic` name of the generator indicates where data will be loaded from.
+
+- The `consumerConfigs` on the connection map describe how to read the data. Any properties given will be passed to the underlying consumer.
+
+- In most cases, you'll want to set `maxEvents` to `1` to load the topic data a single time.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "kind": "loader",
+      "topic": "sourceTopic",
+      "localConfigs": {
+        "maxEvents": 1
+      }
+    },
+    {
+      "kind": "writer",
+      "topic": "destinationTopic",
+      "value": {
+        "_gen": "lookup",
+        "topic": "sourceTopic"
+      }
+    }
+  ],
+  "connections": {
+    "kafka": {
+      "kind": "kafka",
+      "producerConfigs": {
+        "bootstrap.servers": "localhost:9092",
+        "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+        "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+      },
+      "consumerConfigs": {
+        "bootstrap.servers": "localhost:9092",
+        "key.deserializer": "io.shadowtraffic.kafka.serdes.JsonDeserializer",
+        "value.deserializer": "io.shadowtraffic.kafka.serdes.JsonDeserializer"
+      }
+    }
+  }
+}
+```
+
+See [the Overview](/overview/#loaders) section for more general details about loader generators.
+
 ---
 
 ## Specification
@@ -14497,6 +14682,25 @@ Instead of rewriting your connection details into your ShadowTraffic configurati
         "bootstrap.servers",
         "key.serializer",
         "value.serializer"
+      ]
+    },
+    "consumerConfigs": {
+      "type": "object",
+      "properties": {
+        "bootstrap.servers": {
+          "type": "string"
+        },
+        "key.deserializer": {
+          "type": "string"
+        },
+        "value.deserializer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bootstrap.servers",
+        "key.deserializer",
+        "value.deserializer"
       ]
     },
     "topicPolicy": {
@@ -20676,6 +20880,10 @@ Objects are created with the key name `<key-prefix>-<ulid>.<file-suffix>`, where
 
 You can also connect to S3-compatible services like Tigris, [Example 4](#connecting-to-tigris) SeaweedFS, [Example 5](#connecting-to-seaweedfs) and RustFS. [Example 6](#connecting-to-rustfs)
 
+### Loading external buckets
+
+In addition to writer generators, the S3 connection also supports [loader generators](/overview/#loaders) to acquire data from outside buckets. [Example 7](#loading-external-data) This is useful if you want to [`lookup`](/functions/lookup) data from a previous ShadowTraffic run, or data that another system created.
+
 ---
 
 ## Examples
@@ -21048,6 +21256,55 @@ You can change it by using the following two optional parameters under `writerCo
 ### Read-only containers
 
 ShadowTraffic streams each object to a writable staging directory (`/tmp` by default) before uploading it to S3. If you run the container with `docker run --read-only`, staging fails because the filesystem is unwritable. See [read-only filesystems](/cheatsheet/#read-only-filesystems) for how to point ShadowTraffic at a writable staging path.
+
+### Loading external data
+
+To load data from an outside S3 bucket for the purposes of a `lookup`, mark the generator with `kind` set to `loader`. The generator can then be used for lookups like any other. Three notes to be aware of:
+
+- The `bucket` parameter of the generator indicates where data will be loaded from.
+
+- Only `json`, `json.gz`, and `parquet` files are supported.
+
+- In most cases, you'll want to set `maxEvents` to `1` to load the data a single time.
+
+**Input:**
+```json
+{
+  "generators": [
+    {
+      "kind": "loader",
+      "bucket": "source-bucket",
+      "localConfigs": {
+        "maxEvents": 1
+      }
+    },
+    {
+      "kind": "writer",
+      "bucket": "destination-bucket",
+      "data": {
+        "orderId": {
+          "_gen": "uuid"
+        },
+        "customerId": {
+          "_gen": "lookup",
+          "bucket": "source-bucket",
+          "path": [
+            "data",
+            "id"
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "s3": {
+      "kind": "s3"
+    }
+  }
+}
+```
+
+See [the Overview](/overview/#loaders) section for more general details about loader generators.
 
 ---
 
@@ -24067,8 +24324,8 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": "Coy Hackett IV",
-      "b": "Aron Lebsack"
+      "a": "Cornelius Bergnaum",
+      "b": "Noe Streich Sr."
     },
     "key": null
   },
@@ -24076,7 +24333,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Miss Trenton Swaniawski"
+      "b": "Devona Legros"
     },
     "key": null
   },
@@ -24084,7 +24341,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Miss Adriana Skiles"
+      "b": "Julio Robel"
     },
     "key": null
   }
@@ -29666,13 +29923,13 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Luella"
+      "id": "Madge"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Luella",
+    "value": "Madge",
     "key": null
   },
   {
@@ -29680,7 +29937,7 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Brooke"
+      "id": "Franklyn"
     }
   }
 ]
@@ -29741,7 +29998,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Hue"
+      "id": "Pauletta"
     },
     "table": "a"
   },
@@ -29749,7 +30006,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Hue"
+      "id": "Pauletta"
     },
     "table": "b"
   },
@@ -29757,7 +30014,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Ellie"
+      "id": "Raisa"
     },
     "table": "a"
   }
@@ -29820,19 +30077,19 @@ Sometimes make a new key, sometimes use a previously generated one.
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Latashia Kassulke"
+    "key": "Britt Ferry"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "George Bahringer"
+    "key": "Apryl Kertzmann"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Latashia Kassulke"
+    "key": "Britt Ferry"
   }
 ]
 ```
@@ -29901,21 +30158,21 @@ Explicitly supply the connection name when there are multiple connections.
     "op": null,
     "where": null,
     "row": {
-      "email": "cletus.ankunding@hotmail.com"
+      "email": "alicia.kshlerin@yahoo.com"
     },
     "table": "a"
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "cletus.ankunding@hotmail.com",
+    "value": "alicia.kshlerin@yahoo.com",
     "key": null
   },
   {
     "op": null,
     "where": null,
     "row": {
-      "email": "candis.kunze@hotmail.com"
+      "email": "clarine.lockman@hotmail.com"
     },
     "table": "a"
   }
@@ -30101,13 +30358,13 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Beau Frami"
+      "id": "Valentine Labadie I"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Beau Frami",
+    "value": "Valentine Labadie I",
     "key": null
   },
   {
@@ -30115,7 +30372,7 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Felicitas Kertzmann"
+      "id": "Dr. Ashely Jerde"
     }
   }
 ]
@@ -30187,7 +30444,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Cayla Steuber I",
+      "name": "Latoria Orn",
       "magicNumber": 7
     }
   },
@@ -30195,7 +30452,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "headers": null,
     "topic": "b",
     "value": {
-      "lookedUpName": "Cayla Steuber I",
+      "lookedUpName": "Latoria Orn",
       "lookedUpNumber": 7
     },
     "key": null
@@ -30205,7 +30462,7 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Corene Oberbrunner",
+      "name": "Errol Ebert IV",
       "magicNumber": 52
     }
   }
@@ -30427,7 +30684,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "topic": "customers",
     "value": {
       "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
-      "status": "base"
+      "status": "platinum"
     },
     "key": null
   },
@@ -30436,7 +30693,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "topic": "customers",
     "value": {
       "id": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
-      "status": "platinum"
+      "status": "base"
     },
     "key": null
   },
@@ -30444,7 +30701,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "headers": null,
     "topic": "supportTickets",
     "value": {
-      "id": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
       "status": "platinum"
     },
     "key": null
@@ -32139,8 +32396,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Curtis",
-      "lastName": "Parisian",
+      "firstName": "Zora",
+      "lastName": "Langosh",
       "score": 0
     },
     "key": null
@@ -32149,8 +32406,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Isiah",
-      "lastName": "Koch",
+      "firstName": "Ethan",
+      "lastName": "Conroy",
       "score": 8
     },
     "key": null
@@ -32159,8 +32416,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Lucius",
-      "lastName": "Erdman",
+      "firstName": "Adolph",
+      "lastName": "Reynolds",
       "score": 0
     },
     "key": null
@@ -32632,7 +32889,7 @@ Each choice can be another generator.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Collin Wehner",
+    "value": "Galina Wisozk",
     "key": null
   },
   {
@@ -33280,7 +33537,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "debitis_eligendi/totam.pages"
+      "sequi_ab/iure.mp3"
     ],
     "key": null
   },
@@ -33288,11 +33545,11 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "et_consequuntur/quisquam.pages",
-      "occaecati_mollitia/blanditiis.ods",
-      "id_molestias/quos.key",
-      "et_quaerat/quae.xls",
-      "unde_dolorem/enim.bmp"
+      "eos_doloremque/magni.key",
+      "optio_amet/eligendi.xlsx",
+      "ipsam_explicabo/ullam.png",
+      "natus_delectus/praesentium.tiff",
+      "repudiandae_eius/perspiciatis.pdf"
     ],
     "key": null
   },
@@ -33300,7 +33557,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "beatae_accusantium/ab.json"
+      "corrupti_dolores/sunt.odt"
     ],
     "key": null
   }
@@ -33940,8 +34197,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Robel",
-      "firstName": "Tyrell"
+      "lastName": "Hilpert",
+      "firstName": "Elwood"
     },
     "key": null
   },
@@ -33949,8 +34206,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Kautzer",
-      "firstName": "Mohammed"
+      "lastName": "Wolf",
+      "firstName": "Leanna"
     },
     "key": null
   },
@@ -33958,7 +34215,7 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Leo"
+      "firstName": "Sharla"
     },
     "key": null
   }
@@ -36235,19 +36492,19 @@ Use any of the valid Datafaker expressions in `#{}`.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Mrs. Lolita Walker",
+    "value": "Waldo Strosin",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Liliana Schowalter",
+    "value": "Reinaldo Lemke",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Al Bins",
+    "value": "Bradly Stark",
     "key": null
   }
 ]
@@ -36386,19 +36643,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-09-09 03:30:07.750814914",
+    "value": "2023-07-03 14:07:25.356202983",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-08-14 11:31:58.972856812",
+    "value": "2022-12-19 06:51:09.735324975",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2022-12-24 23:40:22.276861421",
+    "value": "2023-06-13 14:37:12.054806456",
     "key": null
   }
 ]
@@ -36430,19 +36687,19 @@ Datafaker has a handful of useful functions that require parameters. If you want
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Mazda, CX-5",
+    "value": "Honda, CR-V",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Ford, Focus",
+    "value": "Xpeng, G3i",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Xpeng, P5",
+    "value": "Xpeng, G9",
     "key": null
   }
 ]
@@ -36494,11 +36751,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "ArletteGrady",
-      "upper": "MS. REX SENGER",
-      "capitalized": "Randa adams",
-      "shortened": "Mis",
-      "lower": "jules boyer"
+      "scrubbed": "KrisAnderson",
+      "upper": "LATASHA MACEJKOVIC I",
+      "capitalized": "Malcom kuhic",
+      "shortened": "Leo",
+      "lower": "lorenzo parker"
     },
     "key": null
   },
@@ -36506,11 +36763,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "ConniePfannerstill",
-      "upper": "CHARLETTE FUNK IV",
-      "capitalized": "Steven skiles",
-      "shortened": "Arl",
-      "lower": "miss jami robel"
+      "scrubbed": "SaraiOberbrunner",
+      "upper": "NEVILLE ONDRICKA",
+      "capitalized": "Sherise greenfelder",
+      "shortened": "Ms.",
+      "lower": "doyle greenfelder"
     },
     "key": null
   }
@@ -36539,19 +36796,19 @@ Change the locale (default United States/English) by setting `locale`: first par
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Northumberland",
+    "value": "County Armagh",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Fife",
+    "value": "Kent",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Leicestershire",
+    "value": "County Fermanagh",
     "key": null
   }
 ]
