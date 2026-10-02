@@ -3961,6 +3961,22 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.3.0
+
+Fri Oct  2 08:00:26 PDT 2026
+
+### Changes
+
+- ⚠️ **Important**: Upgraded ShadowTraffic's JVM to GraalVM Community Edition 25.
+- 🐛 **Fixed**: Fixes [`customFunction`](/functions/customFunction) to fix bindings sent to Ruby.
+- 🐛 **Fixed**: Mitigates [CVE-2026-68497](https://nvd.nist.gov/vuln/detail/CVE-2026-68497).
+- 🐛 **Fixed**: Mitigates [CVE-2026-91776](https://nvd.nist.gov/vuln/detail/CVE-2026-91776).
+- 🐛 **Fixed**: Mitigates [CVE-2026-91777](https://nvd.nist.gov/vuln/detail/CVE-2026-91777).
+- 🐛 **Fixed**: Mitigates [CVE-2026-19032](https://nvd.nist.gov/vuln/detail/CVE-2026-19032).
+- 🐛 **Fixed**: Mitigates [CVE-2026-83557](https://nvd.nist.gov/vuln/detail/CVE-2026-83557).
+
+---
+
 ###  2.2.1
 
 Fri Sep 25 12:20:37 PDT 2026
@@ -8423,7 +8439,7 @@ shadowtraffic:
   image: shadowtraffic/shadowtraffic:latest
   volumes:
     - .:/workspace
-  entrypoint: ["java", "-Djava.security.manager=allow", "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8", "-jar", "/home/shadowtraffic.jar"]
+  entrypoint: ["java", "--enable-native-access=ALL-UNNAMED", "--sun-misc-unsafe-memory-access=allow", "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-Dsun.stderr.encoding=UTF-8", "-jar", "/home/shadowtraffic.jar"]
   command: ["--config", "/workspace/your-config.json"]
   env_file:
     - shadowtraffic/license.env
@@ -20155,7 +20171,7 @@ To execute a Redis `set` command, set `op` to the same name. `set` requires a `v
   {
     "op": "set",
     "attributes": {
-      "value": "c"
+      "value": "b"
     },
     "opParams": null,
     "key": "key-0"
@@ -20163,7 +20179,7 @@ To execute a Redis `set` command, set `op` to the same name. `set` requires a `v
   {
     "op": "set",
     "attributes": {
-      "value": "a"
+      "value": "c"
     },
     "opParams": null,
     "key": "key-1"
@@ -20171,7 +20187,7 @@ To execute a Redis `set` command, set `op` to the same name. `set` requires a `v
   {
     "op": "set",
     "attributes": {
-      "value": "a"
+      "value": "c"
     },
     "opParams": null,
     "key": "key-2"
@@ -20214,7 +20230,7 @@ Likewise, `hset` works similarly. `hset` requires both a `field` and `value`.
   {
     "op": "hset",
     "attributes": {
-      "value": "bronze",
+      "value": "silver",
       "field": "tier"
     },
     "opParams": null,
@@ -20223,7 +20239,7 @@ Likewise, `hset` works similarly. `hset` requires both a `field` and `value`.
   {
     "op": "hset",
     "attributes": {
-      "value": "gold",
+      "value": "bronze",
       "field": "tier"
     },
     "opParams": null,
@@ -20232,7 +20248,7 @@ Likewise, `hset` works similarly. `hset` requires both a `field` and `value`.
   {
     "op": "hset",
     "attributes": {
-      "value": "gold",
+      "value": "bronze",
       "field": "tier"
     },
     "opParams": null,
@@ -20280,8 +20296,8 @@ Finally, `zadd` follows the same pattern, requiring a `score` and `member`. Note
   {
     "op": "zadd",
     "attributes": {
-      "member": "blue",
-      "score": 8.942668130503591
+      "member": "red",
+      "score": 12.187786203576225
     },
     "opParams": null,
     "key": "user-0"
@@ -20289,8 +20305,8 @@ Finally, `zadd` follows the same pattern, requiring a `score` and `member`. Note
   {
     "op": "zadd",
     "attributes": {
-      "member": "green",
-      "score": 11.811731108357588
+      "member": "blue",
+      "score": 10.643074108505578
     },
     "opParams": null,
     "key": "user-1"
@@ -20298,8 +20314,8 @@ Finally, `zadd` follows the same pattern, requiring a `score` and `member`. Note
   {
     "op": "zadd",
     "attributes": {
-      "member": "green",
-      "score": 8.022128917950285
+      "member": "blue",
+      "score": 8.052110255997142
     },
     "opParams": null,
     "key": "user-2"
@@ -23908,9 +23924,9 @@ Set `cardinality` to a positive integer. In this example:
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": 8.9427,
-      "b": 11.6935,
-      "c": 7.1462
+      "a": 12.1878,
+      "b": 10.0926,
+      "c": 7.8284
     },
     "key": null
   },
@@ -23918,9 +23934,9 @@ Set `cardinality` to a positive integer. In this example:
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": 8.9427,
-      "b": 10.2091,
-      "c": 10.8965
+      "a": 12.1878,
+      "b": 11.7749,
+      "c": 10.594
     },
     "key": null
   },
@@ -23928,9 +23944,9 @@ Set `cardinality` to a positive integer. In this example:
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": 8.9427,
-      "b": 7.8284,
-      "c": 8.0521
+      "a": 12.1878,
+      "b": 11.6722,
+      "c": 7.6688
     },
     "key": null
   }
@@ -23987,19 +24003,19 @@ Use `string` to cast any value to a string.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "48.94266813050359",
+    "value": "52.18778620357622",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "51.69347796390609",
+    "value": "50.0926481089999",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "47.14618903225951",
+    "value": "47.828385657988",
     "key": null
   }
 ]
@@ -24026,19 +24042,19 @@ Use `integer` to parse a string to an integer.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 94191,
+    "value": 83397,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 86383,
+    "value": 19677,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 39719,
+    "value": 29659,
     "key": null
   }
 ]
@@ -24166,19 +24182,19 @@ Use `clamp` with a minimum and maxiumum value. In this example, the value will n
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 6.299338456762571,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": 15,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 2,
+    "value": 10.324268381499666,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 2.3993498029579996,
     "key": null
   }
 ]
@@ -24339,8 +24355,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": "Mr. Donita Hilpert",
-      "b": "Jude West III"
+      "b": "Maribel Blanda"
     },
     "key": null
   },
@@ -24348,7 +24363,8 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Werner Wiegand"
+      "a": "Wiley Keebler V",
+      "b": "Sandy Mann"
     },
     "key": null
   },
@@ -24356,7 +24372,7 @@ Specify `rate` to elide a percentage of values. In this example, 50% of the valu
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "b": "Abraham Hirthe"
+      "b": "Hyman Schmeler Sr."
     },
     "key": null
   }
@@ -24436,8 +24452,7 @@ Specify `whenPresent` to elide when a reference value is non-null.
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "a": true,
-      "b": false
+      "b": true
     },
     "key": null
   }
@@ -24917,8 +24932,7 @@ Set `sample` / `rate` to a decimal between `0` and `1`, representing the percent
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "A",
-      "C",
+      "B",
       "A"
     ],
     "key": null
@@ -24927,9 +24941,9 @@ Set `sample` / `rate` to a decimal between `0` and `1`, representing the percent
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "A",
-      "B",
-      "F"
+      "D",
+      "D",
+      "E"
     ],
     "key": null
   },
@@ -24937,9 +24951,9 @@ Set `sample` / `rate` to a decimal between `0` and `1`, representing the percent
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "E",
+      "B",
       "A",
-      "C",
+      "B",
       "F"
     ],
     "key": null
@@ -24988,8 +25002,18 @@ Set `sample` / `rate` to a decimal between `0` and `1`, representing the percent
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "A",
-      "A"
+      "B",
+      "C"
+    ],
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": [
+      "F",
+      "F",
+      "F"
     ],
     "key": null
   },
@@ -24998,18 +25022,6 @@ Set `sample` / `rate` to a decimal between `0` and `1`, representing the percent
     "topic": "sandbox",
     "value": [
       "D",
-      "E",
-      "E",
-      "B",
-      "A"
-    ],
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": [
-      "B",
       "C"
     ],
     "key": null
@@ -25192,19 +25204,19 @@ You can serialize the value in ShadowTraffic like so:
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "\u0000¸ý",
+    "value": "\u0000Ø­",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "\u0000ÓÚ",
+    "value": "\u0000Ä8",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "\u0000§q",
+    "value": "\u0000®\u001b",
     "key": null
   }
 ]
@@ -25245,19 +25257,19 @@ You can serialize the value in ShadowTraffic like so:
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "5Aº÷þ\rá»ç®(ÀE\f",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": "ä<\bOK»+ñîFm,µ",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": "¾jaª\fa\u0017½gCçÜs",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "h^\\³aølF ¾¿°",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "\u0011\u0000²vTW\u0018Ã\u000f@lÈã¡ÿ",
     "key": null
   }
 ]
@@ -25841,19 +25853,19 @@ Use a constant to generate byte arrays of the same size.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "NZ1BuveK/g3hu+euKMBFDOQ8CE9Luyvx",
+    "value": "vmphqpoMYRe9Z0Pn3JeFc5mOaF6IXLNh",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "g53uRm2FLLW+amGqmgxhF71nQ+fcl4Vz",
+    "value": "+GyXRiC+v7ARALJ2VFcYww9AbMjjoYj/",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "mY5oXohcs2H4bJdGIL6/sBEAsnZUVxjD",
+    "value": "8RBZ62+85iZV371vg7iWcNbZ+b9S2D3u",
     "key": null
   }
 ]
@@ -25885,19 +25897,19 @@ Use a function to generate byte arrays of varying sizes, in this case between `1
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "4bvnrijARQzkPAhPSw==",
+    "value": "vWdD59yXhXOZjmheiFyzYQ==",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "vmphqpoMYRe9Z0Pn3JeFc5mOaF6IXLNh+GyXRiC+v7ARALJ2VFc=",
+    "value": "EQCydlRXGMMPQGzI46GI",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "8RBZ62+85iZV371vg7iWcNbZ+b9S2D3u3Av2YgWDXMwWrWgtjEeKJg==",
+    "value": "Vd+9b4O4lnDW2fm/Utg97twL9mIFg1zMFq1oLYxHiib0UCeYSQ==",
     "key": null
   }
 ]
@@ -26013,7 +26025,7 @@ The effect is that the same `on` value will always produce the same `to` value.
     "topic": "sandbox",
     "value": {
       "from": 1,
-      "to": 42.865472580648756
+      "to": 44.57096414497
     },
     "key": null
   },
@@ -26022,7 +26034,7 @@ The effect is that the same `on` value will always produce the same `to` value.
     "topic": "sandbox",
     "value": {
       "from": 1,
-      "to": 42.865472580648756
+      "to": 44.57096414497
     },
     "key": null
   },
@@ -26031,7 +26043,7 @@ The effect is that the same `on` value will always produce the same `to` value.
     "topic": "sandbox",
     "value": {
       "from": 2,
-      "to": 48.64452347927178
+      "to": 52.241261452367425
     },
     "key": null
   }
@@ -26090,12 +26102,6 @@ Generates character strings composed of only alpha characters. Specify the lengt
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "AhWmArnQ",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": "dPAAiGue",
     "key": null
   },
@@ -26103,6 +26109,12 @@ Generates character strings composed of only alpha characters. Specify the lengt
     "headers": null,
     "topic": "sandbox",
     "value": "WIlzORAr",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "ZvMgtYMK",
     "key": null
   }
 ]
@@ -26130,19 +26142,19 @@ To make every character in the generated string unique, set `unique` to `true`.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "TUWBD",
+    "value": "NYTLF",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "EJBGX",
+    "value": "GOKJY",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "LARQB",
+    "value": "GCNUH",
     "key": null
   }
 ]
@@ -26172,19 +26184,19 @@ In this example with `unique` set to `true` and `case` set to `lower`, there are
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "tuwbdqplsmyigxcvrhjfeokzna",
+    "value": "nytlfbhkuzjvewxmigrqacposd",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "ejbgxudlinoacpwrhzyqtsmkfv",
+    "value": "gokjyscpwquvdafbmniezltxrh",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "larqbmyfkitszexuwdvnhcgopj",
+    "value": "gcnuhmarfyvwisjkltpoqezbdx",
     "key": null
   }
 ]
@@ -26388,10 +26400,10 @@ Invokes custom functions defined in either Python, Ruby, or JavaScript.
 
 For the most part, ShadowTraffic's core library is sufficient to generate a wide range of data. But sometimes, the existing functions are going to be missing something that only you can implement. `customFunction` is the escape hatch to let you generate any kind of data you want.
 
-ShadowTraffic natively executes code for each language using [GraalVM 23+](https://www.graalvm.org/). This is important to know because the Graal implementation of each language may have slight difference to other platforms. For reference:
+ShadowTraffic natively executes code for each language using [GraalVM 25+](https://www.graalvm.org/). This is important to know because the Graal implementation of each language may have slight difference to other platforms. For reference:
 
 - Python is executed with [GraalPy](https://www.graalvm.org/python/)
-- Ruby is executed with [TruffleRuby](https://www.graalvm.org/ruby/)
+- Ruby is executed with [TruffleRuby](https://github.com/truffleruby/truffleruby)
 - JavaScript is executed with [GraalJS](https://www.graalvm.org/javascript/)
 
 All custom functions must take a single parameter, which is a map. This map gives you function useful context about its invocation, such as:
@@ -26712,19 +26724,19 @@ Generates character strings composed of only digits. Specify the length with `n`
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "94191",
+    "value": "83397",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "86383",
+    "value": "19677",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "39719",
+    "value": "29659",
     "key": null
   }
 ]
@@ -27388,19 +27400,19 @@ If you want to define your own easing, set `ease` to any numeric function and `d
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 97.35667032625898,
+    "value": 105.46946550894056,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 104.23369490976522,
+    "value": 100.23162027249977,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 92.86547258064876,
+    "value": 94.57096414497,
     "key": null
   }
 ]
@@ -27443,19 +27455,19 @@ If the mathematically perfect curves that `easing` creates aren't realistic, you
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 99.15891604977976,
+    "value": 99.34502711745832,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 100.78940806803134,
+    "value": 99.37210057822887,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 99.00273534469417,
+    "value": 99.1441076182723,
     "key": null
   }
 ]
@@ -28264,19 +28276,19 @@ In this example, timestamps are generated anywhere between 1 and 6 months in the
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-03-14 00:46:49.148",
+    "value": "2024-02-28 19:54:07.058",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-11-10 22:09:32.645",
+    "value": "2024-02-26 18:27:49.401",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-03-25 22:00:50.727",
+    "value": "2024-03-15 03:50:17.800",
     "key": null
   }
 ]
@@ -28630,10 +28642,10 @@ Outputs:
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "latitude": 45.39729012444939,
-      "longitude": -75.79133315114478,
-      "duration": 179.99953613126078,
-      "heading": 39.70884698981962
+      "latitude": 45.8625677936458,
+      "longitude": -114.76728912071275,
+      "duration": 179.99989602684013,
+      "heading": 216.56802791440774
     },
     "key": null
   },
@@ -28641,10 +28653,10 @@ Outputs:
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "latitude": 45.39728779701243,
-      "longitude": -75.79139440473543,
-      "duration": 179.99953613126078,
-      "heading": 39.70884698981962
+      "latitude": 45.862557341736604,
+      "longitude": -114.76734154316978,
+      "duration": 179.99989602684013,
+      "heading": 216.56802791440774
     },
     "key": null
   },
@@ -28652,10 +28664,10 @@ Outputs:
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "latitude": 45.39728546957548,
-      "longitude": -75.79145565832607,
-      "duration": 179.99953613126078,
-      "heading": 39.70884698981962
+      "latitude": 45.86254688982741,
+      "longitude": -114.76739396562682,
+      "duration": 179.99989602684013,
+      "heading": 216.56802791440774
     },
     "key": null
   }
@@ -28798,19 +28810,19 @@ Generates Git SHA-256 strings.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2a73767e33018785c642a77a3cb6222142e76d80d4bb5ef8e61dfa182c3e881b",
+    "value": "4bdce8f9396a2ebadea15693626ef327cc8aa6c766395e29b2bbe54471ee03c0",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "c806735a390fedf31093fc0208b2443acf41148fc99c04f55a5182a7f1057402",
+    "value": "4036c35353a8e750b601caf3a2e8a9e78f36ae87d1750a9ecb4cb097f223d9a0",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "79110c22dc58be2b66579f591d7573612fdf8c38f59a65618b62c88cc3969611",
+    "value": "6e22669c149a1dedad2c840f65c79b29c56ae66b91998555da5391db8c656715",
     "key": null
   }
 ]
@@ -29048,19 +29060,19 @@ Supply a `template` string containing tokens with leading colons and a `params` 
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "SELECT * FROM table1 WHERE column1='ba419d35-0dfe-8af7-aee7-bbe10c45c028';",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": "SELECT * FROM table1 WHERE column1='4f083ce3-f12b-bb4b-46ee-9d82b52c856d';",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": "SELECT * FROM table1 WHERE column1='aa616abe-1761-0c9a-e743-67bd738597dc';",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "SELECT * FROM table1 WHERE column1='5e688e99-61b3-5c88-4697-6cf7b0bfbe20';",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "SELECT * FROM table1 WHERE column1='76b20010-c318-5754-c86c-400eff88a1e3';",
     "key": null
   }
 ]
@@ -29938,13 +29950,13 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Neta"
+      "id": "Francis"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Neta",
+    "value": "Francis",
     "key": null
   },
   {
@@ -29952,7 +29964,7 @@ Look up data in another Kafka topic. By default, `lookup` retrieves the entire e
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Vickie"
+      "id": "Nicholas"
     }
   }
 ]
@@ -30013,7 +30025,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Katy"
+      "id": "Delsie"
     },
     "table": "a"
   },
@@ -30021,7 +30033,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Katy"
+      "id": "Delsie"
     },
     "table": "b"
   },
@@ -30029,7 +30041,7 @@ Look up data in a Postgres table.
     "op": null,
     "where": null,
     "row": {
-      "id": "Bryon"
+      "id": "Andy"
     },
     "table": "a"
   }
@@ -30092,19 +30104,19 @@ Sometimes make a new key, sometimes use a previously generated one.
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Andreas Keeling"
+    "key": "Mr. Merlin Howell"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Robin Marks"
+    "key": "Mrs. Deon Schinner"
   },
   {
     "headers": null,
     "topic": "users",
     "value": null,
-    "key": "Andreas Keeling"
+    "key": "Sid Bode"
   }
 ]
 ```
@@ -30173,21 +30185,21 @@ Explicitly supply the connection name when there are multiple connections.
     "op": null,
     "where": null,
     "row": {
-      "email": "judson.mills@hotmail.com"
+      "email": "roberto.maggio@hotmail.com"
     },
     "table": "a"
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "judson.mills@hotmail.com",
+    "value": "roberto.maggio@hotmail.com",
     "key": null
   },
   {
     "op": null,
     "where": null,
     "row": {
-      "email": "jaimee.koss@yahoo.com"
+      "email": "aide.hintz@yahoo.com"
     },
     "table": "a"
   }
@@ -30233,19 +30245,19 @@ In this example, notice how all the values for `b` lock onto the first value gen
   {
     "headers": null,
     "topic": "a",
-    "value": 94.71334065251796,
+    "value": 94.35940089737974,
     "key": null
   },
   {
     "headers": null,
     "topic": "b",
-    "value": 94.71334065251796,
+    "value": 94.35940089737974,
     "key": null
   },
   {
     "headers": null,
     "topic": "a",
-    "value": 85.73094516129751,
+    "value": 108.36103500448338,
     "key": null
   }
 ]
@@ -30290,19 +30302,19 @@ In this example, notice how each value for `b` lock onto the most event value ge
   {
     "headers": null,
     "topic": "a",
-    "value": 94.71334065251796,
+    "value": 94.35940089737974,
     "key": null
   },
   {
     "headers": null,
     "topic": "b",
-    "value": 94.71334065251796,
+    "value": 94.35940089737974,
     "key": null
   },
   {
     "headers": null,
     "topic": "a",
-    "value": 85.73094516129751,
+    "value": 108.36103500448338,
     "key": null
   }
 ]
@@ -30373,13 +30385,13 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Tam Orn"
+      "id": "Walton Goodwin"
     }
   },
   {
     "headers": null,
     "topic": "b",
-    "value": "Tam Orn",
+    "value": "Walton Goodwin",
     "key": null
   },
   {
@@ -30387,7 +30399,7 @@ Use a histogram to control how the element is selected from the population. This
     "topic": "a",
     "value": null,
     "key": {
-      "id": "Sook Gutmann"
+      "id": "Efrain Schmeler"
     }
   }
 ]
@@ -30459,16 +30471,16 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Beverlee Hodkiewicz V",
-      "magicNumber": 7
+      "name": "Ms. Wyatt Dibbert",
+      "magicNumber": 6
     }
   },
   {
     "headers": null,
     "topic": "b",
     "value": {
-      "lookedUpName": "Beverlee Hodkiewicz V",
-      "lookedUpNumber": 7
+      "lookedUpName": "Ms. Wyatt Dibbert",
+      "lookedUpNumber": 6
     },
     "key": null
   },
@@ -30477,8 +30489,8 @@ Instead, call `lookup` just once by using a variable, then pick out the relevant
     "topic": "a",
     "value": null,
     "key": {
-      "name": "Ms. Jamie Schuster",
-      "magicNumber": 52
+      "name": "Brendan Lebsack",
+      "magicNumber": 45
     }
   }
 ]
@@ -30527,13 +30539,13 @@ Use `name` in the lookup function to target another generator by its `name` attr
     "headers": null,
     "topic": "a",
     "value": null,
-    "key": 7
+    "key": 6
   },
   {
     "headers": null,
     "topic": "b",
     "value": {
-      "result": 7
+      "result": 6
     },
     "key": null
   },
@@ -30541,7 +30553,7 @@ Use `name` in the lookup function to target another generator by its `name` attr
     "headers": null,
     "topic": "a",
     "value": null,
-    "key": 52
+    "key": 45
   }
 ]
 ```
@@ -30604,7 +30616,7 @@ In the example below, `a` generates the sum of two numbers. `b` looks up the num
   {
     "headers": null,
     "topic": "a",
-    "value": 47.49303740091992,
+    "value": 115.59274915860276,
     "key": null
   },
   {
@@ -30612,8 +30624,8 @@ In the example below, `a` generates the sum of two numbers. `b` looks up the num
     "topic": "b",
     "value": {
       "result": {
-        "x": 47.35667032625898,
-        "y": 0.1363670746609369
+        "x": 47.17970044868987,
+        "y": 68.41304870991289
       }
     },
     "key": null
@@ -30621,7 +30633,7 @@ In the example below, `a` generates the sum of two numbers. `b` looks up the num
   {
     "headers": null,
     "topic": "a",
-    "value": 64.608026199175,
+    "value": 74.87971470784534,
     "key": null
   }
 ]
@@ -30698,7 +30710,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "headers": null,
     "topic": "customers",
     "value": {
-      "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
+      "id": "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305",
       "status": "platinum"
     },
     "key": null
@@ -30707,7 +30719,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "headers": null,
     "topic": "customers",
     "value": {
-      "id": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
+      "id": "2d68ad16-268a-478c-9827-50f4569b5949",
       "status": "base"
     },
     "key": null
@@ -30716,7 +30728,7 @@ One downside of this pattern is that you duplicate your generator content, but t
     "headers": null,
     "topic": "supportTickets",
     "value": {
-      "id": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
+      "id": "bff9d9d5-ee3d-d852-62f6-0bdbcc5c8305",
       "status": "platinum"
     },
     "key": null
@@ -31718,11 +31730,11 @@ Generates a map of `n` key/value pairs. Duplicate keys will collapse and defer t
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "ba419d35-0dfe-8af7-aee7-bbe10c45c028": true,
-      "f12bbb4b-46ee-9d83-b52c-856caa616abe": true,
-      "e74367bd-7385-97dc-5e68-8e9961b35c88": true,
-      "b0bfbe20-76b2-0011-c318-5753c86c400f": false,
-      "eb5910f1-26e6-bc6f-6fbd-df557096b883": false
+      "aa616abe-1761-0c9a-e743-67bd738597dc": true,
+      "61b35c88-4697-6cf8-b0bf-be2076b20011": false,
+      "c86c400e-ff88-a1e3-eb59-10f126e6bc6f": true,
+      "7096b882-bff9-d9d6-ee3d-d85262f60bdc": false,
+      "2d68ad16-268a-478c-9827-50f4569b5949": true
     },
     "key": null
   },
@@ -31730,11 +31742,11 @@ Generates a map of `n` key/value pairs. Duplicate keys will collapse and defer t
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "ee3dd852-62f6-0bdc-cc5c-83052d68ad16": true,
-      "982750f4-569b-5949-35b3-53dd402b571a": false,
-      "5d7b347f-2c16-7999-289d-95f99661a432": true,
-      "c053e996-a4c4-6c02-922f-b35e148d9e82": false,
-      "1735c9ec-c0a4-7def-cc72-29ce080b069b": true
+      "402b5719-d372-7ff2-5d7b-347f2c167999": true,
+      "9661a432-4630-2cd9-c053-e996a4c46c02": false,
+      "148d9e81-947c-82ee-1735-c9ecc0a47def": false,
+      "080b069b-5108-46b6-5ba0-a3f332f702b1": false,
+      "02d53e28-6aed-9211-c500-4374f95a6723": true
     },
     "key": null
   },
@@ -31742,11 +31754,11 @@ Generates a map of `n` key/value pairs. Duplicate keys will collapse and defer t
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "5ba0a3f3-32f7-02b1-d15b-23ed02d53e28": true,
-      "c5004374-f95a-6723-14a5-c4b5b6a1caca": false,
-      "7b06ee52-df9a-8487-4aaa-00013832cc52": false,
-      "988bd7d4-d20b-c0bc-3051-ae6ea2fb233f": true,
-      "5e7ebf2c-22ec-a89b-5c39-a9da6fb03cbb": true
+      "b6a1cac9-8873-36a7-7b06-ee52df9a8487": true,
+      "3832cc51-f32a-088c-988b-d7d4d20bc0bc": true,
+      "a2fb233f-60e0-b477-5e7e-bf2c22eca89b": true,
+      "6fb03cbb-6f45-f2ea-a617-570a7512bbb5": false,
+      "79021b82-f370-50bb-7811-dc308c868164": false
     },
     "key": null
   }
@@ -31912,19 +31924,19 @@ This example sums the total value of a shopping cart, where the cart contains it
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 34.68,
+    "value": 26.939999999999998,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 65.61,
+    "value": 93.1,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 61.13,
+    "value": 45.2,
     "key": null
   }
 ]
@@ -32133,19 +32145,19 @@ Reference variables by their name. In this example the values `a` and `b` from t
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 4.266736842453259,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": 2.7296706249513782,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": 2.7514821035501904,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 4.261102839584204,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 3.5968084362229247,
     "key": null
   }
 ]
@@ -32187,19 +32199,19 @@ By default, `math` will return floating point numbers. You can trim them down, e
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 85,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": 104,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": 86,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 98,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 93,
     "key": null
   }
 ]
@@ -32244,19 +32256,19 @@ Use `names` to make a map of identifiers to expressions. These identifiers can b
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 11.386955927812174,
+    "value": 8.18529621799981,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 2.292378064519008,
+    "value": 3.656771315976,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 4.044257835900568,
+    "value": 4.104220511994283,
     "key": null
   }
 ]
@@ -32411,9 +32423,9 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Carlena",
-      "lastName": "Wiegand",
-      "score": 0
+      "firstName": "Carson",
+      "lastName": "Prosacco",
+      "score": 1
     },
     "key": null
   },
@@ -32421,9 +32433,9 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Kelsey",
-      "lastName": "Beer",
-      "score": 8
+      "firstName": "Lillie",
+      "lastName": "Turcotte",
+      "score": 1
     },
     "key": null
   },
@@ -32431,8 +32443,8 @@ Merge a set of objects into one. Most useful when combined with the `previousEve
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Kathline",
-      "lastName": "Mann",
+      "firstName": "Chana",
+      "lastName": "Yost",
       "score": 0
     },
     "key": null
@@ -32647,19 +32659,19 @@ By default, this function generates floating point numbers.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 89.42668130503591,
+    "value": 121.87786203576226,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 116.93477963906088,
+    "value": 100.92648108999904,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 71.46189032259504,
+    "value": 78.28385657988,
     "key": null
   }
 ]
@@ -32687,19 +32699,19 @@ Use the `decimals` function modifier to generate integers.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 492,
+    "value": 516,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 512,
+    "value": 500,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 478,
+    "value": 483,
     "key": null
   }
 ]
@@ -32845,19 +32857,19 @@ Randomly selects a choice with equal probability.
   {
     "headers": null,
     "topic": "sandbox",
+    "value": "b",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": "c",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "a",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": "a",
+    "value": "c",
     "key": null
   }
 ]
@@ -32898,19 +32910,19 @@ Each choice can be another generator.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": true,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": "Everett Nader",
+    "value": 2.090569778961793,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
     "value": true,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "Kyle Barton",
     "key": null
   }
 ]
@@ -33021,19 +33033,19 @@ Optionally, use function calls that return numbers to perform dynamic calculatio
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 713.6434857892314,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": 29.144180414284904,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": 773.612163321922,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 30.287600717225985,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 453.3960308931327,
     "key": null
   }
 ]
@@ -33142,19 +33154,19 @@ You may also want to set a default value if your data is heterogeneously structu
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 1.9199461252484138,
+    "value": 2.254341867377076,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 1.9199461252484138,
+    "value": 2.254341867377076,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 1.9199461252484138,
+    "value": 2.254341867377076,
     "key": null
   }
 ]
@@ -33280,18 +33292,6 @@ At minimum, specify an array of `traits` to generate for the profile. Choices ar
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "email": "rebeccatulloch@geoscape.com",
-      "website": "www.geoscape.com",
-      "company": "Geoscape",
-      "lastName": "Tulloch",
-      "firstName": "Rebecca"
-    },
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": {
       "email": "larrykenny@marketsense.com",
       "website": "www.marketsense.com",
       "company": "MarketSense",
@@ -33309,6 +33309,18 @@ At minimum, specify an array of `traits` to generate for the profile. Choices ar
       "company": "Spikes Cavell Analytic Inc",
       "lastName": "Ponce",
       "firstName": "Stefanny"
+    },
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": {
+      "email": "kevin@otcmarkets.com",
+      "website": "www.otcmarkets.com",
+      "company": "OTC Markets",
+      "lastName": "Morelli",
+      "firstName": "Kevin"
     },
     "key": null
   }
@@ -33350,9 +33362,9 @@ By default, emails will be randomly formatted with a variety of strategies for t
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "email": "rtulloch@geoscape.com",
-      "lastName": "Tulloch",
-      "firstName": "Rebecca"
+      "email": "lkenny@marketsense.com",
+      "lastName": "Kenny",
+      "firstName": "Larry"
     },
     "key": null
   },
@@ -33360,9 +33372,9 @@ By default, emails will be randomly formatted with a variety of strategies for t
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "email": "rquinto@Zonerapp.com",
-      "lastName": "Quinto",
-      "firstName": "Rodolfo"
+      "email": "tbraden@telenav.com",
+      "lastName": "Braden",
+      "firstName": "Tristaca"
     },
     "key": null
   },
@@ -33370,9 +33382,9 @@ By default, emails will be randomly formatted with a variety of strategies for t
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "email": "egordon@foodtechconnect.com",
-      "lastName": "Gordon",
-      "firstName": "Ethel"
+      "email": "vblackwell@persint.com",
+      "lastName": "Blackwell",
+      "firstName": "Victoria"
     },
     "key": null
   }
@@ -33413,16 +33425,6 @@ If you want to dynamically choose between email formats, you can specify a funct
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "email": "jones@analytica.net",
-      "lastName": "Jones",
-      "firstName": "Ravis"
-    },
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": {
       "email": "perez@accuweather.com",
       "lastName": "Perez",
       "firstName": "Cristina"
@@ -33436,6 +33438,16 @@ If you want to dynamically choose between email formats, you can specify a funct
       "email": "linda@capitalcube.com",
       "lastName": "Hucks",
       "firstName": "Linda"
+    },
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": {
+      "email": "candell@energypoints.com",
+      "lastName": "Candell",
+      "firstName": "Jorge"
     },
     "key": null
   }
@@ -33552,7 +33564,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "veniam_facere/fuga.xlsx"
+      "amet_ea/nisi.key"
     ],
     "key": null
   },
@@ -33560,11 +33572,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "expedita_id/tenetur.css",
-      "nobis_veritatis/eos.js",
-      "expedita_animi/odio.doc",
-      "tempora_ab/nemo.mp3",
-      "officia_natus/quas.mp3"
+      "eos_error/temporibus.json"
     ],
     "key": null
   },
@@ -33572,7 +33580,7 @@ Additionally, you can set local variables who scope is only visible inside of `t
     "headers": null,
     "topic": "sandbox",
     "value": [
-      "quia_quaerat/amet.webm"
+      "a_nam/assumenda.json"
     ],
     "key": null
   }
@@ -33624,35 +33632,16 @@ Set `iterateVars` to an array of variable names to re-evaluate them on each iter
     "topic": "sandbox",
     "value": [
       {
-        "a": 58.46738981953044,
-        "b": 58.46738981953044
-      },
-      {
-        "a": 35.73094516129752,
-        "b": 35.73094516129752
-      },
-      {
-        "a": 40.11064458975142,
-        "b": 40.11064458975142
-      }
-    ],
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": [
-      {
-        "a": 60.93893101788113,
-        "b": 60.93893101788113
-      },
-      {
         "a": 50.46324054499952,
         "b": 50.46324054499952
       },
       {
         "a": 39.14192828994,
         "b": 39.14192828994
+      },
+      {
+        "a": 40.260551279985705,
+        "b": 40.260551279985705
       }
     ],
     "key": null
@@ -33661,10 +33650,6 @@ Set `iterateVars` to an array of variable names to re-evaluate them on each iter
     "headers": null,
     "topic": "sandbox",
     "value": [
-      {
-        "a": 40.260551279985705,
-        "b": 40.260551279985705
-      },
       {
         "a": 44.35940089737974,
         "b": 44.35940089737974
@@ -33672,6 +33657,29 @@ Set `iterateVars` to an array of variable names to re-evaluate them on each iter
       {
         "a": 48.14665260695822,
         "b": 48.14665260695822
+      },
+      {
+        "a": 58.361035004483384,
+        "b": 58.361035004483384
+      }
+    ],
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": [
+      {
+        "a": 38.34382327865736,
+        "b": 38.34382327865736
+      },
+      {
+        "a": 56.61900083698767,
+        "b": 56.61900083698767
+      },
+      {
+        "a": 53.79200575150977,
+        "b": 53.79200575150977
       }
     ],
     "key": null
@@ -33712,9 +33720,9 @@ Set `localVars` to a map of names and values, just like top-level generator `var
     "headers": null,
     "topic": "sandbox",
     "value": [
-      17.35667032625898,
-      17.35667032625898,
-      17.35667032625898
+      25.469465508940566,
+      25.469465508940566,
+      25.469465508940566
     ],
     "key": null
   },
@@ -33722,9 +33730,9 @@ Set `localVars` to a map of names and values, just like top-level generator `var
     "headers": null,
     "topic": "sandbox",
     "value": [
-      24.23369490976522,
-      24.23369490976522,
-      24.23369490976522
+      20.23162027249976,
+      20.23162027249976,
+      20.23162027249976
     ],
     "key": null
   },
@@ -33732,9 +33740,9 @@ Set `localVars` to a map of names and values, just like top-level generator `var
     "headers": null,
     "topic": "sandbox",
     "value": [
-      12.86547258064876,
-      12.86547258064876,
-      12.86547258064876
+      14.57096414497,
+      14.57096414497,
+      14.57096414497
     ],
     "key": null
   }
@@ -34212,8 +34220,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "MacGyver",
-      "firstName": "Efren"
+      "lastName": "Satterfield",
+      "firstName": "August"
     },
     "key": null
   },
@@ -34221,8 +34229,8 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "lastName": "Kiehn",
-      "firstName": "Robt"
+      "lastName": "Lang",
+      "firstName": "Delora"
     },
     "key": null
   },
@@ -34230,7 +34238,7 @@ Selects one or more keys from an object at random. Most useful combined with `pr
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "firstName": "Ben"
+      "lastName": "Rippin"
     },
     "key": null
   }
@@ -34401,7 +34409,7 @@ An optional top-level state machine may be defined for the generator. When prese
     "value": {
       "action": "start"
     },
-    "key": 2.6744435984288244
+    "key": 7.832886951900856
   },
   {
     "headers": null,
@@ -34409,7 +34417,7 @@ An optional top-level state machine may be defined for the generator. When prese
     "value": {
       "action": "running"
     },
-    "key": 1.6484482678210184
+    "key": 7.157174383892159
   },
   {
     "headers": null,
@@ -34417,7 +34425,7 @@ An optional top-level state machine may be defined for the generator. When prese
     "value": {
       "action": "stopped"
     },
-    "key": 2.2621743335782165
+    "key": 9.377745723858329
   }
 ]
 ```
@@ -34705,6 +34713,14 @@ In this example, state `s1` runs once, and then either `s2` or `s3` are visited 
     "topic": "sandbox",
     "value": {
       "x": 1
+    },
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": {
+      "x": 2
     },
     "key": null
   },
@@ -36507,19 +36523,19 @@ Use any of the valid Datafaker expressions in `#{}`.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Ernest Gerlach I",
+    "value": "Ulysses Conn",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Aron Feeney",
+    "value": "Telma Huel",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Althea Towne",
+    "value": "Kerry Runolfsson",
     "key": null
   }
 ]
@@ -36569,13 +36585,13 @@ Local names are given preference over Datafaker expressions.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "I am 48 years old",
+    "value": "I am 40 years old",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "I am 25 years old",
+    "value": "I am 29 years old",
     "key": null
   },
   {
@@ -36620,7 +36636,7 @@ Refer to variables defined in `vars` or `varsOnce`. These are given preference o
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "The magic number is 9",
+    "value": "The magic number is 2",
     "key": null
   },
   {
@@ -36632,7 +36648,7 @@ Refer to variables defined in `vars` or `varsOnce`. These are given preference o
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "The magic number is 7",
+    "value": "The magic number is 2",
     "key": null
   }
 ]
@@ -36658,19 +36674,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-02-03 12:19:55.440093169",
+    "value": "2023-09-15 22:11:26.049729372",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-09-03 17:58:37.01507324",
+    "value": "2024-07-11 11:12:10.129453623",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-03-01 01:08:29.669982414",
+    "value": "2023-01-24 01:53:18.739637591",
     "key": null
   }
 ]
@@ -36702,19 +36718,19 @@ Datafaker has a handful of useful functions that require parameters. If you want
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Nissan, Qashqai",
+    "value": "Mercedes-Benz, C-Class",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Seat, Arona",
+    "value": "Buick, Regal",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Renault, Captur",
+    "value": "Alfa-Romeo, 159",
     "key": null
   }
 ]
@@ -36766,11 +36782,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "MarikoGaylord",
-      "upper": "MR. DOLORES THOMPSON",
-      "capitalized": "Kelly kunze",
-      "shortened": "Nia",
-      "lower": "libby hand"
+      "scrubbed": "OctaviaSchowalter",
+      "upper": "KIM CONN",
+      "capitalized": "Peter wehner ii",
+      "shortened": "Don",
+      "lower": "mr. nickolas bergnaum"
     },
     "key": null
   },
@@ -36778,11 +36794,11 @@ You can also abbreviate a string by specifying `length` or remove a substring wi
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "scrubbed": "JimmyWalsh",
-      "upper": "YOULANDA BEATTY JR.",
-      "capitalized": "Ned botsford",
-      "shortened": "Amm",
-      "lower": "reginald adams"
+      "scrubbed": "SalvadorSchultz",
+      "upper": "SYLVIE GLEICHNER",
+      "capitalized": "Wesley cartwright",
+      "shortened": "Kri",
+      "lower": "dr. wilfredo stark"
     },
     "key": null
   }
@@ -36811,19 +36827,19 @@ Change the locale (default United States/English) by setting `locale`: first par
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Humberside",
+    "value": "Surrey",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Durham",
+    "value": "Cheshire",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "Rutland",
+    "value": "North Yorkshire",
     "key": null
   }
 ]
@@ -37280,19 +37296,19 @@ This function takes no parameters.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "01HWBF4H8Z6PEM3EQQHBZ0VRDV",
+    "value": "01HWBF4H8ZQSN63AMT1HGHFFB7",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "01HWBF4H905304A3747G44YJXV",
+    "value": "01HWBF4H90VJBRAWWSHSM5X22W",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "01HWBF4H91GEEYWHKDGMPBBFKA",
+    "value": "01HWBF4H91Z1P9EHH0QTZV0480",
     "key": null
   }
 ]
@@ -37344,19 +37360,19 @@ By default, this function generates floating point numbers.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 1.7151222240089097,
+    "value": 2.5526220285624417,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 9.052327302539943,
+    "value": 2.6744435984288244,
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": 1.0122730367194843,
+    "value": 1.6484482678210184,
     "key": null
   }
 ]
@@ -37386,19 +37402,19 @@ Use the `decimals` function modifier to generate integers.
   {
     "headers": null,
     "topic": "sandbox",
+    "value": 58,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": 59,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
     "value": 53,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": 94,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": 50,
     "key": null
   }
 ]
@@ -37480,19 +37496,19 @@ By default, this function will generate version 4 UUIDs.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "ba419d35-0dfe-8af7-aee7-bbe10c45c028",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
-    "value": "4f083ce3-f12b-bb4b-46ee-9d82b52c856d",
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "sandbox",
     "value": "aa616abe-1761-0c9a-e743-67bd738597dc",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "5e688e99-61b3-5c88-4697-6cf7b0bfbe20",
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "sandbox",
+    "value": "76b20010-c318-5754-c86c-400eff88a1e3",
     "key": null
   }
 ]
@@ -37518,19 +37534,19 @@ It can also generate time-based (v7) UUIDs.
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "018f16f2-451f-759d-81ba-f78afe0de1bb",
+    "value": "018f16f2-451f-7e6a-a1aa-9a0c6117bd67",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "018f16f2-4520-78c0-850c-e43c084f4bbb",
+    "value": "018f16f2-4520-7c97-8573-998e685e885c",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "018f16f2-4521-739d-ae46-6d852cb5be6a",
+    "value": "018f16f2-4521-786c-9746-20bebfb01100",
     "key": null
   }
 ]
@@ -37624,8 +37640,8 @@ Use `vars` to generate a fresh value for each iteration. Use `varsOnce` to gener
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "val2": 1.3178320995595154,
-      "val1": 1.0054546829864375
+      "val2": 1.6900542349166408,
+      "val1": 1.2881992301426748
     },
     "key": null
   },
@@ -37633,8 +37649,8 @@ Use `vars` to generate a fresh value for each iteration. Use `varsOnce` to gener
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "val2": 1.3178320995595154,
-      "val1": 3.831433687297641
+      "val2": 1.6900542349166408,
+      "val1": 1.5609663704792074
     },
     "key": null
   },
@@ -37642,8 +37658,8 @@ Use `vars` to generate a fresh value for each iteration. Use `varsOnce` to gener
     "headers": null,
     "topic": "sandbox",
     "value": {
-      "val2": 1.3178320995595154,
-      "val1": 1.6900542349166408
+      "val2": 1.6900542349166408,
+      "val1": 1.2570626786091843
     },
     "key": null
   }
@@ -37723,7 +37739,7 @@ Use a compound structure, like a map, to generate multiple values assigned to on
         "tags": {
           "isActive": false
         },
-        "theNumber": 1
+        "theNumber": 4
       }
     },
     "key": null
@@ -37736,7 +37752,7 @@ Use a compound structure, like a map, to generate multiple values assigned to on
         "tags": {
           "isActive": false
         },
-        "theNumber": 41
+        "theNumber": 17
       }
     },
     "key": null
@@ -37747,9 +37763,9 @@ Use a compound structure, like a map, to generate multiple values assigned to on
     "value": {
       "userProfile": {
         "tags": {
-          "isActive": false
+          "isActive": true
         },
-        "theNumber": 10
+        "theNumber": 87
       }
     },
     "key": null
@@ -39922,18 +39938,6 @@ Supply the statement as a `localConfig`. Accepts arbitrary SQL, and you can supp
     "op": null,
     "where": null,
     "row": {
-      "email": "larrykenny@marketsense.com",
-      "website": "www.marketsense.com",
-      "company": "MarketSense",
-      "lastName": "Kenny",
-      "firstName": "Larry"
-    },
-    "table": "customers"
-  },
-  {
-    "op": null,
-    "where": null,
-    "row": {
       "email": "stefanny.ponce@spikescavell.com",
       "website": "www.spikescavell.com",
       "company": "Spikes Cavell Analytic Inc",
@@ -39951,6 +39955,18 @@ Supply the statement as a `localConfig`. Accepts arbitrary SQL, and you can supp
       "company": "OTC Markets",
       "lastName": "Morelli",
       "firstName": "Kevin"
+    },
+    "table": "customers"
+  },
+  {
+    "op": null,
+    "where": null,
+    "row": {
+      "email": "carolyn@lumesis.com",
+      "website": "www.lumesis.com",
+      "company": "Lumesis, Inc.",
+      "lastName": "Collins",
+      "firstName": "Carolyn"
     },
     "table": "customers"
   }
@@ -40612,12 +40628,6 @@ When the last stage of a schedule finishes, `loop` resets the schedule and begin
   {
     "headers": null,
     "topic": "generatorA",
-    "value": 3,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "generatorA",
     "value": 1,
     "key": null
   },
@@ -40625,6 +40635,12 @@ When the last stage of a schedule finishes, `loop` resets the schedule and begin
     "headers": null,
     "topic": "generatorA",
     "value": 1,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 2,
     "key": null
   }
 ]
@@ -40732,12 +40748,6 @@ Then, under the `stages` key of `schedule`, name the generators to run. Notice i
   {
     "headers": null,
     "topic": "generatorA",
-    "value": 3,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "generatorA",
     "value": 1,
     "key": null
   },
@@ -40745,6 +40755,12 @@ Then, under the `stages` key of `schedule`, name the generators to run. Notice i
     "headers": null,
     "topic": "generatorA",
     "value": 1,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 2,
     "key": null
   }
 ]
@@ -40831,12 +40847,6 @@ In this example, generator `a` is overriden to produce only `5` events, and `b` 
   {
     "headers": null,
     "topic": "generatorA",
-    "value": 3,
-    "key": null
-  },
-  {
-    "headers": null,
-    "topic": "generatorA",
     "value": 1,
     "key": null
   },
@@ -40844,6 +40854,12 @@ In this example, generator `a` is overriden to produce only `5` events, and `b` 
     "headers": null,
     "topic": "generatorA",
     "value": 1,
+    "key": null
+  },
+  {
+    "headers": null,
+    "topic": "generatorA",
+    "value": 2,
     "key": null
   }
 ]
