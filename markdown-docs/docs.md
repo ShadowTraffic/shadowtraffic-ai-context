@@ -3961,6 +3961,19 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.4.0
+
+Wed Nov 11 12:33:18 PST 2026
+
+### Changes
+
+- ✅ **Added**: Adds new Profiler feature, which allows you to automatically generate ShadowTraffic files from existing data sources. This feature is evolving and expected to change.
+- 🐛 **Fixed**: Fixes Avro union values written in Avro's JSON encoding, where the value was wrapped in an object keyed by its branch type.
+- 🐛 **Fixed**: Fixes Kafka Avro serialization ignoring `schemaRegistrySubject`, which caused schemas to be looked up under the default topic-based subject name instead.
+- ⚡ **Improved**: JSON Schema bootstrapping now supports `enum`, `const`, `oneOf`, `anyOf`, and multi-type `type` arrays.
+
+---
+
 ###  2.3.2
 
 Thu Oct 22 13:33:18 PDT 2026
@@ -9714,6 +9727,204 @@ And with that, you have a solid understanding of the main constructs in ShadowTr
 
 Want to learn more? Try the [video guides](/video-guides.mdx) or [the cheat sheet](/cheatsheet.mdx).
 
+# profiler.md
+
+## Commentary
+
+<EvolvingBadge />
+
+Many times when you need to create synthetic data, you're working backwards from a hypothesis. For example, you may want to demonstrate what happens in your project when it encounters some critical trait or edge case in your data, so you carefully configure ShadowTraffic with a particular schema, data range, and the like.
+
+But other times, you might want to simulate an existing data source—one you may not know much about, or is so large and complex that it would be tedious to simulate by hand.
+
+To that end, ShadowTraffic Profiler is a built-in tool that connects to existing data sources and automatically generates a matching ShadowTraffic simulation. It statistically models your schema and data, determining a representative simulation that retains its essential properties without compromising privacy of the original data.
+
+### Motivation
+
+Some examples that motivate where you'd use this:
+
+1. You have an existing data source and want a zero-configuration way to make more data like it.
+
+2. You want to simulate hundreds or thousands of tables/topics.
+
+3. Your schemas are complex, with many columns and deep nesting.
+
+4. The properties of your data aren't obvious or easily discoverable, like the distribution of numeric values.
+
+5. The relationships (foreign keys) between your data sources aren't obvious.
+
+6. Your data contains outliers and schema violations, and you want to simulate those in similar proportion.
+
+## How it works
+
+### Configuring the profiler
+
+Like all other features of ShadowTraffic, the Profiler launches with the help of a few command line arguments. In this case, the Profiler needs to know only one thing: where are your existing data sources? `--config` supplies that information:
+
+```
+docker run --env-file license.env \
+           -v $(pwd)/your-config.json:/home/config.json \
+           shadowtraffic/shadowtraffic:latest \
+           --action profile \
+           --config /home/config.json
+```
+
+The content of `config.json` largely mirrors a standard ShadowTraffic configuration file, except you only need to supply a `connections` block. For example, to profile data from Kafka, a basic `config.json` may look like:
+
+```js
+{
+    "connections": {
+        "prod-kafka": {
+            "kind": "kafka",
+            "consumerConfigs": {
+                "bootstrap.servers": "broker:9092",
+                "schema.registry.url": "http://schema-registry:8081",
+                "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer",
+                "value.deserializer": "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+            },
+            "topics": [
+                {
+                    "topic": "orders"
+                }
+            ]                
+        }
+    }
+}
+```
+
+With that, the Profiler will boot up and use everything it can to learn what the corresponding complete ShadowTraffic file should look like. In this case, it might output something like:
+
+<details>
+`Example output`
+
+```js
+{
+    "generators" : [
+        {
+            "connection" : "prod-kafka",
+            "topic" : "orders",
+            "value" : {
+                "order_id" : {
+                    "_gen" : "uuid"
+                },
+                "status" : {
+                    "_gen" : "oneOf",
+                    "choices" : [
+                        "PENDING",
+                        "SHIPPED",
+                        "DELIVERED",
+                        "CANCELLED"
+                    ]
+                },
+                "amount" : {
+                    "_gen" : "normalDistribution",
+                    "mean" : 100,
+                    "sd" : 10
+                },
+                "placed_at" : {
+                    "_gen" : "uniformDistribution",
+                    "bounds" : [
+                        1,
+                        5000000
+                    ],
+                    "decimals" : 0
+                },
+                "shipped_at" : {
+                    "_gen" : "oneOf",
+                    "choices" : [
+                        {
+                            "null" : null
+                        },
+                        {
+                            "long" : {
+                                "_gen" : "uniformDistribution",
+                                "bounds" : [
+                                    1,
+                                    5000000
+                                ],
+                                "decimals" : 0
+                            }
+                        }
+                    ]
+                },
+                "customer" : {
+                    "name" : {
+                        "_gen" : "string",
+                        "expr" : "#{Name.fullName}"
+                    }
+                },
+                "tags" : {
+                    "_gen" : "repeatedly",
+                    "n" : {
+                        "_gen" : "uniformDistribution",
+                        "bounds" : [
+                            1,
+                            5
+                        ],
+                        "decimals" : 0
+                    },
+                    "target" : {
+                        "_gen" : "string",
+                        "expr" : "#{Cosmere.metals}"
+                    }
+                },
+                "note" : {
+                    "_gen" : "oneOf",
+                    "choices" : [
+                        {
+                            "null" : null
+                        },
+                        {
+                            "string" : {
+                                "_gen" : "string",
+                                "expr" : "#{Yoda.quote}"
+                            }
+                        }
+                    ]
+                }
+            },
+            "producerConfigs" : {
+                "value.serializer" : "io.confluent.kafka.serializers.KafkaAvroSerializer"
+            },
+            "key" : null
+        }
+    ],
+    "connections" : {
+        "prod-kafka" : {
+            "kind" : "kafka",
+            "producerConfigs" : {
+                "bootstrap.servers" : "broker:9092",
+                "schema.registry.url" : "http://schema-registry:8081",
+                "key.serializer" : "org.apache.kafka.common.serialization.StringSerializer",
+                "value.serializer" : "org.apache.kafka.common.serialization.StringSerializer"
+            }
+        }
+    }
+}
+```
+
+</details>
+
+Profiling is currently only supported for certain connections. For programmatic usage, it's recommended to invoke profiling with the `--quiet` flag to elide logging output.
+
+## Examples
+
+### Profiling Kafka
+
+Profiling a Kafka cluster [requires two parameters](/connections/kafka/#profiler-json-schema):
+
+1. `consumerConfigs`: your broker endpoint and Schema Registry endpoint to connect
+2. `topics`: an array of topics to simulate
+
+Currently, ShadowTraffic will only profile topics whose key or value are linked to Schema Registry. It assumes a default [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#subject-name-strategy-overview) naming convention, but both the key and value subjects can be overridden, as seen in the example.
+
+An example `config.json` file might look like:
+
+```json
+[Example Code - could not load data]
+```
+
+
 # quickstart.md
 
 Here's a minimal example that generates data to Kafka to get you up and running.
@@ -13969,6 +14180,10 @@ Note that until Kafka removes its dependency on Security Manager (coming soon), 
 
 In addition to writer generators, the Kafka connection also supports [loader generators](/overview/#loaders) to acquire data from outside topics. [Example 9](#loading-external-data) This is useful if you want to [`lookup`](/functions/lookup) data from a previous ShadowTraffic run, or data that another system created.
 
+### Profiling topics
+
+The Kafka connection supports [Profiling](/profiler), which is a feature that automatically writes your configuration file based on an existing data source. Read more about how to use this in the [Kafka-specific examples](/profiler/#profiling-kafka) of the Profiler docs.
+
 ---
 
 ## Examples
@@ -15292,6 +15507,12 @@ See [the Overview](/overview/#loaders) section for more general details about lo
     }
   ]
 }
+```
+
+### Profiler JSON schema
+
+```json
+[Schema - reference not found]
 ```
 
 
@@ -36702,19 +36923,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-10-05 22:11:26.049729372",
+    "value": "2023-10-25 22:11:26.049729372",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-07-31 11:12:10.129453623",
+    "value": "2024-08-20 11:12:10.129453623",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-02-13 01:53:18.739637591",
+    "value": "2023-03-05 01:53:18.739637591",
     "key": null
   }
 ]
