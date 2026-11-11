@@ -3967,7 +3967,7 @@ Wed Nov 11 12:33:18 PST 2026
 
 ### Changes
 
-- ✅ **Added**: Adds new Profiler feature, which allows you to automatically generate ShadowTraffic files from existing data sources. This feature is evolving and expected to change.
+- ✅ **Added**: Adds new [Profiler feature](/profiler), which allows you to automatically generate ShadowTraffic files from existing data sources. This feature is evolving and expected to change.
 - 🐛 **Fixed**: Fixes Avro union values written in Avro's JSON encoding, where the value was wrapped in an object keyed by its branch type.
 - 🐛 **Fixed**: Fixes Kafka Avro serialization ignoring `schemaRegistrySubject`, which caused schemas to be looked up under the default topic-based subject name instead.
 - ⚡ **Improved**: JSON Schema bootstrapping now supports `enum`, `const`, `oneOf`, `anyOf`, and multi-type `type` arrays.
