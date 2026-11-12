@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.4.1
+
+Thu Nov 12 11:22:30 PST 2026
+
+### Changes
+
+- ⚡ **Improved**: Ehances [Profiler](/profiler) so that [`env`](/functions/env) functions are preserved in the output.
+
+---
+
 ###  2.4.0
 
 Wed Nov 11 12:33:18 PST 2026
@@ -36923,19 +36933,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-10-25 22:11:26.049729372",
+    "value": "2023-10-26 22:11:26.049729372",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-08-20 11:12:10.129453623",
+    "value": "2024-08-21 11:12:10.129453623",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-03-05 01:53:18.739637591",
+    "value": "2023-03-06 01:53:18.739637591",
     "key": null
   }
 ]
