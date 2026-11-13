@@ -3961,13 +3961,25 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.4.2
+
+Fri Nov 13 11:57:02 PST 2026
+
+### Changes
+
+- 🐛 **Fixed**: Mitigates [CVE-2026-102554](https://nvd.nist.gov/vuln/detail/CVE-2026-102554).
+- 🐛 **Fixed**: Mitigates [CVE-2026-57914](https://nvd.nist.gov/vuln/detail/CVE-2026-57914).
+- 🐛 **Fixed**: Mitigates [CVE-2026-59171](https://nvd.nist.gov/vuln/detail/CVE-2026-59171).
+
+---
+
 ###  2.4.1
 
 Thu Nov 12 11:22:30 PST 2026
 
 ### Changes
 
-- ⚡ **Improved**: Ehances [Profiler](/profiler) so that [`env`](/functions/env) functions are preserved in the output.
+- ⚡ **Improved**: Enhances [Profiler](/profiler) so that [`env`](/functions/env) functions are preserved in the output.
 
 ---
 
@@ -36933,19 +36945,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-10-26 22:11:26.049729372",
+    "value": "2023-10-27 22:11:26.049729372",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-08-21 11:12:10.129453623",
+    "value": "2024-08-22 11:12:10.129453623",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-03-06 01:53:18.739637591",
+    "value": "2023-03-07 01:53:18.739637591",
     "key": null
   }
 ]
