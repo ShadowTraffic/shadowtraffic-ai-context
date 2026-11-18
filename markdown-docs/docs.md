@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.4.3
+
+Wed Nov 18 08:10:14 PST 2026
+
+### Changes
+
+- ⚠️ **Important**: Mitigates Java4Shell ([CVE-2026-114938](https://nvd.nist.gov/vuln/detail/CVE-2026-114938)) by adding JVM flag `-XX:-UseBASE64Intrinsics`. ShadowTraffic's JVM will be updated as soon as a new, patched GraalVM community edition is released.
+
+---
+
 ###  2.4.2
 
 Fri Nov 13 11:57:02 PST 2026
@@ -36945,19 +36955,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-10-27 22:11:26.049729372",
+    "value": "2023-11-01 22:11:26.049729372",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-08-22 11:12:10.129453623",
+    "value": "2024-08-27 11:12:10.129453623",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-03-07 01:53:18.739637591",
+    "value": "2023-03-12 01:53:18.739637591",
     "key": null
   }
 ]
