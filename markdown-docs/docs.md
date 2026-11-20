@@ -3961,6 +3961,18 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.5.0
+
+Fri Nov 20 11:28:34 PST 2026
+
+### Changes
+
+- ✅ **Added**: Updates [Profiler](/profiler) to use source data, not just schemas, in its summarization techniques.
+- ✅ **Added**: [Profiler](/profiler) now also works against Kafka topics serialized with plain JSON.
+- 🐛 **Fixed**: Fixes regression that caused `--stdout` to require a connection to Schema Registry for Kafka generators.
+
+---
+
 ###  2.4.3
 
 Wed Nov 18 08:10:14 PST 2026
@@ -9801,10 +9813,13 @@ docker run --env-file license.env \
            --config /home/config.json
 ```
 
-The content of `config.json` largely mirrors a standard ShadowTraffic configuration file, except you only need to supply a `connections` block. For example, to profile data from Kafka, a basic `config.json` may look like:
+The content of `config.json` largely mirrors a standard ShadowTraffic configuration file, except you're only required to supply a `connections` block. By default, the Profiler will read at most `1,000,000` events from each collection in each source, though that can be overridden as seen below. Putting it all together in an example that profiles data from Kafka, a basic `config.json` may look like:
 
 ```js
 {
+    "profiler": {
+        "sampleCount": 50000
+    },
     "connections": {
         "prod-kafka": {
             "kind": "kafka",
@@ -9831,104 +9846,256 @@ With that, the Profiler will boot up and use everything it can to learn what the
 
 ```js
 {
-    "generators" : [
+    "generators": [
         {
-            "connection" : "prod-kafka",
-            "topic" : "orders",
-            "value" : {
-                "order_id" : {
-                    "_gen" : "uuid"
+            "connection": "prod-kafka",
+            "topic": "orders",
+            "value": {
+                "order_id": {
+                    "_gen": "uuid"
                 },
-                "status" : {
-                    "_gen" : "oneOf",
-                    "choices" : [
-                        "PENDING",
-                        "SHIPPED",
-                        "DELIVERED",
-                        "CANCELLED"
-                    ]
-                },
-                "amount" : {
-                    "_gen" : "normalDistribution",
-                    "mean" : 100,
-                    "sd" : 10
-                },
-                "placed_at" : {
-                    "_gen" : "uniformDistribution",
-                    "bounds" : [
-                        1,
-                        5000000
-                    ],
-                    "decimals" : 0
-                },
-                "shipped_at" : {
-                    "_gen" : "oneOf",
-                    "choices" : [
+                "status": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
                         {
-                            "null" : null
+                            "weight": 204,
+                            "value": "PENDING"
                         },
                         {
-                            "long" : {
-                                "_gen" : "uniformDistribution",
-                                "bounds" : [
-                                    1,
-                                    5000000
+                            "weight": 257,
+                            "value": "SHIPPED"
+                        },
+                        // ...and more
+                    ]
+                },
+                "amount": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        {
+                            "weight": 3,
+                            "value": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [
+                                    159.09,
+                                    162.27
+                                ]
+                            }
+                        },
+                        {
+                            "weight": 1,
+                            "value": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [
+                                    13.65,
+                                    13.93
+                                ]
+                            }
+                        },
+                        // ...and more
+                    ]
+                },
+                "placed_at": {
+                    "_gen": "uniformDistribution",
+                    "bounds": [
+                        1795022330543,
+                        1795022331103
+                    ],
+                    "decimals": 0
+                },
+                "shipped_at": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
+                        {
+                            "weight": 386,
+                            "value": null
+                        },
+                        {
+                            "weight": 614,
+                            "value": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [
+                                    1795022330543,
+                                    1795022331103
                                 ],
-                                "decimals" : 0
+                                "decimals": 0
                             }
                         }
                     ]
                 },
-                "customer" : {
-                    "name" : {
-                        "_gen" : "string",
-                        "expr" : "#{Name.fullName}"
-                    }
-                },
-                "tags" : {
-                    "_gen" : "repeatedly",
-                    "n" : {
-                        "_gen" : "uniformDistribution",
-                        "bounds" : [
-                            1,
-                            5
-                        ],
-                        "decimals" : 0
+                "customer": {
+                    "name": {
+                        "_gen": "characterString",
+                        "n": {
+                            "_gen": "weightedOneOf",
+                            "choices": [
+                                {
+                                    "weight": 131,
+                                    "value": {
+                                        "_gen": "uniformDistribution",
+                                        "bounds": [
+                                            14.78,
+                                            15.07
+                                        ]
+                                    }
+                                },
+                                {
+                                    "weight": 93,
+                                    "value": {
+                                        "_gen": "uniformDistribution",
+                                        "bounds": [
+                                            16.0,
+                                            16.32
+                                        ]
+                                    }
+                                },
+                                // ...and more
+                            ]
+                        },
+                        "case": "mixed"
                     },
-                    "target" : {
-                        "_gen" : "string",
-                        "expr" : "#{Cosmere.metals}"
+                    "tier": {
+                        "_gen": "characterString",
+                        "n": {
+                            "_gen": "weightedOneOf",
+                            "choices": [
+                                {
+                                    "weight": 701,
+                                    "value": {
+                                        "_gen": "uniformDistribution",
+                                        "bounds": [
+                                            5.94,
+                                            6
+                                        ]
+                                    }
+                                },
+                                {
+                                    "weight": 299,
+                                    "value": {
+                                        "_gen": "uniformDistribution",
+                                        "bounds": [
+                                            4,
+                                            4.08
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "case": "lower"
                     }
                 },
-                "note" : {
-                    "_gen" : "oneOf",
-                    "choices" : [
+                "tags": {
+                    "_gen": "repeatedly",
+                    "n": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            {
+                                "weight": 332,
+                                "value": {
+                                    "_gen": "constant",
+                                    "x": 0
+                                }
+                            },
+                            {
+                                "weight": 332,
+                                "value": {
+                                    "_gen": "uniformDistribution",
+                                    "bounds": [
+                                        1.99,
+                                        2
+                                    ]
+                                }
+                            },
+                            // ...and more
+                        ],
+                        "decimals": 0
+                    },
+                    "target": {
+                        "_gen": "characterString",
+                        "n": {
+                            "_gen": "weightedOneOf",
+                            "choices": [
+                                {
+                                    "weight": 516,
+                                    "value": {
+                                        "_gen": "uniformDistribution",
+                                        "bounds": [
+                                            4,
+                                            4.08
+                                        ]
+                                    }
+                                },
+                                {
+                                    "weight": 484,
+                                    "value": {
+                                        "_gen": "uniformDistribution",
+                                        "bounds": [
+                                            6.96,
+                                            7
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "case": "lower"
+                    }
+                },
+                "note": {
+                    "_gen": "weightedOneOf",
+                    "choices": [
                         {
-                            "null" : null
+                            "weight": 804,
+                            "value": null
                         },
                         {
-                            "string" : {
-                                "_gen" : "string",
-                                "expr" : "#{Yoda.quote}"
+                            "weight": 196,
+                            "value": {
+                                "_gen": "characterString",
+                                "n": {
+                                    "_gen": "weightedOneOf",
+                                    "choices": [
+                                        {
+                                            "weight": 1,
+                                            "value": {
+                                                "_gen": "uniformDistribution",
+                                                "bounds": [
+                                                    14.78,
+                                                    15.07
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "weight": 6,
+                                            "value": {
+                                                "_gen": "uniformDistribution",
+                                                "bounds": [
+                                                    18.74,
+                                                    19.12
+                                                ]
+                                            }
+                                        },
+                                        // ...and more
+                                    ]
+                                },
+                                "case": "mixed"
                             }
                         }
                     ]
                 }
             },
-            "producerConfigs" : {
-                "value.serializer" : "io.confluent.kafka.serializers.KafkaAvroSerializer"
+            "producerConfigs": {
+                "value.serializer": "io.confluent.kafka.serializers.KafkaAvroSerializer"
             },
-            "key" : null
+            "key": null
         }
     ],
-    "connections" : {
-        "prod-kafka" : {
-            "kind" : "kafka",
-            "producerConfigs" : {
-                "bootstrap.servers" : "broker:9092",
-                "schema.registry.url" : "http://schema-registry:8081",
-                "key.serializer" : "org.apache.kafka.common.serialization.StringSerializer",
-                "value.serializer" : "org.apache.kafka.common.serialization.StringSerializer"
+    "connections": {
+        "prod-kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "broker:9092",
+                "schema.registry.url": "http://schema-registry:8081",
+                "key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+                "value.serializer": "org.apache.kafka.common.serialization.StringSerializer"
             }
         }
     }
@@ -9937,20 +10104,30 @@ With that, the Profiler will boot up and use everything it can to learn what the
 
 </details>
 
-Profiling is currently only supported for certain connections. For programmatic usage, it's recommended to invoke profiling with the `--quiet` flag to elide logging output.
+Profiling is currently only supported for certain connections. For programmatic usage, it's recommended to invoke profiling with the `--quiet` flag to elide ShadowTraffic's logging output.
 
 ## Examples
 
 ### Profiling Kafka
 
-Profiling a Kafka cluster [requires two parameters](/connections/kafka/#profiler-json-schema):
+Currently, ShadowTraffic will only profile topics that are:
 
-1. `consumerConfigs`: your broker endpoint and Schema Registry endpoint to connect
+1. Serialized with Avro through Schema Registry
+2. Serialized with JSON Schema, also through Schema Registry
+3. Serialized with plain JSON
+
+To profile those topics, you need only [two required parameters](/connections/kafka/#profiler-json-schema):
+
+1. `consumerConfigs`: your broker endpoint, and optionally your Schema Registry endpoint
 2. `topics`: an array of topics to simulate
 
-Currently, ShadowTraffic will only profile topics whose key or value are linked to Schema Registry. It assumes a default [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#subject-name-strategy-overview) naming convention, but both the key and value subjects can be overridden, as seen in the example.
+For topics linked to Schema Registry, the Profiler assumes a default [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#subject-name-strategy-overview) naming convention, though both the key and value subjects can be overridden. Additionally, deserializers for topics linked to Schema Registry will be automatically discovered, so there's no need to supply them in the `consumerConfigs` block.
 
-An example `config.json` file might look like:
+You can also override the maximum number of events that will be sampled in each topic. Each topic's data is read from earliest to latest.
+
+Lastly, each element of the `topics` array can take an optional `consumerConfigs`, which will override any parameters in the parent attribute above. This is useful when ShadowTraffic can't automatically discover the deserializers needed to read your data (as in the case of plain JSON).
+
+An example `config.json` file demonstrating all that looks like:
 
 ```json
 [Example Code - could not load data]
@@ -36955,19 +37132,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-11-01 22:11:26.049729372",
+    "value": "2023-11-03 22:11:26.049729372",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-08-27 11:12:10.129453623",
+    "value": "2024-08-29 11:12:10.129453623",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-03-12 01:53:18.739637591",
+    "value": "2023-03-14 01:53:18.739637591",
     "key": null
   }
 ]
