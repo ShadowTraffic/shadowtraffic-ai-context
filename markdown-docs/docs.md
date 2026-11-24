@@ -3961,6 +3961,16 @@ See [the full library](/video-guides.mdx).
 You can subscribe to this changelog through [the RSS feed](https://docs.shadowtraffic.io/rss.xml) (external).
 
 ## What's new
+###  2.5.1
+
+Tue Nov 24 09:12:32 PST 2026
+
+### Changes
+
+- ⚡ **Improved**: Updates JVM to GraalVM Community 25i6, mitigating Java4Shell at the JVM level. `-XX:-UseBASE64Intrinsics` has been removed from the entrypoint since it's no longer required.
+
+---
+
 ###  2.5.0
 
 Fri Nov 20 11:28:34 PST 2026
@@ -37132,19 +37142,19 @@ Some Datafaker expressions are functions that take parameters. When there's a fi
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-11-03 22:11:26.049729372",
+    "value": "2023-11-07 22:11:26.049729372",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2024-08-29 11:12:10.129453623",
+    "value": "2024-09-02 11:12:10.129453623",
     "key": null
   },
   {
     "headers": null,
     "topic": "sandbox",
-    "value": "2023-03-14 01:53:18.739637591",
+    "value": "2023-03-18 01:53:18.739637591",
     "key": null
   }
 ]
